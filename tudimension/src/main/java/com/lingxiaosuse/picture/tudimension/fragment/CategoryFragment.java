@@ -1,14 +1,21 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
+import android.content.Intent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.google.gson.GsonBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
+import com.lingxiaosuse.picture.tudimension.activity.CategoryActivity;
+import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.GridCategoryAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.CategoryInterface;
+import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.liuguangqiang.cookie.CookieBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +40,7 @@ public class CategoryFragment extends BaseFragment{
     }
     @Override
     public View initView() {
-        View view = UIUtils.inflate(R.layout.pager_category);
+        View view = UIUtils.inflate(R.layout.fragment_category);
         gridView = view.findViewById(R.id.gv_category);
         return view;
     }
@@ -42,25 +49,37 @@ public class CategoryFragment extends BaseFragment{
      *从服务器上获取分类信息
      */
     private void getCategory(){
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://service.picasso.adesk.com")
-                .addConverterFactory(GsonConverterFactory.create(new GsonBuilder().create()))
-                .build();
-        CategoryInterface category = retrofit.create(CategoryInterface.class);
-        Call<CategoryModle> call = category.categoryModle();
-        call.enqueue(new Callback<CategoryModle>() {
-            @Override
-            public void onResponse(Call<CategoryModle> call, Response<CategoryModle> response) {
-                categoryList = response.body().getRes().getCategory();
-                mGridAdapter = new GridCategoryAdapter(categoryList);
-                gridView.setAdapter(mGridAdapter);
-                mGridAdapter.notifyDataSetChanged();
-            }
+        RetrofitHelper.getInstance(UIUtils.getContext())
+                .getInterface(CategoryInterface.class)
+                .categoryModle()
+                .enqueue(new Callback<CategoryModle>() {
+                    @Override
+                    public void onResponse(Call<CategoryModle> call, Response<CategoryModle> response) {
+                        categoryList = response.body().getRes().getCategory();
+                        mGridAdapter = new GridCategoryAdapter(categoryList);
+                        gridView.setAdapter(mGridAdapter);
+                        mGridAdapter.notifyDataSetChanged();
+                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                                /*Intent intent = new Intent(UIUtils.getContext(),CategoryActivity.class);
+                                startActivity(intent);*/
+                                Intent intent = new Intent(UIUtils.getContext(),
+                                        BannerDetailActivity.class);
+                                intent.putExtra("url",categoryList.get(position).getCover());
+                                intent.putExtra("desc",categoryList.get(position).getName());
+                                intent.putExtra("id",categoryList.get(position).getId());
+                                intent.putExtra("title",categoryList.get(position).getName());
+                                intent.putExtra("type","category");  //说明类型是轮播图
+                                startActivity(intent);
+                            }
+                        });
+                    }
 
-            @Override
-            public void onFailure(Call<CategoryModle> call, Throwable t) {
+                    @Override
+                    public void onFailure(Call<CategoryModle> call, Throwable t) {
 
-            }
-        });
+                    }
+                });
     }
 }

@@ -1,6 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +21,14 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.GlideImageLoader;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +49,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
     private LayoutInflater mLayoutInflater;
     private boolean isFinish;   //是否加载完成 -- 隐藏布局
 
+    private String imgRule = "?imageView2/3/h/230"; //图片规则，从服务器取230大小的图片
     public MyRecycleViewAdapter(ArrayList<HomePageModle.Picture> list,
                                 ArrayList<HomePageModle.slidePic> slideList,
                                 Context context){
@@ -105,7 +113,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
         if (viewHolder instanceof FootHolder){
             StaggeredGridLayoutManager.LayoutParams clp
                     = (StaggeredGridLayoutManager.LayoutParams) ((FootHolder) viewHolder).rlayout.getLayoutParams();
@@ -128,11 +136,41 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     = (StaggeredGridLayoutManager.LayoutParams) ((HeadHolder) viewHolder).llayout.getLayoutParams();
             // 最最关键一步，设置当前view占满列数，这样就可以占据两列实现头部了
             clp.setFullSpan(true);
+            List<String> urlList = new ArrayList<String>();
+            List<String> titleList = new ArrayList<String>();
+            for (int i = 0; i < slideList.size(); i++) {
+                urlList.add(slideList.get(i).lcover);
+                titleList.add(slideList.get(i).desc);
+            }
+            //设置图片加载器
+            ((HeadHolder) viewHolder).banner.setImageLoader(new GlideImageLoader());
+            //设置banner样式
+            ((HeadHolder) viewHolder).banner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE);
+            //设置图片集合
+            ((HeadHolder) viewHolder).banner.setImages(urlList);
+            ((HeadHolder) viewHolder).banner.setBannerAnimation(Transformer.DepthPage);
+            //设置标题集合（当banner样式有显示title时）
+            ((HeadHolder) viewHolder).banner.setBannerTitles(titleList);
+            //设置自动轮播，默认为true
+            ((HeadHolder) viewHolder).banner.isAutoPlay(true);
+            //设置轮播时间
+            ((HeadHolder) viewHolder).banner.setDelayTime(1500);
+            //设置指示器位置（当banner模式中有指示器时）
+            ((HeadHolder) viewHolder).banner.setIndicatorGravity(BannerConfig.TITLE_BACKGROUND);
+            //banner设置方法全部调用完毕时最后调用
+            ((HeadHolder) viewHolder).banner.start();
+            ((HeadHolder) viewHolder).banner.setOnBannerListener(new OnBannerListener() {
+                @Override
+                public void OnBannerClick(int position) {
+                    if (mOnBannerClickListener != null){
+                        mOnBannerClickListener.onBannerClick(position);
+                    }
+                }
+            });
         }else if (viewHolder instanceof ViewHolder){
-            Uri uri = Uri.parse(list.get(position).img);
+            final Uri uri = Uri.parse(list.get(position).img +imgRule);
 
             //如果本地JPEG图，有EXIF的缩略图，image pipeline 可以立刻返回它作为一个缩略图
-            //((ViewHolder) viewHolder).imageview.setImageURI(uri);
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                     .setLocalThumbnailPreviewsEnabled(true)
                     .build();
@@ -141,7 +179,18 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     .setOldController(((ViewHolder) viewHolder).imageview.getController())
                     .build();
             ((ViewHolder) viewHolder).imageview.setController(controller);
+            //((ViewHolder) viewHolder).imageview.setImageURI(uri);
             ((ViewHolder) viewHolder).textView.setText(list.get(position).desc);
+            //设置点击事件
+            if (mOnItemClickListener != null){
+                ((ViewHolder) viewHolder).imageview.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mOnItemClickListener.onItemClick(view,position,uri);
+                    }
+                });
+            }
+
         }
     }
 
@@ -160,13 +209,14 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
     class HeadHolder extends RecyclerView.ViewHolder{
         LinearLayout llayout;
-        ViewPager viewpager;
+        /*ViewPager viewpager;*/
+        private Banner banner;
         public HeadHolder(View itemView) {
             super(itemView);
             llayout = itemView.findViewById(R.id.ll_head);
-            viewpager = itemView.findViewById(R.id.vp_head);
-
-            viewpager.setAdapter(new HomePagerAdapter(slideList));
+            /*viewpager = itemView.findViewById(R.id.vp_head);
+            viewpager.setAdapter(new HomePagerAdapter(slideList));*/
+            banner = itemView.findViewById(R.id.banner_head);
         }
     }
     class FootHolder extends RecyclerView.ViewHolder{
@@ -189,5 +239,23 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public void isFinish(boolean isFinish){
         this.isFinish = isFinish;
+    }
+
+    private OnItemClickListener mOnItemClickListener = null;
+    //设置item的点击事件
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position, Uri uri);
+    }
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener){
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    private OnBannerClickListener mOnBannerClickListener = null;
+    //设置banner的点击事件
+    public interface OnBannerClickListener {
+        void onBannerClick(int position);
+    }
+    public void setOnBannerClickListener(OnBannerClickListener mOnBannerClickListener){
+        this.mOnBannerClickListener = mOnBannerClickListener;
     }
 }

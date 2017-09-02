@@ -8,7 +8,7 @@
             android:id="@+id/gv_category"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:numColumns="3">
-
+            android:gravity="center"
+            android:numColumns="2">
         </GridView>
 </LinearLayout>

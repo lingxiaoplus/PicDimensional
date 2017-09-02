@@ -1,15 +1,25 @@
 package com.lingxiaosuse.picture.tudimension.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.datasource.BaseDataSubscriber;
 import com.facebook.datasource.DataSource;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.imagepipeline.core.ImagePipeline;
+import com.facebook.imagepipeline.datasource.BaseBitmapDataSubscriber;
+import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.memory.PooledByteBuffer;
 import com.facebook.imagepipeline.memory.PooledByteBufferInputStream;
 import com.facebook.imagepipeline.request.ImageRequest;
@@ -85,4 +95,40 @@ public class DownloadImgUtils {
             }
         }, Executors.newSingleThreadExecutor());
     }
+    public static void downLoadImg(Uri uri, final OnDownloadListener listener) {
+        ImageRequest imageRequest = ImageRequestBuilder
+                .newBuilderWithSource(uri)
+                .setProgressiveRenderingEnabled(true)
+                .build();
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        DataSource<CloseableReference<CloseableImage>> dataSource =
+                imagePipeline.fetchDecodedImage(imageRequest, null);
+        dataSource.subscribe(new BaseBitmapDataSubscriber() {
+            @Override
+            public void onNewResultImpl(@Nullable Bitmap bitmap) {
+                //bitmap即为下载所得图片
+                listener.onDownloadSuccess(bitmap);
+            }
+
+            @Override
+            public void onFailureImpl(DataSource dataSource) {
+                listener.onDownloadFailed(dataSource.getFailureCause().toString());
+            }
+        }, CallerThreadExecutor.getInstance());
+    }
+
+    public interface OnDownloadListener {
+        /**
+         * 下载成功
+         */
+        void onDownloadSuccess(Bitmap bitmap);
+        /**
+         * 下载失败
+         * @param errormsg 失败信息
+         */
+        void onDownloadFailed(String errormsg);
+    }
+
+
+
 }

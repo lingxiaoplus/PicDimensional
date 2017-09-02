@@ -26,4 +26,13 @@
         <item name="android:windowActionBar">false</item>
     </style>
 
+
+    <!--透明activity-->
+    <style name="transparent">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>
+    </style>
+    <!--end透明activity-->
 </resources>

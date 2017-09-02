@@ -2,26 +2,31 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/colorWhite"
-    android:gravity="center">
+    android:background="@drawable/background_card">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/pic_grid_item"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            fresco:viewAspectRatio="1.33"
+            android:id="@+id/iv_meizi_img"
+            android:padding="5dp"
+            android:layout_width="240dp"
+            android:layout_height="320dp"
             fresco:progressBarImageScaleType="centerInside"
             fresco:progressBarAutoRotateInterval="2000"
             fresco:progressBarImage="@drawable/ic_loading_default"
             />
         <TextView
-            android:id="@+id/tv_grid_item"
+            android:id="@+id/tv_meizi_des"
+            android:layout_below="@id/iv_meizi_img"
+            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="分类"
-            android:textColor="#4CAF50"
+            android:text="这是图片信息"
             android:textSize="16sp"
             />
+    </RelativeLayout>
+
 </LinearLayout>

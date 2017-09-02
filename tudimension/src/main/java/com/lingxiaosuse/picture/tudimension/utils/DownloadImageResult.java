@@ -1,12 +1,14 @@
 package com.lingxiaosuse.picture.tudimension.utils;
 
 import android.os.Environment;
+import android.support.design.widget.Snackbar;
+import android.widget.Toast;
 
 /**
  * Created by lingxiao on 2017/8/4.
  */
 
-class DownloadImageResult {
+public class DownloadImageResult {
     String path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/tudimension";
     public String getFilePath() {
         return path;

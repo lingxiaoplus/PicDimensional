@@ -1,5 +1,8 @@
 package com.lingxiaosuse.picture.tudimension;
 
+import android.Manifest;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.GsonBuilder;
@@ -29,6 +33,8 @@ import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.CategoryInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.HomePageInterface;
+import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.security.PrivateKey;
@@ -56,6 +62,20 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         //tabLayout = (TabLayout) findViewById(R.id.tab_main);
         initView();
+        PremessionUtils.getPremession(this,getString(R.string.permession_title),
+                getString(R.string.permession_message),
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                }
+                , new PremessionUtils.onPermissinoListener() {
+                    @Override
+                    public void onPermissionGet() {
+                        ToastUtils.show("已获取权限");
+                    }
+                    @Override
+                    public void onPermissionDenied() {
+                        ToastUtils.show("获取权限失败");
+                    }
+                });
     }
 
     private void initView() {
@@ -64,12 +84,13 @@ public class MainActivity extends BaseActivity {
         }
         MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
+        //设置viewpager缓存页面个数
+        viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                BaseFragment fragment = FragmentFactory
-                        .createFragment(tab.getPosition());
+
             }
 
             @Override
@@ -103,5 +124,9 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        PremessionUtils.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
 }

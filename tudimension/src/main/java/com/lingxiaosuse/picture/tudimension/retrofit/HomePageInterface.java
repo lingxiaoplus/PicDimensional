@@ -11,10 +11,15 @@ import retrofit2.http.Query;
  */
 
 public interface HomePageInterface {
-    //http://service.picasso.adesk.com/v3/homepage?limit=30&adult=false
+    //http://service.picasso.adesk.com/v3/homepage?limit=30&skip=0&adult=false
+    /**
+     *@param limit 每次请求加载多少数据
+     *@param skip 分页 0 30 60
+     */
     @GET("/v3/homepage")
     Call<HomePageModle> homePageModle(
             @Query("limit") int limit,
+            @Query("skip") int skip,
             @Query("adult") boolean adult
     );
 }

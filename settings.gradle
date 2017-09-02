@@ -1,1 +1,1 @@
-include ':app', ':tudimension', ':mysnackbar'
+include ':tudimension'

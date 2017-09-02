@@ -30,9 +30,18 @@ public class HomePageModle {
         }
     }
     public class Picture{
-        public String img;  //图片地址
+        public String img;  //原始图片地址
         public ArrayList<String> tag;  //标签类别
         public long atime;    //时间
+        public String preview; //压缩过后的图片地址
+
+        public String getPreview() {
+            return preview;
+        }
+
+        public void setPreview(String preview) {
+            this.preview = preview;
+        }
 
         public String getImg() {
             return img;
@@ -131,6 +140,24 @@ public class HomePageModle {
     public class slidePic{
         public long atime;
         public String cover;        //图片
+        public String lcover; //720分辨率图片
+        public String id; //图片id，用于拼接url
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getLcover() {
+            return lcover;
+        }
+
+        public void setLcover(String lcover) {
+            this.lcover = lcover;
+        }
 
         public long getAtime() {
             return atime;

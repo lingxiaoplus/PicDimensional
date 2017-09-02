@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">图次元</string>
+    <string name="permession_title">提示信息</string>
+    <string name="permession_message">当前应用缺少必要权限,该功能暂时无法使用。如若需要，请单击【确定】按钮前往设置中心进行权限授权。</string>
+    <string name="back_name">返回</string>
+    <string name="person_title">app:behavior_overlapTop=\"30dp\", The amount that the scrolling view should overlap the bottom of any AppBarLayout. 使ScrollView压在AppBarLayout上面一段长度.  作者：SpikeKing 链接：http://www.jianshu.com/p/97206f5973c5 來源：简书 著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</string>
+    <string name="person_intro">在onCreate里面设置滑动逻辑, 设置两个动画: 监听AppBar的滑动, 处理Toolbar和Title的显示; 自动滑动效果.</string>
+
 </resources>
