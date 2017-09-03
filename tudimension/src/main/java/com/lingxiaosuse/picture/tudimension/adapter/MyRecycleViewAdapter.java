@@ -119,6 +119,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     = (StaggeredGridLayoutManager.LayoutParams) ((FootHolder) viewHolder).rlayout.getLayoutParams();
             clp.setFullSpan(true);
             if (listener != null){
+                //上拉加载更多
                 listener.onLoadMore();
             }
 
@@ -198,7 +199,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
     public int getItemCount() {
         return list == null?0:list.size();
     }
-    class ViewHolder extends RecyclerView.ViewHolder{
+    private class ViewHolder extends RecyclerView.ViewHolder{
         private SimpleDraweeView imageview;
         private TextView textView;
         public ViewHolder(View itemView) {
@@ -207,7 +208,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
             textView = itemView.findViewById(R.id.tv_home_des);
         }
     }
-    class HeadHolder extends RecyclerView.ViewHolder{
+    private class HeadHolder extends RecyclerView.ViewHolder{
         LinearLayout llayout;
         /*ViewPager viewpager;*/
         private Banner banner;
@@ -219,7 +220,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
             banner = itemView.findViewById(R.id.banner_head);
         }
     }
-    class FootHolder extends RecyclerView.ViewHolder{
+    private class FootHolder extends RecyclerView.ViewHolder{
         RelativeLayout rlayout;
         LinearLayout loadingLayout,finishLayout;
         public FootHolder(View itemView) {

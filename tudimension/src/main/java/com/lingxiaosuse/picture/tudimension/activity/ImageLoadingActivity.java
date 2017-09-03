@@ -2,13 +2,16 @@ package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lingxiaosuse.picture.tudimension.R;
@@ -42,8 +45,13 @@ public class ImageLoadingActivity extends AppCompatActivity {
     TextView textCurrent;
     @BindView(R.id.vp_image_load)
     ViewPager viewPager;
+    @BindView(R.id.tv_image_save)
+    TextView saveText;
+    @BindView(R.id.ll_loading)
+    LinearLayout linearLayout;
     private ArrayList<String> picList;
     private ImageLoadAdapter mAdapter;
+    private boolean isHot;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +68,13 @@ public class ImageLoadingActivity extends AppCompatActivity {
         mPosition = intent.getIntExtra("position",0);
         itemCount = intent.getIntExtra("itemCount",0);
         id = intent.getStringExtra("id");
+        isHot = intent.getBooleanExtra("isHot",false); //判断是否是hot界面
         picList = intent.getStringArrayListExtra("picList");
-        mAdapter = new ImageLoadAdapter(picList);
+
+        if(!isHot){
+            linearLayout.setBackgroundColor(Color.BLACK);
+        }
+        mAdapter = new ImageLoadAdapter(picList,isHot);
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mPosition);
         textCurrent.setText(mPosition+1+"/"+itemCount);

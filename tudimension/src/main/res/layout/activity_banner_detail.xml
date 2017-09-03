@@ -13,7 +13,9 @@
        >
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="450dp"
+            android:layout_height="430dp"
+            android:fitsSystemWindows="true"
+            app:titleEnabled="false"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/main_iv_placeholder"
@@ -22,104 +24,61 @@
                 app:progressBarImageScaleType="centerInside"
                 app:progressBarAutoRotateInterval="2000"
                 app:progressBarImage="@drawable/ic_loading_default"/>
-            <FrameLayout
-                android:id="@+id/main_fl_title"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="bottom|center_horizontal"
-                android:background="@color/colorPrimary"
-                app:layout_collapseMode="parallax">
-
-                <LinearLayout
-                    android:id="@+id/main_ll_title_container"
+                android:layout_height="40dp"
+                android:background="@drawable/gradient"
+                android:fitsSystemWindows="true"
+                 />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/main_tb_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="66dp"
+                app:layout_collapseMode="pin"
+                android:minHeight="?attr/actionBarSize"
+                android:fitsSystemWindows="true"
+                app:theme="@style/ThemeOverlay.AppCompat.Light">
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_gravity="center">
-
-                    <TextView
-                        android:id="@+id/tv_banner_message"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center"
-                        android:textColor="@android:color/white"
-                        android:textSize="25dp"/>
-                </LinearLayout>
-            </FrameLayout>
-        </android.support.design.widget.CollapsingToolbarLayout>
-    </android.support.design.widget.AppBarLayout>
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="none"
-        app:behavior_overlapTop="30dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            app:cardElevation="8dp"
-            app:contentPadding="16dp">
-            <ScrollView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-                </android.support.v7.widget.RecyclerView>
-            </ScrollView>
-        </android.support.v7.widget.CardView>
-
-    </android.support.v4.widget.NestedScrollView>
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/main_tb_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:background="@color/colorPrimary"
-        app:layout_anchor="@id/main_fl_title"
-        app:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" />
-            <RelativeLayout
-                android:layout_width="40dp"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:layout_marginTop="22dp">
+                    android:layout_marginTop="30dp"
+                    android:fitsSystemWindows="true">
                 <ImageView
-                    android:visibility="invisible"
                     android:id="@+id/iv_banner_back"
                     android:layout_width="40dp"
                     android:layout_height="25dp"
-                    android:layout_centerInParent="true"
                     android:src="@drawable/ic_back"
-                    />
-            </RelativeLayout>
-            <TextView
-                android:id="@+id/main_tv_title"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="8dp"
-                android:gravity="center_vertical"
-                android:text="@string/back_name"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:visibility="invisible"
-                android:layout_marginTop="22dp"/>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.Toolbar>
+                    android:layout_centerVertical="true"/>
+                    <TextView
+                        android:id="@+id/tv_banner_title"
+                        android:layout_toRightOf="@id/iv_banner_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="title"
+                        android:textSize="18sp"
+                        android:textColor="#fff"
+                        android:layout_marginLeft="5dp"
+                        android:maxLines="1"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+            </android.support.v7.widget.Toolbar>
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="8dp"
+            app:cardElevation="8dp"
+            app:contentPadding="16dp"
+            android:focusable="false"
+            android:scrollbars="none"
+            app:behavior_overlapTop="120dp"
+            android:fitsSystemWindows="true"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+        </android.support.v7.widget.CardView>
 </android.support.design.widget.CoordinatorLayout>

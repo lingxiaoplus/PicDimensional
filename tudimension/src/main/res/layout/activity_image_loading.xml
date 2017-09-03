@@ -5,12 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#000"
-    tools:context="com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity">
+    android:id="@+id/ll_loading"
+    >
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="22dp">
+        >
         <android.support.v4.view.ViewPager
             android:id="@+id/vp_image_load"
             android:layout_width="match_parent"
@@ -20,6 +20,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:layout_marginTop="22dp"
             android:background="@drawable/ic_trans_background"
             >
             <ImageView

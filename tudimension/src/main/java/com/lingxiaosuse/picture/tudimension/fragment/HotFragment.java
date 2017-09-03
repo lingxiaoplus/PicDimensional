@@ -140,6 +140,7 @@ public class HotFragment extends BaseFragment{
                 intent.putExtra("itemCount",mAdapter.getItemCount());
                 intent.putExtra("id",previsList.get(position).get_id());
                 intent.putStringArrayListExtra("picList",picUrlList);
+                intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
                 startActivity(intent);
             }
         });
