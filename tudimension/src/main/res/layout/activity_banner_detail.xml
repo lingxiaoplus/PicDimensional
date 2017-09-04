@@ -39,16 +39,20 @@
                 android:fitsSystemWindows="true"
                 app:theme="@style/ThemeOverlay.AppCompat.Light">
                 <RelativeLayout
+                    android:id="@+id/rl_banner_back"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:fitsSystemWindows="true">
+                    android:fitsSystemWindows="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    >
                 <ImageView
                     android:id="@+id/iv_banner_back"
                     android:layout_width="40dp"
                     android:layout_height="25dp"
                     android:src="@drawable/ic_back"
-                    android:layout_centerVertical="true"/>
+                    android:layout_centerVertical="true"
+                    />
                     <TextView
                         android:id="@+id/tv_banner_title"
                         android:layout_toRightOf="@id/iv_banner_back"

@@ -20,6 +20,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -73,6 +74,9 @@ public class BannerDetailActivity extends BaseActivity {
 
     @BindView(R.id.rv_banner)
     RecyclerView recyclerView;
+
+    @BindView(R.id.rl_banner_back)
+    RelativeLayout relativeLayout;
     private RecyclerView.LayoutManager mLayoutManager;
     private BannerRecycleAdapter mAdapter;
 
@@ -115,7 +119,7 @@ public class BannerDetailActivity extends BaseActivity {
         getDataFromServere(type,id,false);
         mTbToolbar.setTitle("");
         textTitle.setText(title);
-        imageBack.setOnClickListener(new View.OnClickListener() {
+        relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -151,7 +155,11 @@ public class BannerDetailActivity extends BaseActivity {
                         mAdapter.setRefreshListener(new BannerRecycleAdapter.onLoadmoreListener() {
                             @Override
                             public void onLoadMore(int position) {
-                                getDataFromServere(type,id,true);
+                                if (picList.size()<30){
+                                    mAdapter.isFinish(true);
+                                }else {
+                                    getDataFromServere(type,id,true);
+                                }
                             }
                         });
                         mAdapter.setOnItemClickListener(new BannerRecycleAdapter.OnItemClickListener() {
