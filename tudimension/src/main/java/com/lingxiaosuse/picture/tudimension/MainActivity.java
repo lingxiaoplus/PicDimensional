@@ -2,58 +2,34 @@ package com.lingxiaosuse.picture.tudimension;
 
 import android.Manifest;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.GridView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.gson.GsonBuilder;
+import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.BaseActivity;
-import com.lingxiaosuse.picture.tudimension.adapter.GridCategoryAdapter;
-import com.lingxiaosuse.picture.tudimension.adapter.MyRecycleViewAdapter;
+import com.lingxiaosuse.picture.tudimension.activity.SettingsActivity;
 import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
-import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
-import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
-import com.lingxiaosuse.picture.tudimension.retrofit.CategoryInterface;
-import com.lingxiaosuse.picture.tudimension.retrofit.HomePageInterface;
 import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
-import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-
-import java.security.PrivateKey;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends BaseActivity {
     @BindView(R.id.tab_main)
     TabLayout tabLayout;
     @BindView(R.id.vp_main)
     ViewPager viewPager;
+    @BindView(R.id.toolbar_main)
+    Toolbar toolbar;
     private String[] tabStr = new String[]{"推荐","分类","最新","专辑"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +79,7 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+        setSupportActionBar(toolbar);
     }
 
     class MainPageAdapter extends FragmentPagerAdapter{
@@ -128,5 +105,27 @@ public class MainActivity extends BaseActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         PremessionUtils.onRequestPermissionsResult(requestCode,permissions,grantResults);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_support:
+                ToastUtils.show("捐赠与支持");
+                break;
+            case R.id.menu_setting:
+                StartActivity(SettingsActivity.class,false);
+                break;
+            case R.id.menu_about:
+                StartActivity(AboutActivity.class,false);
+                break;
+        }
+        return true;
     }
 }

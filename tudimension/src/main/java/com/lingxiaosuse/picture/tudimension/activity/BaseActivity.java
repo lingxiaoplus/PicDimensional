@@ -1,5 +1,6 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -30,5 +31,12 @@ public class BaseActivity extends AppCompatActivity{
     protected void onDestroy() {
         super.onDestroy();
         ActivityController.removeActivity(this);
+    }
+
+    public void StartActivity(Class clzz,boolean isFinish){
+        startActivity(new Intent(getApplicationContext(),clzz));
+        if (isFinish){
+            finish();
+        }
     }
 }
