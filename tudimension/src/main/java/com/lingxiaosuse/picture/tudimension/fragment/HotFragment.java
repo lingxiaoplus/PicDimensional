@@ -16,6 +16,7 @@ import com.google.gson.GsonBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.HotRecycleAdapter;
+import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.modle.HotModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.HomePageInterface;
@@ -142,7 +143,7 @@ public class HotFragment extends BaseFragment{
         return view;
     }
     private void getData(int current,int page){
-        HttpUtils.doGet("http://gank.io/api/data/%E7%A6%8F%E5%88%A9/"+current+"/"+page,
+        HttpUtils.doGet(ContentValue.GANKURL+current+"/"+page,
                 new okhttp3.Callback() {
             @Override
             public void onFailure(okhttp3.Call call, IOException e) {

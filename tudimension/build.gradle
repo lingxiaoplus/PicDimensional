@@ -24,10 +24,12 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    compile files('libs/MobCommons-2017.0412.1554.jar')
+    //捐赠
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'org.zackratos:ultimatebar:1.0.3'
@@ -47,6 +49,8 @@ dependencies {
     compile 'com.liuguangqiang.cookie:library:0.2'
     compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support:support-vector-drawable:26.+'
+    compile 'com.github.didikee:AndroidDonate:0.1.0'
     testCompile 'junit:junit:4.12'
+    compile 'agency.tango.android:material-intro-screen:0.0.5'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

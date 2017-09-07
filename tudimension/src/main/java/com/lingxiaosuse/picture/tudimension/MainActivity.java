@@ -1,6 +1,12 @@
 package com.lingxiaosuse.picture.tudimension;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.didikee.donate.AlipayDonate;
+import android.didikee.donate.WeiXinDonate;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -19,6 +25,9 @@ import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
 import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
+
+import java.io.File;
+import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -117,7 +126,7 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_support:
-                ToastUtils.show("捐赠与支持");
+                showDialog();
                 break;
             case R.id.menu_setting:
                 StartActivity(SettingsActivity.class,false);
@@ -127,5 +136,50 @@ public class MainActivity extends BaseActivity {
                 break;
         }
         return true;
+    }
+
+    private void showDialog() {
+        String[] items = {"支付宝", "微信"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("感谢各位大佬的捐赠~");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (i == 0){
+                    ToastUtils.show("支付宝");
+                    donateAlipay("FKX014647ZUX0IO5DJW109");
+                }else {
+                    ToastUtils.show("请从相册中选择第一张二维码");
+                    donateWeixin();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * 支付宝支付
+     * @param payCode 收款码后面的字符串；例如：收款二维码里面的字符串为 https://qr.alipay.com/stx00187oxldjvyo3ofaw60 ，则
+     *                payCode = stx00187oxldjvyo3ofaw60
+     *                注：不区分大小写
+     *                FKX014647ZUX0IO5DJW109
+     */
+    private void donateAlipay(String payCode) {
+        boolean hasInstalledAlipayClient = AlipayDonate.hasInstalledAlipayClient(this);
+        if (hasInstalledAlipayClient) {
+            AlipayDonate.startAlipayClient(this, payCode);
+        }
+    }
+
+    /**
+     * 需要提前准备好 微信收款码 照片，可通过微信客户端生成
+     */
+    private void donateWeixin() {
+        InputStream weixinQrIs = getResources().openRawResource(R.raw.ic_wechat_pay);
+        String qrPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "AndroidDonateSample" + File.separator +
+                "lingxiao_weixin.png";
+        WeiXinDonate.saveDonateQrImage2SDCard(qrPath, BitmapFactory.decodeStream(weixinQrIs));
+        WeiXinDonate.donateViaWeiXin(this, qrPath);
     }
 }

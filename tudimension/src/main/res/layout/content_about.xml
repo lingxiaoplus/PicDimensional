@@ -49,6 +49,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/text_margin"
+                    android:layout_gravity="center_vertical"
                     android:text="@string/large_text" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -72,6 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/text_margin"
+                    android:layout_gravity="center_vertical"
                     android:text="每日分享妹子图 和 技术干货，还有供大家中午休息的休闲视频" />
             </LinearLayout>
 
@@ -96,6 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/text_margin"
+                    android:layout_gravity="center_vertical"
                     android:text="连续5年关注手机美化，一键改变桌面锁屏" />
             </LinearLayout>
         </android.support.v7.widget.CardView>

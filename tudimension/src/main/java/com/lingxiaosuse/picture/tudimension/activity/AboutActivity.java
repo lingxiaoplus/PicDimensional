@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ import android.widget.TextView;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.liuguangqiang.cookie.CookieBar;
+import com.liuguangqiang.cookie.OnActionClickListener;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
@@ -53,8 +56,18 @@ public class AboutActivity extends BaseActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "点我干嘛？", Snackbar.LENGTH_LONG)
-                        .setAction("干", null).show();
+                new CookieBar.Builder(AboutActivity.this)
+                        .setTitle("恭喜")
+                        .setMessage("妹子向你发来一条消息")
+                        .setBackgroundColor(R.color.colorPrimary)
+                        .setIcon(R.drawable.ic_default_about)
+                        .setAction("点击回复", new OnActionClickListener() {
+                            @Override
+                            public void onClick() {
+                                ToastUtils.show("骗你的，你哪来的妹子");
+                            }
+                        })
+                        .show();
             }
         });
 
@@ -99,7 +112,11 @@ public class AboutActivity extends BaseActivity {
             case R.id.card_about_wallpaper:
                 break;
             case R.id.card_about_version:
-                ToastUtils.show("已经是最新版本");
+                new CookieBar.Builder(AboutActivity.this)
+                        .setTitle("恭喜")
+                        .setMessage("已经是最新版本了")
+                        .setBackgroundColor(R.color.colorPrimary)
+                        .show();
                 break;
             case R.id.card_about_gank:
                 ToastUtils.show("点击了干货集中营");
