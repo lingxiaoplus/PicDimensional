@@ -50,13 +50,14 @@
                 <TextView
                     android:id="@+id/tv_update_wifi"
                     style="@style/textMsg"
-                    android:text="WIFI情况下自动下载安装包"
+                    android:text="WIFI情况下自动检测更新"
                     android:layout_below="@id/tv_update"/>
                 <android.support.v7.widget.SwitchCompat
                     android:layout_alignParentRight="true"
                     android:id="@+id/switch_upload"
                     android:focusable="false"
                     android:clickable="false"
+                    android:checked="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"/>

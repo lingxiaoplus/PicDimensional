@@ -20,7 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             frecso:viewAspectRatio="2.25"
-            frecso:actualImageUri="@drawable/pic_item_list_default"/>
+            frecso:progressBarImageScaleType="centerInside"
+            frecso:progressBarAutoRotateInterval="2000"
+            frecso:progressBarImage="@drawable/ic_loading_default"/>
         <TextView
             android:id="@+id/tv_slideshow"
             android:layout_width="match_parent"

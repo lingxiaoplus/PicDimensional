@@ -3,10 +3,13 @@ package com.lingxiaosuse.picture.tudimension;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.IntentFilter;
 import android.didikee.donate.AlipayDonate;
 import android.didikee.donate.WeiXinDonate;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -15,16 +18,31 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.RotateAnimation;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
+import com.lingxiaosuse.picture.tudimension.activity.ActivityController;
 import com.lingxiaosuse.picture.tudimension.activity.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SettingsActivity;
 import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
+import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.receiver.NetworkReceiver;
+import com.lingxiaosuse.picture.tudimension.utils.AnimationUtils;
 import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
+import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
+import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.LeafLoadingView;
+import com.liuguangqiang.cookie.CookieBar;
 
 import java.io.File;
 import java.io.InputStream;
@@ -39,7 +57,27 @@ public class MainActivity extends BaseActivity {
     ViewPager viewPager;
     @BindView(R.id.toolbar_main)
     Toolbar toolbar;
+
     private String[] tabStr = new String[]{"推荐","分类","最新","专辑"};
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 2){
+                //默认是自动更新的
+                boolean isCheck = SpUtils
+                        .getBoolean(UIUtils.getContext(), ContentValue.IS_CHECK,true);
+                if (isCheck){
+
+                    checkUpdate();
+
+                }
+            }
+        }
+    };
+    private NetworkReceiver mNetworkChangeListener;
+    private View dialogView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +99,13 @@ public class MainActivity extends BaseActivity {
                         ToastUtils.show("获取权限失败");
                     }
                 });
+
+        mNetworkChangeListener = new NetworkReceiver(mHandler);
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        filter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
+        filter.addAction("android.net.wifi.STATE_CHANGE");
+        registerReceiver(mNetworkChangeListener,filter);
     }
 
     private void initView() {
@@ -181,5 +226,30 @@ public class MainActivity extends BaseActivity {
                 "lingxiao_weixin.png";
         WeiXinDonate.saveDonateQrImage2SDCard(qrPath, BitmapFactory.decodeStream(weixinQrIs));
         WeiXinDonate.donateViaWeiXin(this, qrPath);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mNetworkChangeListener != null){
+            unregisterReceiver(mNetworkChangeListener);
+        }
+    }
+
+    long preTime = 0;
+    @Override
+    public void onBackPressed() {
+        long nowTime = System.currentTimeMillis();
+        if (nowTime - preTime > 2000){
+            new CookieBar.Builder(this)
+                    .setTitle("提示")
+                    .setMessage("再按一次退出软件")
+                    .setBackgroundColor(R.color.colorPrimary)
+                    .setLayoutGravity(Gravity.BOTTOM)
+                    .show();
+            preTime = nowTime;
+        }else {
+            ActivityController.finishAll();
+        }
     }
 }

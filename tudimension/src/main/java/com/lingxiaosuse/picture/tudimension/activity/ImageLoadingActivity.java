@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
@@ -126,6 +127,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
                         .show();
             }
         });
+
     }
 
     public String saveBitmapFile(Bitmap bitmap){
@@ -158,6 +160,16 @@ public class ImageLoadingActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(this.getContentResolver(),
+                    file.getAbsolutePath(), file.getName(), null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        // 最后通知图库更新
+        UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                Uri.fromFile(new File(file.getPath()))));
         return msg;
     }
 }

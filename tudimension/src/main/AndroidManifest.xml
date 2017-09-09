@@ -21,6 +21,8 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
     <application
         android:name=".global.MyApplication"
         android:allowBackup="true"
@@ -47,57 +49,21 @@
             android:label="@string/title_activity_about"
             android:theme="@style/MyMainTheme" />
         <activity android:name=".activity.SettingsActivity" />
-        <!-- sharesdk -->
-        <activity
-            android:name="com.mob.tools.MobUIShell"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize">
-            <intent-filter>
-                <data android:scheme="tencent100371282" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <!-- 调用新浪原生SDK，需要注册的回调activity -->
-            <intent-filter>
-                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-
-            <!-- 集成line客户端登录授权，需要添如下格式的过滤器 -->
-            <intent-filter>
-                <data android:scheme="line.1477692153" />
-
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <!-- 微信分享回调 -->
-        <activity
-            android:name="wxapi.WXEntryActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!-- 填写您从Mob开发者后台中得到的Appkey和AppSecret -->
-        <meta-data
-            android:name="Mob-AppKey"
-            android:value="20c16dcadb96a" />
-        <meta-data
-            android:name="Mob-AppSecret"
-            android:value="beea058763881748987744fad7d67499" />
-
         <activity android:name=".activity.IndicatorActivity"
             android:theme="@style/Theme.Intro">
 
         </activity>
+        <receiver android:name=".receiver.NetworkReceiver"></receiver>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.lingxiaosuse.picture.tudimension.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <!--元数据-->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
     </application>
 
 </manifest>

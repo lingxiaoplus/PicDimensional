@@ -13,7 +13,9 @@ import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.HotModle;
+import com.lingxiaosuse.picture.tudimension.modle.VersionModle;
 import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
+import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import org.zackratos.ultimatebar.UltimateBar;
@@ -34,6 +36,7 @@ public class SplashActivity extends BaseActivity {
     private List<HotModle.ResultsBean> resultList;
     @BindView(R.id.splash_image)
     SimpleDraweeView draweeView;
+    private boolean isFirst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,18 +45,25 @@ public class SplashActivity extends BaseActivity {
         ButterKnife.bind(this);
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();
+        isFirst = SpUtils.getBoolean(this, ContentValue.ISFIRST_KEY,true);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        HttpUtils.doGet(ContentValue.GANKURL + "10/1", new Callback() {
+        chcekVersion();
+        HttpUtils.doGet(ContentValue.GANKURL + "30/1", new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 UIUtils.runOnUIThread(new Runnable() {
                     @Override
                     public void run() {
-                        StartActivity(IndicatorActivity.class,true);
+                        if (isFirst){
+                            StartActivity(IndicatorActivity.class,true);
+                        }else {
+                            StartActivity(MainActivity.class,true);
+                        }
+
                     }
                 });
             }
@@ -96,13 +106,13 @@ public class SplashActivity extends BaseActivity {
                    （第五个参数，第六个参数），（第七个参数,第八个参数）是用来指定缩放的中心点
                     0.5f代表从中心缩放
              */
-        ScaleAnimation scaleAnimation = new ScaleAnimation(1,1.5f,1,1.5f,
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1f,1.05f,1f,1.05f,
                 Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
         //3秒完成动画
         scaleAnimation.setDuration(3000);
-        scaleAnimation.setFillAfter(true);
         //将AlphaAnimation这个已经设置好的动画添加到 AnimationSet中
         animationSet.addAnimation(scaleAnimation);
+        animationSet.setFillAfter(true);
         //启动动画
         draweeView.startAnimation(animationSet);
         scaleAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -113,12 +123,37 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                StartActivity(IndicatorActivity.class,true);
+                if (isFirst){
+                    StartActivity(IndicatorActivity.class,true);
+                }else {
+                    StartActivity(MainActivity.class,true);
+                }
             }
 
             @Override
             public void onAnimationRepeat(Animation animation) {
 
+            }
+        });
+    }
+
+    /**
+     *从服务器获取版本信息并保存
+     */
+    private void chcekVersion(){
+        HttpUtils.doGet(ContentValue.UPDATEURL, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String result = response.body().string();
+                Gson gson = new Gson();
+                VersionModle modle = gson.fromJson(result, VersionModle.class);
+                SpUtils.putInt(UIUtils.getContext(),ContentValue.VERSION_CODE,modle.getVersionCode());
+                SpUtils.putString(UIUtils.getContext(),ContentValue.VERSION_DES,modle.getVersionDes());
+                SpUtils.putString(UIUtils.getContext(),ContentValue.DOWNLOAD_URL,modle.getDownloadUrl());
             }
         });
     }

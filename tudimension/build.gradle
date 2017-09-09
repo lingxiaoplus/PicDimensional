@@ -17,8 +17,22 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            //清除无用代码 true
+            // code shrinking需要结合ProGuard使用，添加minifyEnabled true在你的build.gradle文件中。
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions{
+        checkReleaseBuilds false
+        abortOnError false
+    }
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'x86', 'armeabi-v7a', 'mips'
+            universalApk true
         }
     }
 }
@@ -28,7 +42,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile files('libs/MobCommons-2017.0412.1554.jar')
     //捐赠
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
@@ -52,5 +65,7 @@ dependencies {
     compile 'com.github.didikee:AndroidDonate:0.1.0'
     testCompile 'junit:junit:4.12'
     compile 'agency.tango.android:material-intro-screen:0.0.5'
+    compile 'com.tencent.bugly:crashreport:latest.release'
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

@@ -5,9 +5,7 @@
     <color name="colorPrimaryDark">#4CAF50</color>
     <color name="colorAccent">#ff4081</color>
 
-    <color name="colorGray">#AAAAAAAA</color>
     <color name="colorWhite">#11111111</color>
-    <color name="colorTrans">#01000000</color>
 
     <!--涟漪效果颜色-->
     <color name="grey">#AAAAAA</color>

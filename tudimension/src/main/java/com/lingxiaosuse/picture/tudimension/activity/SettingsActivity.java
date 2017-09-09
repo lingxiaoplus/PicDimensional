@@ -1,5 +1,6 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,13 +13,15 @@ import android.widget.TextView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
+import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.text.DecimalFormat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 public class SettingsActivity extends BaseActivity {
     @BindView(R.id.toolbar_setting)
@@ -36,6 +39,13 @@ public class SettingsActivity extends BaseActivity {
         ButterKnife.bind(this);
         initToolbar();
         getCacheSize();
+        boolean isCheck = SpUtils.getBoolean(this,ContentValue.IS_CHECK,true);
+        switchCompat.setChecked(isCheck);
+        if (switchCompat.isChecked()){
+            textWifi.setText("WIFI情况下自动检测更新");
+        }else {
+            textWifi.setText("WIFI情况下不检测更新");
+        }
     }
 
     private void getCacheSize() {
@@ -69,10 +79,11 @@ public class SettingsActivity extends BaseActivity {
             case R.id.rl_update:
                 switchCompat.setChecked(!switchCompat.isChecked());
                 if (switchCompat.isChecked()){
-                    textWifi.setText("WIFI情况下自动下载安装包");
+                    textWifi.setText("WIFI情况下自动检测更新");
                 }else {
-                    textWifi.setText("WIFI情况下不自动下载安装包");
+                    textWifi.setText("WIFI情况下不检测更新");
                 }
+                SpUtils.putBoolean(UIUtils.getContext(), ContentValue.IS_CHECK,switchCompat.isChecked());
                 break;
             case R.id.rl_clear:
                 clearCache();
@@ -118,27 +129,10 @@ public class SettingsActivity extends BaseActivity {
         imagePipeline.clearCaches();
     }
 
-    private void showShare() {
-        OnekeyShare oks = new OnekeyShare();
-        //关闭sso授权
-        oks.disableSSOWhenAuthorize();
-        // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间等使用
-        oks.setTitle("图次元");
-        // titleUrl是标题的网络链接，QQ和QQ空间等使用
-        oks.setTitleUrl("http://sharesdk.cn");
-        // text是分享文本，所有平台都需要这个字段
-        oks.setText("致力于向汉子们分享妹子");
-        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-        //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
-        // url仅在微信（包括好友和朋友圈）中使用
-        oks.setUrl("http://sharesdk.cn");
-        // comment是我对这条分享的评论，仅在人人网和QQ空间使用
-        oks.setComment("我是测试评论文本");
-        // site是分享此内容的网站名称，仅在QQ空间使用
-        oks.setSite(getString(R.string.app_name));
-        // siteUrl是分享此内容的网站地址，仅在QQ空间使用
-        oks.setSiteUrl("http://sharesdk.cn");
-        // 启动分享GUI
-        oks.show(this);
+    private void showShare(){
+        Intent textIntent = new Intent(Intent.ACTION_SEND);
+        textIntent.setType("text/plain");
+        textIntent.putExtra(Intent.EXTRA_TEXT, "我发现了一个不得了的应用：http://tudimension-1252348761.coscd.myqcloud.com/version/tudimension-armeabi-v7a-release.apk");
+        startActivity(Intent.createChooser(textIntent, "分享"));
     }
 }

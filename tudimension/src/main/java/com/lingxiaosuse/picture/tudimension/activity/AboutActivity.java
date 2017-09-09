@@ -45,6 +45,7 @@ public class AboutActivity extends BaseActivity {
     @BindView(R.id.fab)
     FloatingActionButton fab;
     private PackageManager mPmanager;
+    private View dialogView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,11 +113,14 @@ public class AboutActivity extends BaseActivity {
             case R.id.card_about_wallpaper:
                 break;
             case R.id.card_about_version:
-                new CookieBar.Builder(AboutActivity.this)
-                        .setTitle("恭喜")
-                        .setMessage("已经是最新版本了")
-                        .setBackgroundColor(R.color.colorPrimary)
-                        .show();
+                dialogView = UIUtils.inflate(R.layout.dialog_download);
+                if (!checkUpdate()){
+                    new CookieBar.Builder(AboutActivity.this)
+                            .setTitle("恭喜")
+                            .setMessage("已经是最新版本了")
+                            .setBackgroundColor(R.color.colorPrimary)
+                            .show();
+                }
                 break;
             case R.id.card_about_gank:
                 ToastUtils.show("点击了干货集中营");
