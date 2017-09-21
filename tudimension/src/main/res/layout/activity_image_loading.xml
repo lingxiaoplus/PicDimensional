@@ -40,17 +40,24 @@
                 android:textColor="#fff"
                 android:layout_centerInParent="true"
                 android:text="123"/>
-            <TextView
-                android:id="@+id/tv_image_save"
+            <ImageView
+                android:id="@+id/iv_image_save"
                 android:layout_centerInParent="true"
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="保存"
-                android:textColor="#fff"
                 android:layout_margin="10dp"
-                android:textSize="16sp"
+                app:srcCompat="@drawable/ic_img_save"
                 android:background="?android:attr/selectableItemBackground"/>
+            <ImageView
+                android:id="@+id/iv_img_share"
+                android:layout_toLeftOf="@id/iv_image_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_img_share"
+                android:layout_centerInParent="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:layout_marginRight="5dp"/>
         </RelativeLayout>
 
     </FrameLayout>

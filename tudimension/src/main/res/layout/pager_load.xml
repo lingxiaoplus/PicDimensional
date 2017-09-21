@@ -9,7 +9,7 @@
         android:id="@+id/simple_pager_load"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        fresco:viewAspectRatio="1.33"
+        fresco:viewAspectRatio="1.2"
         fresco:progressBarImageScaleType="centerInside"
         fresco:progressBarAutoRotateInterval="2000"
         fresco:progressBarImage="@drawable/ic_loading_default"/>

@@ -23,6 +23,8 @@
         app:tabBackground="@color/colorPrimary"
         android:foreground="?android:attr/selectableItemBackground"
         app:tabIndicatorColor="@color/colorAccent"
+        app:tabTextColor="#fff"
+        app:tabSelectedTextColor="@color/colorAccent"
         >
     </android.support.design.widget.TabLayout>
     <android.support.v4.view.ViewPager

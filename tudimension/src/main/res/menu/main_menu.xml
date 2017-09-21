@@ -7,6 +7,11 @@
         app:showAsAction="never"
         />
     <item
+        android:id="@+id/menu_download"
+        android:title="查看下载图片"
+        app:showAsAction="never"
+        />
+    <item
         android:id="@+id/menu_setting"
         android:title="设置"
         app:showAsAction="never"

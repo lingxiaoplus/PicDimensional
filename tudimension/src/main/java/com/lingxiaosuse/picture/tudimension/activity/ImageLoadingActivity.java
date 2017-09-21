@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,6 +20,7 @@ import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.ImageLoadAdapter;
 import com.lingxiaosuse.picture.tudimension.transformer.DepthPageTransformer;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadImgUtils;
+import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.liuguangqiang.cookie.CookieBar;
@@ -46,13 +48,14 @@ public class ImageLoadingActivity extends AppCompatActivity {
     TextView textCurrent;
     @BindView(R.id.vp_image_load)
     ViewPager viewPager;
-    @BindView(R.id.tv_image_save)
-    TextView saveText;
+    @BindView(R.id.iv_image_save)
+    ImageView saveImg;
     @BindView(R.id.ll_loading)
     LinearLayout linearLayout;
     private ArrayList<String> picList;
     private ImageLoadAdapter mAdapter;
     private boolean isHot;
+    private File file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +107,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
     public void imageBack(){
         finish();
     }
-    @OnClick(R.id.tv_image_save)
+    @OnClick(R.id.iv_image_save)
     public void imageSave(final View view){
         ToastUtils.show("正在下载中...");
         DownloadImgUtils.downLoadImg(Uri.parse(picList.get(mPosition)), new DownloadImgUtils.OnDownloadListener() {
@@ -127,7 +130,28 @@ public class ImageLoadingActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
 
+    //分享图片
+    @OnClick(R.id.iv_img_share)
+    public void shareImg(){
+        DownloadImgUtils.downLoadImg(Uri.parse(picList.get(mPosition)), new DownloadImgUtils.OnDownloadListener(){
+
+            @Override
+            public void onDownloadSuccess(Bitmap bitmap) {
+                saveBitmapFile(bitmap);
+                Intent shareImgIntent = new Intent(Intent.ACTION_SEND);
+                shareImgIntent.setType("image/*");
+                Uri u = Uri.fromFile(file);
+                shareImgIntent.putExtra(Intent.EXTRA_STREAM, u);
+                startActivity(shareImgIntent);
+            }
+
+            @Override
+            public void onDownloadFailed(String errormsg) {
+
+            }
+        });
     }
 
     public String saveBitmapFile(Bitmap bitmap){
@@ -139,7 +163,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
         if (!fileDir.exists() || fileDir.isFile()){
             fileDir.mkdirs();
         }
-        File file = new File(path+"/"+id+mPosition+".jpg");
+        file = new File(path+"/"+id+mPosition+".jpg");
         if (file.exists()){
             msg = "图片已经保存了！";
             return msg;

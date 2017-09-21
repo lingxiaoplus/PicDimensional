@@ -21,6 +21,7 @@ import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.HomePageInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.WaveLoading;
 
 import java.util.ArrayList;
 
@@ -36,7 +37,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecommendFragment extends BaseFragment{
     private RecyclerView recycleView;
-    private ProgressBar progressBar;
+    private WaveLoading waveLoading;
     private SwipeRefreshLayout swipeLayout;
     private MyRecycleViewAdapter adapter;
     private ArrayList<HomePageModle.HomeImg> slidePage;
@@ -55,7 +56,7 @@ public class RecommendFragment extends BaseFragment{
         View view = View.inflate(UIUtils.getContext(), R.layout.fragment_recommend,null);
         recycleView = view.findViewById(R.id.rv_main);
         swipeLayout = view.findViewById(R.id.sl_main);
-        progressBar = view.findViewById(R.id.pb_main);
+        waveLoading = view.findViewById(R.id.pb_main);
         //设置item之间的间隔
         SpaceItemDecoration space = new SpaceItemDecoration(10);
         recycleView.addItemDecoration(space);
@@ -103,7 +104,6 @@ public class RecommendFragment extends BaseFragment{
                                 slideList.add(homeDesList.get(j).value);
                             }
                         }
-                        progressBar.setVisibility(View.INVISIBLE);
                         adapter = new MyRecycleViewAdapter(picList,slideList,UIUtils.getContext());
                         // 错列网格布局
                         recycleView.setHasFixedSize(true);      //设置固定大小
@@ -157,6 +157,8 @@ public class RecommendFragment extends BaseFragment{
                                 startActivity(intent);
                             }
                         });
+
+                        waveLoading.setVisibility(View.INVISIBLE);
                     }
 
                     @Override

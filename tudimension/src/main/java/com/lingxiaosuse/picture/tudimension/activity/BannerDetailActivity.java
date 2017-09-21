@@ -134,7 +134,7 @@ public class BannerDetailActivity extends BaseActivity {
         RetrofitHelper
                 .getInstance(this)
                 .getInterface(BannerInterface.class)
-                .bannerModle(type,id,30,skip,false)
+                .bannerModle(type,id,30,skip,false,"hot")
                 .enqueue(new Callback<BannerModle>() {
                     @Override
                     public void onResponse(Call<BannerModle> call, Response<BannerModle> response) {

@@ -8,6 +8,7 @@ import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -15,6 +16,7 @@ import com.facebook.imagepipeline.core.ImagePipeline;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.text.DecimalFormat;
@@ -32,6 +34,11 @@ public class SettingsActivity extends BaseActivity {
     TextView clearSize;
     @BindView(R.id.tv_update_wifi)
     TextView textWifi;
+
+    @BindView(R.id.tv_daily_switch)
+    TextView textDaily;  //启动页面的图片
+    @BindView(R.id.switch_daily)
+    SwitchCompat switchDaily;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +52,14 @@ public class SettingsActivity extends BaseActivity {
             textWifi.setText("WIFI情况下自动检测更新");
         }else {
             textWifi.setText("WIFI情况下不检测更新");
+        }
+
+        boolean isCheck1 = SpUtils.getBoolean(this,ContentValue.IS_OPEN_DAILY,true);
+        switchDaily.setChecked(isCheck1);
+        if (switchDaily.isChecked()){
+            textDaily.setText("开启启动页每日图片");
+        }else {
+            textDaily.setText("关闭启动页每日图片");
         }
     }
 
@@ -73,7 +88,7 @@ public class SettingsActivity extends BaseActivity {
         }
         return true;
     }
-    @OnClick({R.id.rl_update,R.id.rl_clear,R.id.rl_share})
+    @OnClick({R.id.rl_update,R.id.rl_clear,R.id.rl_share,R.id.rl_checkout,R.id.rl_daily})
     public void onClick(View view){
         switch (view.getId()){
             case R.id.rl_update:
@@ -91,6 +106,20 @@ public class SettingsActivity extends BaseActivity {
                 break;
             case R.id.rl_share:
                 showShare();
+                break;
+            case R.id.rl_checkout:
+                //换肤
+                ToastUtils.show("更换皮肤");
+                break;
+            case R.id.rl_daily:
+                switchDaily.setChecked(!switchDaily.isChecked());
+                if (switchDaily.isChecked()){
+                    textDaily.setText("开启启动页每日图片");
+                }else {
+                    textDaily.setText("关闭启动页每日图片");
+                }
+                SpUtils.putBoolean(UIUtils.getContext(),
+                        ContentValue.IS_OPEN_DAILY,switchDaily.isChecked());
                 break;
         }
     }

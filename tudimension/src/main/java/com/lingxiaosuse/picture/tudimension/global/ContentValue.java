@@ -1,5 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.global;
 
+import android.os.Environment;
+
 /**
  * Created by lingxiao on 2017/9/1.
  */
@@ -19,7 +21,15 @@ public class ContentValue {
 
     //是否自动检测更新
     public static String IS_CHECK = "is_check";
+    //是否开启日图
+    public static String IS_OPEN_DAILY ="is_open_daily";
     //
     //干货集中营api
     public static String GANKURL = "http://gank.io/api/data/%E7%A6%8F%E5%88%A9/";
+
+
+    //保存的图片路径
+    public static String PATH = Environment
+            .getExternalStorageDirectory()
+            .getAbsolutePath() + "/tudimension";
 }

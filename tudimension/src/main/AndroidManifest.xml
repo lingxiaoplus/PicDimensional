@@ -20,7 +20,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
     <uses-permission android:name="android.permission.READ_LOGS" />
 
     <application
@@ -31,8 +30,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyMainTheme">
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,21 +47,26 @@
             android:label="@string/title_activity_about"
             android:theme="@style/MyMainTheme" />
         <activity android:name=".activity.SettingsActivity" />
-        <activity android:name=".activity.IndicatorActivity"
-            android:theme="@style/Theme.Intro">
+        <activity
+            android:name=".activity.IndicatorActivity"
+            android:theme="@style/Theme.Intro" />
 
-        </activity>
-        <receiver android:name=".receiver.NetworkReceiver"></receiver>
+        <receiver android:name=".receiver.NetworkReceiver" />
+
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.lingxiaosuse.picture.tudimension.fileprovider"
-            android:grantUriPermissions="true"
-            android:exported="false">
-            <!--元数据-->
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <!-- 元数据 -->
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_path" />
         </provider>
+
+        <activity android:name=".activity.SeeDownLoadImgActivity" />
+        <activity android:name=".activity.LocalImgActivity"></activity>
     </application>
 
 </manifest>
