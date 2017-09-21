@@ -3,7 +3,7 @@ picture dimensional
 
 主要用到的框架是现在流行的retrofit+rxjava+rxandroid
 
-##V1.0
+## V1.0
 
 1.图片查看和下载
 
@@ -11,7 +11,7 @@ picture dimensional
 
 3.首页轮播图
 
-##V1.1
+## V1.1
 
 1.启动页面增加开关，如果不想显示可以关闭
 
@@ -22,7 +22,7 @@ picture dimensional
 4.图片详情界面可以分享了
 
 
-##用到的开源库
+## 用到的开源库
 强大的图片加载框架   [fresco](https://www.fresco-cn.org/docs/getting-started.html)
 
 android轮播图控件    [banner](https://github.com/youth5201314/banner)
