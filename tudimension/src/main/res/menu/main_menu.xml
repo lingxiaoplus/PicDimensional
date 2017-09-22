@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
+        android:id="@+id/menu_search"
+        android:title="搜索"
+        android:icon="@drawable/ic_img_search"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/menu_support"
         android:title="捐赠与支持"
         app:showAsAction="never"

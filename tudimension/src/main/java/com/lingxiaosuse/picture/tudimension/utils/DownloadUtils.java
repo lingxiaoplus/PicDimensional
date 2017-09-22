@@ -39,13 +39,13 @@ public class DownloadUtils {
      * @param saveDir 储存下载文件的SDCard目录
      * @param listener 下载监听
      */
-    public void download(final String url, final String saveDir, final OnDownloadListener listener) {
+    public void download(final boolean isImg,final String url, final String saveDir, final OnDownloadListener listener) {
         Request request = new Request.Builder().url(url).build();
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 // 下载失败
-                listener.onDownloadFailed();
+                listener.onDownloadFailed(e.toString());
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -57,9 +57,14 @@ public class DownloadUtils {
                 String savePath = isExistDir(saveDir);
                 isExistFile(saveDir,url);
                 try {
+                    File file;
                     is = response.body().byteStream();
                     long total = response.body().contentLength();
-                    File file = new File(savePath, getNameFromUrl(url));
+                    if (isImg){
+                        file = new File(savePath, getNameFromUrl(url)+".jpg");
+                    }else {
+                        file = new File(savePath, getNameFromUrl(url));
+                    }
                     fos = new FileOutputStream(file);
                     long sum = 0;
                     while ((len = is.read(buf)) != -1) {
@@ -83,7 +88,7 @@ public class DownloadUtils {
                         if (fos != null)
                             fos.close();
                     } catch (IOException e) {
-                        listener.onDownloadFailed();
+                        listener.onDownloadFailed(e.toString());
                         Log.i("code", "onResponse:下载失败 ");
                     }
                 }
@@ -146,6 +151,6 @@ public class DownloadUtils {
         /**
          * 下载失败
          */
-        void onDownloadFailed();
+        void onDownloadFailed(String error);
     }
 }

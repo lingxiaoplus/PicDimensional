@@ -110,7 +110,8 @@ public class ImageLoadingActivity extends AppCompatActivity {
     @OnClick(R.id.iv_image_save)
     public void imageSave(final View view){
         ToastUtils.show("正在下载中...");
-        DownloadImgUtils.downLoadImg(Uri.parse(picList.get(mPosition)), new DownloadImgUtils.OnDownloadListener() {
+        //下载大图片很容易失败
+        /*DownloadImgUtils.downLoadImg(Uri.parse(picList.get(mPosition)), new DownloadImgUtils.OnDownloadListener() {
             @Override
             public void onDownloadSuccess(Bitmap bitmap) {
                 String saveInfo = saveBitmapFile(bitmap);
@@ -128,6 +129,50 @@ public class ImageLoadingActivity extends AppCompatActivity {
                         .setMessage(s)
                         .setBackgroundColor(R.color.colorPrimary)
                         .show();
+            }
+        });*/
+        DownloadUtils.get().download(true, picList.get(mPosition), "tudimension", new DownloadUtils.OnDownloadListener() {
+            @Override
+            public void onDownloadSuccess(File file) {
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new CookieBar.Builder(ImageLoadingActivity.this)
+                                .setTitle("提示")
+                                .setMessage("下载成功")
+                                .setBackgroundColor(R.color.colorPrimary)
+                                .show();
+                    }
+                });
+                try {
+                    MediaStore.Images.Media.insertImage(UIUtils.getContext()
+                                    .getContentResolver(),
+                            file.getAbsolutePath(), file.getName(), null);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                // 最后通知图库更新
+                UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        Uri.fromFile(new File(file.getPath()))));
+            }
+
+            @Override
+            public void onDownloading(int progress) {
+
+            }
+
+            @Override
+            public void onDownloadFailed(final String error) {
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new CookieBar.Builder(ImageLoadingActivity.this)
+                                .setTitle("下载失败")
+                                .setMessage(error)
+                                .setBackgroundColor(R.color.colorPrimary)
+                                .show();
+                    }
+                });
             }
         });
     }

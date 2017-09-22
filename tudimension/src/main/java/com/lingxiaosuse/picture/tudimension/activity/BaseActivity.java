@@ -155,7 +155,7 @@ public class BaseActivity extends AppCompatActivity{
      *下载安装包
      */
     private void downLoadApk(String url) {
-        DownloadUtils.get().download(url, "download", new DownloadUtils.OnDownloadListener() {
+        DownloadUtils.get().download(false,url, "download", new DownloadUtils.OnDownloadListener() {
             @Override
             public void onDownloadSuccess(File file) {
                 UIUtils.runOnUIThread(new Runnable() {
@@ -174,11 +174,11 @@ public class BaseActivity extends AppCompatActivity{
             }
 
             @Override
-            public void onDownloadFailed() {
+            public void onDownloadFailed(final String error) {
                 UIUtils.runOnUIThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtils.show("下载失败");
+                        ToastUtils.show("下载失败"+error);
                     }
                 });
             }
