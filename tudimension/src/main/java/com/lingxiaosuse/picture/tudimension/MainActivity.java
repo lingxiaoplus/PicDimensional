@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.ActivityController;
 import com.lingxiaosuse.picture.tudimension.activity.BaseActivity;
+import com.lingxiaosuse.picture.tudimension.activity.SearchActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SeeDownLoadImgActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SettingsActivity;
 import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
@@ -182,6 +183,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.menu_download:
                 StartActivity(SeeDownLoadImgActivity.class,false);
+                break;
+            case R.id.menu_search:
+                StartActivity(SearchActivity.class,false);
                 break;
         }
         return true;

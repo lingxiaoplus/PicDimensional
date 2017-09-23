@@ -52,12 +52,7 @@ public class LocalImgActivity extends BaseActivity {
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mPosition);
 
-        setSupportActionBar(toolbar);
-        ActionBar actionBar =  getSupportActionBar();
-        if(actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+        setToolbarBack(toolbar);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -13,7 +13,9 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -201,5 +203,19 @@ public class BaseActivity extends AppCompatActivity{
             install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(install);
         }
+    }
+
+    /**
+     *设置toolbar的返回键
+     */
+    public void setToolbarBack(Toolbar toolbar){
+        setSupportActionBar(toolbar);
+        ActionBar actionBar =  getSupportActionBar();
+        if(actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+        }
+        toolbar.setTitle("");
+
     }
 }
