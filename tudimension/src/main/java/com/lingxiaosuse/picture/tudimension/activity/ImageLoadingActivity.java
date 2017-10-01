@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.ImageLoadAdapter;
+import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.transformer.DepthPageTransformer;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadImgUtils;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
@@ -200,9 +201,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
     }
 
     public String saveBitmapFile(Bitmap bitmap){
-        String path = Environment
-                .getExternalStorageDirectory()
-                .getAbsolutePath() + "/tudimension";
+        String path = ContentValue.PATH;
         String msg = "保存成功";
         File fileDir =new File(path);//将要保存图片的文件夹
         if (!fileDir.exists() || fileDir.isFile()){

@@ -7,7 +7,7 @@
     android:orientation="vertical"
     android:id="@+id/ll_loading"
     >
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
@@ -22,15 +22,17 @@
             android:layout_height="60dp"
             android:layout_marginTop="22dp"
             android:background="@drawable/ic_trans_background"
+            android:layout_alignParentBottom="true"
             >
             <ImageView
                 android:id="@+id/iv_image_back"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:layout_margin="10dp"
-                android:padding="5dp"
-                android:src="@drawable/ic_image_back"
-                android:background="?android:attr/selectableItemBackground"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                app:srcCompat="@drawable/ic_img_back"
+                android:layout_marginLeft="5dp"
+                android:layout_centerVertical="true"
+                android:background="@drawable/touchable_background"/>
             <TextView
                 android:id="@+id/tv_image_loading"
                 android:layout_toRightOf="@id/iv_image_back"
@@ -46,9 +48,10 @@
                 android:layout_alignParentRight="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
+                android:padding="7dp"
+                android:layout_marginRight="5dp"
                 app:srcCompat="@drawable/ic_img_save"
-                android:background="?android:attr/selectableItemBackground"/>
+                android:background="@drawable/touchable_background"/>
             <ImageView
                 android:id="@+id/iv_img_share"
                 android:layout_toLeftOf="@id/iv_image_save"
@@ -56,10 +59,11 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_img_share"
                 android:layout_centerInParent="true"
-                android:background="?android:attr/selectableItemBackground"
+                android:padding="10dp"
+                android:background="@drawable/touchable_background"
                 android:layout_marginRight="5dp"/>
         </RelativeLayout>
 
-    </FrameLayout>
+    </RelativeLayout>
 
 </LinearLayout>

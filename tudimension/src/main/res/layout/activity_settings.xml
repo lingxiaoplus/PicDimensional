@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:padding="10dp"
-                android:background="@drawable/touchable_background">
+                android:background="@drawable/touchable_background_normal">
                 <TextView
                     android:id="@+id/tv_update"
                     android:text="检查更新"
@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:padding="10dp"
-                android:background="@drawable/touchable_background">
+                android:background="@drawable/touchable_background_normal">
                 <TextView
                     android:id="@+id/tv_daily"
                     android:text="启动页面图片"
@@ -95,7 +95,7 @@
                 android:layout_margin="10dp"
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
-                android:background="@drawable/touchable_background">
+                android:background="@drawable/touchable_background_normal">
                 <TextView
                     android:id="@+id/tv_clear"
                     android:text="清理缓存"
@@ -136,7 +136,7 @@
                 android:layout_margin="10dp"
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
-                android:background="@drawable/touchable_background">
+                android:background="@drawable/touchable_background_normal">
                 <TextView
                     android:id="@+id/tv_share"
                     android:text="分享给好友"
@@ -154,7 +154,7 @@
                 android:layout_margin="10dp"
                 android:layout_marginTop="10dp"
                 android:padding="10dp"
-                android:background="@drawable/touchable_background">
+                android:background="@drawable/touchable_background_normal">
                 <TextView
                     android:id="@+id/tv_checkout"
                     android:text="换肤"

@@ -26,6 +26,8 @@
             android:layout_height="wrap_content"
             android:text="这是图片信息"
             android:textSize="16sp"
+            android:maxLines="2"
+            android:ellipsize="end"
             />
     </RelativeLayout>
 

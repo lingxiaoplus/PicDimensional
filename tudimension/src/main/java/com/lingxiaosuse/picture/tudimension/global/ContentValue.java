@@ -27,7 +27,10 @@ public class ContentValue {
     //干货集中营api
     public static String GANKURL = "http://gank.io/api/data/%E7%A6%8F%E5%88%A9/";
 
-
+    //安卓壁纸的baseurl
+    public static String BASE_URL = "http://service.picasso.adesk.com";
+    //安卓壁纸的搜索
+    public static String SEARCH_URL = "http://so.picasso.adesk.com";
     //保存的图片路径
     public static String PATH = Environment
             .getExternalStorageDirectory()

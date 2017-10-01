@@ -1,8 +1,10 @@
 package com.lingxiaosuse.picture.tudimension.retrofit;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.google.gson.GsonBuilder;
+import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -36,11 +38,12 @@ public class RetrofitHelper {
 
     private void resetApp() {
         mRetrofit = new Retrofit.Builder()
-                .baseUrl("http://service.picasso.adesk.com")
+                .baseUrl(ContentValue.BASE_URL)
                 .client(client)
                 .addConverterFactory(factory)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
+
     }
     public <T> T getInterface(Class<T> reqServer){
         return mRetrofit.create(reqServer);

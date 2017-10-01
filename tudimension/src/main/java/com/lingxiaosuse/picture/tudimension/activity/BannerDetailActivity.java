@@ -27,6 +27,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BannerRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MyRecycleViewAdapter;
+import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.BannerInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;

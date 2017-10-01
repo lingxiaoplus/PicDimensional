@@ -11,6 +11,7 @@ import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
 import com.lingxiaosuse.picture.tudimension.activity.CategoryActivity;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.GridCategoryAdapter;
+import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.CategoryInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;

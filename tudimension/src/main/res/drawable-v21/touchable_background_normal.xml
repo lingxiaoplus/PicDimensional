@@ -4,8 +4,8 @@
     android:color="@color/grey"
     >
     <item>
-        <shape android:shape="oval">
-            <solid android:color="@color/white"/>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/whiteNor"/>
         </shape>
     </item>
 </ripple>

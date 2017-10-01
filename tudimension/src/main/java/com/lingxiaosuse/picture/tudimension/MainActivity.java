@@ -45,6 +45,7 @@ import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.LeafLoadingView;
 import com.liuguangqiang.cookie.CookieBar;
+import com.liuguangqiang.cookie.OnActionClickListener;
 
 import java.io.File;
 import java.io.InputStream;
@@ -252,6 +253,12 @@ public class MainActivity extends BaseActivity {
             new CookieBar.Builder(this)
                     .setTitle("提示")
                     .setMessage("再按一次退出软件")
+                    .setAction("退出", new OnActionClickListener() {
+                        @Override
+                        public void onClick() {
+                            ActivityController.finishAll();
+                        }
+                    })
                     .setBackgroundColor(R.color.colorPrimary)
                     .setLayoutGravity(Gravity.BOTTOM)
                     .show();
