@@ -1,14 +1,17 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.app.AlertDialog;
+import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -26,6 +29,7 @@ import android.widget.ImageView;
 import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.AnimationUtils;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
@@ -51,6 +55,9 @@ public class BaseActivity extends AppCompatActivity{
     private Button cancle,ensure;
     private LeafLoadingView leafProg;
     private ImageView fanImage;
+    private View dialogView;
+    private AlertDialog mDialog;
+    private int mProgress;
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -58,9 +65,19 @@ public class BaseActivity extends AppCompatActivity{
             leafProg.setProgress(mProgress);
         }
     };
-    private int mProgress;
-    private View dialogView;
-    private AlertDialog mDialog;
+    /*private DownloadService.DownloadBinder downloadBinder;
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            downloadBinder = (DownloadService.DownloadBinder) iBinder;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };*/
+    //private Intent mDownloadIntent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,11 +89,17 @@ public class BaseActivity extends AppCompatActivity{
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setColorBar(ContextCompat.getColor(this, R.color.colorPrimary));
         ActivityController.addActivity(this);
+        /*mDownloadIntent = new Intent(this, DownloadService.class);
+        startService(mDownloadIntent);
+        bindService(mDownloadIntent,connection,BIND_AUTO_CREATE);*/
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        //解绑服务
+        //unbindService(connection);
+        //stopService(mDownloadIntent);
         ActivityController.removeActivity(this);
     }
 
@@ -90,6 +113,7 @@ public class BaseActivity extends AppCompatActivity{
      *检查更新
      */
     public boolean checkUpdate(){
+
         mPmanager = getPackageManager();
         int serverVersion = SpUtils
                 .getInt(BaseActivity.this, ContentValue.VERSION_CODE,1);
@@ -131,32 +155,13 @@ public class BaseActivity extends AppCompatActivity{
         builder.show();
     }
 
-    private void showDownLoadDia() {
-        AlertDialog.Builder downLoadBuilder = new AlertDialog.Builder(this);
-        //下载进度条
-        mDialog = downLoadBuilder.create();
-        dialogView = UIUtils.inflate(R.layout.dialog_download);
-        leafProg = (LeafLoadingView) dialogView.findViewById(R.id.leaf_download);
-        cancle = (Button) dialogView.findViewById(R.id.bt_download_cancle);
-        ensure = (Button) dialogView.findViewById(R.id.bt_download_ensure);
-        fanImage = (ImageView) dialogView.findViewById(R.id.iv_download_fan);
-        mDialog.setView(dialogView);
-        mDialog.show();
-        initDownloadDiaView();
-    }
 
-    private void initDownloadDiaView() {
-        RotateAnimation rotateAnimation =
-                AnimationUtils.initRotateAnimation(false, 1500, true,
-                        Animation.INFINITE);
-        fanImage.startAnimation(rotateAnimation);
-        Log.i("BaseActivity", "initDownloadDiaView: "+fanImage);
-    }
 
     /**
      *下载安装包
      */
     private void downLoadApk(String url) {
+        //downloadBinder.startDownload(url);
         DownloadUtils.get().download(false,url, "download", new DownloadUtils.OnDownloadListener() {
             @Override
             public void onDownloadSuccess(File file) {
@@ -186,6 +191,28 @@ public class BaseActivity extends AppCompatActivity{
             }
         });
     }
+    private void showDownLoadDia() {
+        AlertDialog.Builder downLoadBuilder = new AlertDialog.Builder(this);
+        //下载进度条
+        mDialog = downLoadBuilder.create();
+        dialogView = UIUtils.inflate(R.layout.dialog_download);
+        leafProg = (LeafLoadingView) dialogView.findViewById(R.id.leaf_download);
+        cancle = (Button) dialogView.findViewById(R.id.bt_download_cancle);
+        ensure = (Button) dialogView.findViewById(R.id.bt_download_ensure);
+        fanImage = (ImageView) dialogView.findViewById(R.id.iv_download_fan);
+        mDialog.setView(dialogView);
+        mDialog.show();
+        initDownloadDiaView();
+    }
+
+    private void initDownloadDiaView() {
+        RotateAnimation rotateAnimation =
+                AnimationUtils.initRotateAnimation(false, 1500, true,
+                        Animation.INFINITE);
+        fanImage.startAnimation(rotateAnimation);
+        Log.i("BaseActivity", "initDownloadDiaView: "+fanImage);
+    }
+
     /**
      *下载成功后安装
      */

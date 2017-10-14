@@ -3,6 +3,7 @@ package com.lingxiaosuse.picture.tudimension;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.didikee.donate.AlipayDonate;
 import android.didikee.donate.WeiXinDonate;
@@ -38,6 +39,7 @@ import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.receiver.NetworkReceiver;
+import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.AnimationUtils;
 import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
@@ -71,9 +73,7 @@ public class MainActivity extends BaseActivity {
                 boolean isCheck = SpUtils
                         .getBoolean(UIUtils.getContext(), ContentValue.IS_CHECK,true);
                 if (isCheck){
-
                     checkUpdate();
-
                 }
             }
         }

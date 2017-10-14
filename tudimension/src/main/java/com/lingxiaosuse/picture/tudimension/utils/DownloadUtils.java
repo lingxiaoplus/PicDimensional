@@ -17,6 +17,8 @@ import okhttp3.Response;
 
 /**
  * Created by lingxiao on 2017/8/11.
+ * 基于okhttp的下载工具类
+ * 无法暂停和取消下载
  */
 
 public class DownloadUtils {
@@ -55,11 +57,18 @@ public class DownloadUtils {
                 FileOutputStream fos = null;
                 // 储存下载文件的目录
                 String savePath = isExistDir(saveDir);
-                isExistFile(saveDir,url);
+                File file = null;
                 try {
-                    File file;
                     is = response.body().byteStream();
-                    long total = response.body().contentLength();
+                    long total = getContentLength(url);
+                    long downloadLength = 0; //记录已下载的文件长度
+                    if (total == 0){
+                        listener.onDownloadFailed("File is null!");
+                        return;
+                    }else if (total == downloadLength){
+                        listener.onDownloadSuccess(file);
+                        return;
+                    }
                     if (isImg){
                         file = new File(savePath, getNameFromUrl(url)+".jpg");
                     }else {
@@ -118,12 +127,14 @@ public class DownloadUtils {
      * @throws IOException
      * 判断下载文件是否存在
      */
-    private void isExistFile(String saveDir,String url) throws IOException {
+    private File isExistFile(String saveDir,String url) throws IOException {
         // 下载位置
         File downloadFile = new File(Environment.getExternalStorageDirectory()+getNameFromUrl(url));
         if (downloadFile.exists()) {
-            downloadFile.delete();
+            //downloadFile.delete();
+            return downloadFile;
         }
+        return null;
     }
 
     /**
@@ -152,5 +163,29 @@ public class DownloadUtils {
          * 下载失败
          */
         void onDownloadFailed(String error);
+        /**
+         *下载暂停
+         */
+        //void onDownloadPaused();
+        /**
+         *取消下载
+         */
+        //void onDownloadCancled();
+    }
+    /**
+     *获取文件长度
+     */
+    private long getContentLength(String downloadUrl) throws IOException {
+        OkHttpClient client = new OkHttpClient();
+        Request request = new Request.Builder()
+                .url(downloadUrl)
+                .build();
+        Response response = client.newCall(request).execute();
+        if (response != null && response.isSuccessful()){
+            long contentLength = response.body().contentLength();
+            response.body().close();
+            return contentLength;
+        }
+        return 0;
     }
 }

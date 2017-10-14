@@ -11,6 +11,7 @@
         android:layout_height="match_parent"
         fresco:progressBarImageScaleType="centerInside"
         fresco:progressBarAutoRotateInterval="2000"
-        fresco:progressBarImage="@drawable/ic_loading_default"/>
+        fresco:progressBarImage="@drawable/ic_loading_default"
+        fresco:fadeDuration="500"/>
 
 </LinearLayout>

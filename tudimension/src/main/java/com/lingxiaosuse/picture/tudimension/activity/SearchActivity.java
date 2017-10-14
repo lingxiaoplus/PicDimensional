@@ -70,7 +70,8 @@ public class SearchActivity extends BaseActivity {
     private int page = 0;
     //保存返回结果
     private List<SearchResultModle.ResBean.WallPaper> wallPaperList = new ArrayList<>();
-    private List<SearchResultModle.ResBean.WallPaper> oldList = new ArrayList<>();
+    private List<SearchResultModle.ResBean.WallPaper> oldList;
+    private List<SearchResultModle.ResBean.SearchBean> SearchList = new ArrayList<>();
     private GridLayoutManager mLayoutManager;
 
     private ArrayList<String> picUrlList = new ArrayList<>();
@@ -155,27 +156,36 @@ public class SearchActivity extends BaseActivity {
      * @param keyword 关键字
      * @param page 页数
      */
-    private void getKeyData(String keyword,int page) {
+    private void getKeyData(String keyword, final int page) {
         waveLoading.setVisibility(View.VISIBLE);
         final long preTime = System.currentTimeMillis();
         RetrofitHelper
                 .getInstance(this)
                 .getInterface(SearchKeyResultInterface.class)
-                .searchResult(ContentValue.SEARCH_URL+"/v1/search/all/resource/"+keyword+"?version=181&channel=huawei&limit=30&skip="+page+"&adult=false")
+                .searchResult(ContentValue.SEARCH_URL+"/v1/search/all/resource/"+keyword+"?version=181&channel=huawei&skip="+page+"&adult=false")
                 .enqueue(new Callback<SearchResultModle>() {
                     @Override
                     public void onResponse(Call<SearchResultModle> call, Response<SearchResultModle> response) {
-                        response.body().getRes().getSearch();
+                        SearchList = response.body().getRes().getSearch();
                         try {
-                            if (index>0){
-                                oldList.clear();
+                            //if (index>0){
+                                //oldList.clear();
+                            //}
+                            for (int i = 0; i < SearchList.size(); i++) {
+                                oldList = SearchList.get(i).getItems();
+                                wallPaperList.addAll(SearchList.get(i).getItems());
+
                             }
-                            for (int i = 0; i < response.body().getRes().getSearch().size(); i++) {
-                                oldList.addAll(response.body().getRes().getSearch().get(i).getItems());
+                            for (int i = 0; i < wallPaperList.size(); i++) {
+                                Log.i("SearchActivity", "图片地址: "
+                                        +wallPaperList.get(i).getImg());
                             }
-                            wallPaperList.addAll(oldList);
                             mAdapter.notifyDataSetChanged();
                             recyclerView.setVisibility(View.VISIBLE);
+                            Log.i("SearchActivity", "wallPaperList: "+wallPaperList.size()
+                                    +"oldList"+oldList.size()
+                                    +"SearchList"+SearchList.size()
+                                    +"页数："+page);
                             mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
                                 @Override
                                 public void onItemClick(View View, int position) {

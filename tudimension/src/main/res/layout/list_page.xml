@@ -23,6 +23,9 @@
             fresco:progressBarImageScaleType="centerInside"
             fresco:progressBarAutoRotateInterval="2000"
             fresco:progressBarImage="@drawable/ic_loading_default"
+            fresco:failureImage="@drawable/ic_failure"
+            fresco:failureImageScaleType="centerInside"
+            fresco:fadeDuration="1000"
             />
         <TextView
             android:id="@+id/tv_home_des"

@@ -166,9 +166,6 @@ public class WaveLoading extends View{
         float top = metrics.top;
         float bottom = metrics.bottom;
         int centerY = (int) (rect.centerY() - top/2 - bottom/2);
-        Log.i("code", "text:"+text+"  rect.centerX():"+rect.centerX()+"  centerY:"+centerY
-                +"  textPaint:"+textPaint
-        );
         canvas.drawText(text,rect.centerX(),centerY,textPaint);
     }
 }

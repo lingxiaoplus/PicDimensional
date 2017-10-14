@@ -23,7 +23,7 @@ public class ImageLoadAdapter extends PagerAdapter{
     private ArrayList<String> urlList;
     private SimpleDraweeView image;
     private boolean isHot;
-
+    private String imgRule ="?imageView2/3/h/1080";
     public ImageLoadAdapter(ArrayList<String> urlList,boolean isHot){
         this.urlList = urlList;
         this.isHot = isHot;
@@ -52,7 +52,7 @@ public class ImageLoadAdapter extends PagerAdapter{
             }else {
                 view = UIUtils.inflate(R.layout.pager_load);
                 image = view.findViewById(R.id.simple_pager_load);
-                Uri uri = Uri.parse(urlList.get(position));
+                Uri uri = Uri.parse(urlList.get(position)+imgRule);
                 Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
                 image.setImageURI(uri);
                 container.addView(view);

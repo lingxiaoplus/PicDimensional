@@ -22,7 +22,6 @@ public class SearchRecyAdapter extends BaseRecycleAdapter{
     public SearchRecyAdapter(List mList) {
         super(mList);
     }
-
     @Override
     public void bindData(BaseViewHolder holder, int position, List mList) {
         try{

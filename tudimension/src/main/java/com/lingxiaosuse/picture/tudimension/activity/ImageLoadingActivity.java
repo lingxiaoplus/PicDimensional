@@ -1,10 +1,13 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -19,6 +22,7 @@ import android.widget.TextView;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.ImageLoadAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.transformer.DepthPageTransformer;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadImgUtils;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
@@ -110,28 +114,6 @@ public class ImageLoadingActivity extends AppCompatActivity {
     }
     @OnClick(R.id.iv_image_save)
     public void imageSave(final View view){
-        ToastUtils.show("正在下载中...");
-        //下载大图片很容易失败
-        /*DownloadImgUtils.downLoadImg(Uri.parse(picList.get(mPosition)), new DownloadImgUtils.OnDownloadListener() {
-            @Override
-            public void onDownloadSuccess(Bitmap bitmap) {
-                String saveInfo = saveBitmapFile(bitmap);
-                new CookieBar.Builder(ImageLoadingActivity.this)
-                        .setTitle("提示")
-                        .setMessage(saveInfo)
-                        .setBackgroundColor(R.color.colorPrimary)
-                        .show();
-            }
-
-            @Override
-            public void onDownloadFailed(String s) {
-                new CookieBar.Builder(ImageLoadingActivity.this)
-                        .setTitle("下载失败")
-                        .setMessage(s)
-                        .setBackgroundColor(R.color.colorPrimary)
-                        .show();
-            }
-        });*/
         DownloadUtils.get().download(true, picList.get(mPosition), "tudimension", new DownloadUtils.OnDownloadListener() {
             @Override
             public void onDownloadSuccess(File file) {
@@ -158,8 +140,13 @@ public class ImageLoadingActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onDownloading(int progress) {
-
+            public void onDownloading(final int progress) {
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.show("正在下载"+progress+"%");
+                    }
+                });
             }
 
             @Override
@@ -239,5 +226,12 @@ public class ImageLoadingActivity extends AppCompatActivity {
         UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                 Uri.fromFile(new File(file.getPath()))));
         return msg;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //stopService(mDownloadIntent);
+        //unbindService(connection);
     }
 }
