@@ -15,7 +15,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="5dp">
+        android:layout_marginLeft="5dp"
+        android:gravity="center">
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_home_image"
             android:layout_width="200dp"
@@ -29,7 +30,7 @@
             />
         <TextView
             android:id="@+id/tv_home_des"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#4CAF50"
             android:textSize="16sp"
