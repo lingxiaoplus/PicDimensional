@@ -8,6 +8,7 @@ import android.os.Environment;
 
 public class ContentValue {
     public static final String imgRule ="?imageView2/3/h/230";//图片规则，从服务器取230大小的图片
+    public static final String bigImgRule ="?imageView2/3/h/1080";
     //升级接口
     public static final String UPDATEURL = "http://www.lingxiaosuse.cn/tudimension/update.json";
     //是否是第一次进入

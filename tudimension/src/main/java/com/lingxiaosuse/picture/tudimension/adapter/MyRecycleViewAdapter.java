@@ -113,7 +113,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, final int position) throws NullPointerException{
         if (viewHolder instanceof FootHolder){
             StaggeredGridLayoutManager.LayoutParams clp
                     = (StaggeredGridLayoutManager.LayoutParams) ((FootHolder) viewHolder).rlayout.getLayoutParams();

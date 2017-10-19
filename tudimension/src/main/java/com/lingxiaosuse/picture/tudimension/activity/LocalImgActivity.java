@@ -178,6 +178,12 @@ public class LocalImgActivity extends BaseActivity {
         public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView((View) object);
         }
+
+        //可以随时刷新viewpager
+        @Override
+        public int getItemPosition(Object object) {
+            return POSITION_NONE;
+        }
     }
     /**
      *隐藏toolbar
@@ -239,6 +245,7 @@ public class LocalImgActivity extends BaseActivity {
         file.delete();
         mAdapter.notifyDataSetChanged();
         viewPager.setCurrentItem(mPosition);
+        // TODO: 2017/10/19 这个地方需要通知前一个界面刷新recycleview 
     }
 
     @Override
@@ -258,13 +265,13 @@ public class LocalImgActivity extends BaseActivity {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Log.i("viewpager的相关信息", "viewPager.getChildCount(): "+viewPager.getChildCount()+"mPosition:"+mPosition);
+                /*Log.i("viewpager的相关信息", "viewPager.getChildCount(): "+viewPager.getChildCount()+"mPosition:"+mPosition);
                 if (list.size() == mPosition+1){
                     viewPager.setCurrentItem(mPosition-1);
                 }else {
                     viewPager.setCurrentItem(mPosition+1);
-                }
-                //deleteWallpaper();
+                }*/
+                deleteWallpaper();
                 dialogInterface.dismiss();
             }
         });
