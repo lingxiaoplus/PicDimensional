@@ -108,18 +108,22 @@ public class BannerDetailActivity extends BaseActivity {
     /**
      *用于根据传递过来的值初始化控件
      */
-    private void initIntentValue() {
-        String url = getIntent().getStringExtra("url");
-        String message = getIntent().getStringExtra("desc");
-        final String id = getIntent().getStringExtra("id");
-        String title = getIntent().getStringExtra("title");
-        final String type = getIntent().getStringExtra("type");
-        Uri uri = Uri.parse(url);
-        mIvPlaceholder.setImageURI(uri);
+    private void initIntentValue(){
+        try{
+            String url = getIntent().getStringExtra("url");
+            String message = getIntent().getStringExtra("desc");
+            final String id = getIntent().getStringExtra("id");
+            String title = getIntent().getStringExtra("title");
+            final String type = getIntent().getStringExtra("type");
+            Uri uri = Uri.parse(url);
+            mIvPlaceholder.setImageURI(uri);
+            getDataFromServere(type,id,false);
+            mTbToolbar.setTitle("");
+            textTitle.setText(title);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        getDataFromServere(type,id,false);
-        mTbToolbar.setTitle("");
-        textTitle.setText(title);
         relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

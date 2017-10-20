@@ -49,6 +49,8 @@ public class ImageLoadAdapter extends PagerAdapter{
                 Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
                 image.setImageURI(uri);
                 container.addView(view);
+                setOnclick(image);
+                setOnLongClick(image);
             }else {
                 view = UIUtils.inflate(R.layout.pager_load);
                 image = view.findViewById(R.id.simple_pager_load);
@@ -56,6 +58,8 @@ public class ImageLoadAdapter extends PagerAdapter{
                 Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
                 image.setImageURI(uri);
                 container.addView(view);
+                setOnclick(image);
+                setOnLongClick(image);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -67,5 +71,43 @@ public class ImageLoadAdapter extends PagerAdapter{
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
+    }
+
+    public OnItemClickListener listener;
+    public void setOnItemclick(OnItemClickListener listener){
+        this.listener = listener;
+    }
+    public interface OnItemClickListener{
+        void onClick();
+    }
+
+    public onItemLongClickListener longClickListener;
+    public void setLongClickListener(onItemLongClickListener listener){
+        this.longClickListener = listener;
+    }
+    public interface onItemLongClickListener{
+        void onLongClick();
+    }
+    private void setOnclick(SimpleDraweeView view){
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (listener != null){
+                    listener.onClick();
+                }
+            }
+        });
+    }
+    private void setOnLongClick(SimpleDraweeView view){
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (longClickListener != null){
+                    longClickListener.onLongClick();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 }

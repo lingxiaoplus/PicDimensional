@@ -82,7 +82,7 @@ public class AboutActivity extends BaseActivity {
         try {
             PackageInfo info = mPmanager.getPackageInfo(getPackageName(),0);
             String versionName = info.versionName;
-            textVersion.setText("版本号："+versionName);
+            textVersion.setText("version："+versionName);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }

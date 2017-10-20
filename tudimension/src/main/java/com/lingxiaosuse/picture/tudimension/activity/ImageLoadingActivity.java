@@ -1,6 +1,10 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
@@ -17,6 +21,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lingxiaosuse.picture.tudimension.R;
@@ -57,6 +62,8 @@ public class ImageLoadingActivity extends AppCompatActivity {
     ImageView saveImg;
     @BindView(R.id.ll_loading)
     LinearLayout linearLayout;
+    @BindView(R.id.rl_loading)
+    RelativeLayout relativeLayout;
     private ArrayList<String> picList;
     private ImageLoadAdapter mAdapter;
     private boolean isHot;
@@ -107,6 +114,20 @@ public class ImageLoadingActivity extends AppCompatActivity {
 
         //给viewpager设置动画
         viewPager.setPageTransformer(true,new DepthPageTransformer());
+
+        //设置viewpager的点击事件
+        mAdapter.setOnItemclick(new ImageLoadAdapter.OnItemClickListener() {
+            @Override
+            public void onClick() {
+                toggleButtomView();
+            }
+        });
+        mAdapter.setLongClickListener(new ImageLoadAdapter.onItemLongClickListener() {
+            @Override
+            public void onLongClick() {
+                showDialog();
+            }
+        });
     }
     @OnClick(R.id.iv_image_back)
     public void imageBack(){
@@ -114,55 +135,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
     }
     @OnClick(R.id.iv_image_save)
     public void imageSave(final View view){
-        DownloadUtils.get().download(true, picList.get(mPosition), "tudimension", new DownloadUtils.OnDownloadListener() {
-            @Override
-            public void onDownloadSuccess(File file) {
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        new CookieBar.Builder(ImageLoadingActivity.this)
-                                .setTitle("提示")
-                                .setMessage("下载成功")
-                                .setBackgroundColor(R.color.colorPrimary)
-                                .show();
-                    }
-                });
-                try {
-                    MediaStore.Images.Media.insertImage(UIUtils.getContext()
-                                    .getContentResolver(),
-                            file.getAbsolutePath(), file.getName(), null);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-                // 最后通知图库更新
-                UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        Uri.fromFile(new File(file.getPath()))));
-            }
-
-            @Override
-            public void onDownloading(final int progress) {
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtils.show("正在下载"+progress+"%");
-                    }
-                });
-            }
-
-            @Override
-            public void onDownloadFailed(final String error) {
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        new CookieBar.Builder(ImageLoadingActivity.this)
-                                .setTitle("下载失败")
-                                .setMessage(error)
-                                .setBackgroundColor(R.color.colorPrimary)
-                                .show();
-                    }
-                });
-            }
-        });
+        downloadImg();
     }
 
     //分享图片
@@ -233,5 +206,84 @@ public class ImageLoadingActivity extends AppCompatActivity {
         super.onDestroy();
         //stopService(mDownloadIntent);
         //unbindService(connection);
+    }
+
+    /**
+     *隐藏底部导航栏
+     */
+    private void toggleButtomView() {
+        float current = relativeLayout.getTranslationY();
+        ObjectAnimator animator = ObjectAnimator
+                .ofFloat(relativeLayout, "translationY", current, current == 0 ? relativeLayout.getHeight()+100 : 0);
+        animator.start();
+    }
+
+    private void downloadImg(){
+        DownloadUtils.get().download(true, picList.get(mPosition), "tudimension", new DownloadUtils.OnDownloadListener() {
+            @Override
+            public void onDownloadSuccess(File file) {
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new CookieBar.Builder(ImageLoadingActivity.this)
+                                .setTitle("提示")
+                                .setMessage("下载成功")
+                                .setBackgroundColor(R.color.colorPrimary)
+                                .show();
+                        ToastUtils.show("下载完成");
+                    }
+                });
+                try {
+                    MediaStore.Images.Media.insertImage(UIUtils.getContext()
+                                    .getContentResolver(),
+                            file.getAbsolutePath(), file.getName(), null);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                // 最后通知图库更新
+                UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                        Uri.fromFile(new File(file.getPath()))));
+            }
+
+            @Override
+            public void onDownloading(final int progress) {
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.show("正在下载"+progress+"%");
+                    }
+                });
+            }
+
+            @Override
+            public void onDownloadFailed(final String error) {
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        new CookieBar.Builder(ImageLoadingActivity.this)
+                                .setTitle("下载失败")
+                                .setMessage(error)
+                                .setBackgroundColor(R.color.colorPrimary)
+                                .show();
+                    }
+                });
+            }
+        });
+    }
+
+    private void showDialog() {
+        String[] items = {"下载", "取消"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (i == 0){
+                    downloadImg();
+                }else {
+
+                }
+            }
+        });
+        builder.show();
     }
 }

@@ -24,6 +24,9 @@ import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.HotRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.LocalImgAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.rxbus.DeleteEvent;
+import com.lingxiaosuse.picture.tudimension.rxbus.RxBus;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.io.File;
@@ -35,6 +38,8 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.Subscription;
+import rx.functions.Action1;
 
 public class SeeDownLoadImgActivity extends BaseActivity {
     //存储每个目录下的图片路径,key是文件名
@@ -48,6 +53,7 @@ public class SeeDownLoadImgActivity extends BaseActivity {
     RecyclerView recyclerView;
     private LinearLayoutManager mLayoutManager;
     private LocalImgAdapter mAdapter;
+    private Subscription rxSubscription;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +73,7 @@ public class SeeDownLoadImgActivity extends BaseActivity {
             textNull.setVisibility(View.GONE);
         }
         for (int i = 0; i < fileList.size(); i++) {
-            Log.i("下载的图片路径", fileList.get(i).getAbsolutePath());
+            //Log.i("下载的图片路径", fileList.get(i).getAbsolutePath());
             String path = "file://"+fileList.get(i).getAbsolutePath();
             //String path = fileList.get(i).getAbsolutePath();
             mPicList.add(path);
@@ -87,6 +93,29 @@ public class SeeDownLoadImgActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        initSubscription();
+    }
+
+    /**
+     *订阅消息
+     */
+    private void initSubscription() {
+        rxSubscription = RxBus.getDefault().tObservable(DeleteEvent.class)
+                .subscribe(new Action1<DeleteEvent>() {
+                    @Override
+                    public void call(DeleteEvent deleteEvent) {
+                        //刷新数据
+                        mPicList.remove(deleteEvent.getPosition());
+                        mAdapter.notifyDataSetChanged();
+                        Log.i("code", "接收到删除数据了: "+deleteEvent.getPosition());
+                    }
+                }, new Action1<Throwable>() {
+                    @Override
+                    public void call(Throwable throwable) {
+                        ToastUtils.show(throwable.toString());
+                    }
+                });
     }
 
     @Override
@@ -109,5 +138,14 @@ public class SeeDownLoadImgActivity extends BaseActivity {
             }
         }
         return mFileList;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //取消订阅
+        if (!rxSubscription.isUnsubscribed()){
+            rxSubscription.unsubscribe();
+        }
     }
 }

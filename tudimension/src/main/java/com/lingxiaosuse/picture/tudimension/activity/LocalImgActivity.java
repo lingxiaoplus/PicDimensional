@@ -26,6 +26,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.rxbus.DeleteEvent;
+import com.lingxiaosuse.picture.tudimension.rxbus.RxBus;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
@@ -245,7 +247,10 @@ public class LocalImgActivity extends BaseActivity {
         file.delete();
         mAdapter.notifyDataSetChanged();
         viewPager.setCurrentItem(mPosition);
-        // TODO: 2017/10/19 这个地方需要通知前一个界面刷新recycleview 
+
+        //通过rxbus发送消息通知订阅者更新数据
+        RxBus.getDefault().post(new DeleteEvent(mPosition));
+        Log.i("code", "发送删除数据了: ");
     }
 
     @Override
