@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/picture.iml" filepath="$PROJECT_DIR$/picture.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PicDimensional.iml" filepath="$PROJECT_DIR$/PicDimensional.iml" />
       <module fileurl="file://$PROJECT_DIR$/tudimension/tudimension.iml" filepath="$PROJECT_DIR$/tudimension/tudimension.iml" />
     </modules>
   </component>

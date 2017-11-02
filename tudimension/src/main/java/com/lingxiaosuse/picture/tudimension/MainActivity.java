@@ -12,12 +12,14 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
@@ -62,7 +64,8 @@ public class MainActivity extends BaseActivity {
     ViewPager viewPager;
     @BindView(R.id.toolbar_main)
     Toolbar toolbar;
-
+    @BindView(R.id.fab_main)
+    FloatingActionButton faButton;
     private String[] tabStr = new String[]{"推荐","分类","最新","专辑"};
     private Handler mHandler = new Handler(){
         @Override
@@ -123,7 +126,6 @@ public class MainActivity extends BaseActivity {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-
             }
 
             @Override
@@ -136,6 +138,7 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+
         setSupportActionBar(toolbar);
     }
 

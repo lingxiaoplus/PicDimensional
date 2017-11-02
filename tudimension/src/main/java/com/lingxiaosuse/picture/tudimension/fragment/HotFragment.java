@@ -3,6 +3,7 @@ package com.lingxiaosuse.picture.tudimension.fragment;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -161,5 +162,10 @@ public class HotFragment extends BaseFragment{
                 mHandler.sendEmptyMessage(0);
             }
         });
+    }
+
+    @Override
+    public RecyclerView getRecycle() {
+        return recyclerView;
     }
 }

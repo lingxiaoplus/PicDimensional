@@ -1,5 +1,6 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -48,11 +49,17 @@ public class RecommendFragment extends BaseFragment{
     private ArrayList<HomePageModle.Picture> picMoreList = new ArrayList<>();//加载更多图片
     private ArrayList<String> picUrlList = new ArrayList<>();//取出图片地址传递给下一个activity
     private int skip = 0;
-    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void initData() {
         getData(30,0);
+
+        faButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getRecycle().smoothScrollToPosition(0);
+            }
+        });
     }
 
     @Override
@@ -61,17 +68,12 @@ public class RecommendFragment extends BaseFragment{
         recycleView = view.findViewById(R.id.rv_main);
         swipeLayout = view.findViewById(R.id.sl_main);
         waveLoading = view.findViewById(R.id.pb_main);
-        floatingActionButton = view.findViewById(R.id.recommend_float_button);
+
         //设置item之间的间隔
         SpaceItemDecoration space = new SpaceItemDecoration(10);
         recycleView.addItemDecoration(space);
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                recycleView.smoothScrollToPosition(0);
-            }
-        });
+
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -206,6 +208,11 @@ public class RecommendFragment extends BaseFragment{
 
                     }
                 });
+    }
+
+    @Override
+    public RecyclerView getRecycle() {
+        return recycleView;
     }
 
     @Override

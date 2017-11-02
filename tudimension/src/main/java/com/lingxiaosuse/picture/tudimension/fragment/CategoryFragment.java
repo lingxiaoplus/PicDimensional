@@ -1,6 +1,8 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -44,6 +46,11 @@ public class CategoryFragment extends BaseFragment{
         View view = UIUtils.inflate(R.layout.fragment_category);
         gridView = view.findViewById(R.id.gv_category);
         return view;
+    }
+
+    @Override
+    public RecyclerView getRecycle() {
+        return null;
     }
 
     /**

@@ -21,6 +21,14 @@ picture dimensional
 
 4.图片详情界面可以分享了
 
+## V1.2
+
+1.修复图片下载失败的几率
+2.修复查看部分图片卡顿问题
+3.更新了一下源，有些图片更好看啦
+4.增加图片搜索功能
+5.可以对下载好的图片做出一些py操作
+6.修改应用图标
 
 ## 用到的开源库
 强大的图片加载框架   [fresco](https://www.fresco-cn.org/docs/getting-started.html)

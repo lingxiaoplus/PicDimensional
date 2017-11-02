@@ -27,20 +27,6 @@
             wave:mainColor="@color/colorPrimary"
             wave:text="图"
             />
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/recommend_float_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            app:srcCompat="@drawable/ic_return_top"
-            app:backgroundTint="@color/colorPrimary"
-            app:elevation="8dp"
-            app:pressedTranslationZ="20dp"
-            android:layout_margin="30dp"
-            app:layout_behavior="com.lingxiaosuse.picture.tudimension.transformer.ScrollAwareFABBehaviorDefault"
-            android:theme="@style/AppTheme.NoActionBar"
-            />
     </RelativeLayout>
 
 </LinearLayout>
