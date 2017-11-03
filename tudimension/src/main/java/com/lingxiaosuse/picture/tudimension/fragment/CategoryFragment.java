@@ -1,24 +1,19 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
 import android.content.Intent;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
-import com.google.gson.GsonBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
-import com.lingxiaosuse.picture.tudimension.activity.CategoryActivity;
-import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
-import com.lingxiaosuse.picture.tudimension.adapter.GridCategoryAdapter;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
+import com.lingxiaosuse.picture.tudimension.adapter.CategoryAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.CategoryInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-import com.liuguangqiang.cookie.CookieBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,17 +21,17 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by lingxiao on 2017/8/28.
  */
 
 public class CategoryFragment extends BaseFragment{
-    private GridView gridView;
+    private RecyclerView recyclerView;
     private List<CategoryModle.ResBean.CategoryBean> categoryList = new ArrayList<>();
-    private GridCategoryAdapter mGridAdapter;
+    private CategoryAdapter mCateAdapter;
+    private GridLayoutManager mLayoutManager;
+
     @Override
     protected void initData() {
         getCategory();
@@ -44,7 +39,7 @@ public class CategoryFragment extends BaseFragment{
     @Override
     public View initView() {
         View view = UIUtils.inflate(R.layout.fragment_category);
-        gridView = view.findViewById(R.id.gv_category);
+        recyclerView = view.findViewById(R.id.rv_category);
         return view;
     }
 
@@ -64,12 +59,15 @@ public class CategoryFragment extends BaseFragment{
                     @Override
                     public void onResponse(Call<CategoryModle> call, Response<CategoryModle> response) {
                         categoryList = response.body().getRes().getCategory();
-                        mGridAdapter = new GridCategoryAdapter(categoryList);
-                        gridView.setAdapter(mGridAdapter);
-                        mGridAdapter.notifyDataSetChanged();
-                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        mCateAdapter = new CategoryAdapter(categoryList);
+                        recyclerView.setAdapter(mCateAdapter);
+                        mLayoutManager = new GridLayoutManager(getActivity(),2,
+                                LinearLayoutManager.VERTICAL,false);
+                        recyclerView.setLayoutManager(mLayoutManager);
+                        mCateAdapter.notifyDataSetChanged();
+                        mCateAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
                             @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                            public void onItemClick(View View, int position) {
                                 /*Intent intent = new Intent(UIUtils.getContext(),CategoryActivity.class);
                                 startActivity(intent);*/
                                 Intent intent = new Intent(UIUtils.getContext(),

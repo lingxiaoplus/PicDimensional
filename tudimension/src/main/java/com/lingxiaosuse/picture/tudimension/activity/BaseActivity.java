@@ -65,6 +65,7 @@ public class BaseActivity extends AppCompatActivity{
             leafProg.setProgress(mProgress);
         }
     };
+    public UltimateBar ultimateBar;
     /*private DownloadService.DownloadBinder downloadBinder;
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -86,7 +87,7 @@ public class BaseActivity extends AppCompatActivity{
         /*UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar();*/
         //半透明
-        UltimateBar ultimateBar = new UltimateBar(this);
+        ultimateBar = new UltimateBar(this);
         ultimateBar.setColorBar(ContextCompat.getColor(this, R.color.colorPrimary));
         ActivityController.addActivity(this);
         /*mDownloadIntent = new Intent(this, DownloadService.class);

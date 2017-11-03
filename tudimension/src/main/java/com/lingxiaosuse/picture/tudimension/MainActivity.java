@@ -8,6 +8,8 @@ import android.content.IntentFilter;
 import android.didikee.donate.AlipayDonate;
 import android.didikee.donate.WeiXinDonate;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -17,8 +19,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -66,6 +71,8 @@ public class MainActivity extends BaseActivity {
     Toolbar toolbar;
     @BindView(R.id.fab_main)
     FloatingActionButton faButton;
+    @BindView(R.id.dl_menu)
+    DrawerLayout mDrawerLayout;
     private String[] tabStr = new String[]{"推荐","分类","最新","专辑"};
     private Handler mHandler = new Handler(){
         @Override
@@ -83,7 +90,7 @@ public class MainActivity extends BaseActivity {
     };
     private NetworkReceiver mNetworkChangeListener;
     private View dialogView;
-
+    private ActionBarDrawerToggle mDrawerToggle;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,6 +147,27 @@ public class MainActivity extends BaseActivity {
         });
 
         setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        //创建返回键，并实现打开关/闭监听
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
+                toolbar, R.string.open, R.string.close) {
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                ultimateBar.setColorBarForDrawer(getResources().getColor(R.color.colorAccent));
+
+            }
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                ultimateBar.setColorBar(ContextCompat.getColor(UIUtils.getContext(),
+                        R.color.colorPrimary));
+            }
+        };
+        mDrawerToggle.syncState();
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+
     }
 
     class MainPageAdapter extends FragmentPagerAdapter{
