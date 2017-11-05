@@ -64,6 +64,16 @@
                 android:padding="10dp"
                 android:background="@drawable/touchable_background"
                 android:layout_marginRight="5dp"/>
+            <ImageView
+                android:id="@+id/iv_img_comment"
+                android:layout_toLeftOf="@id/iv_img_share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:srcCompat="@drawable/ic_img_comment"
+                android:layout_centerInParent="true"
+                android:padding="10dp"
+                android:background="@drawable/touchable_background"
+                android:layout_marginRight="5dp"/>
         </RelativeLayout>
 
     </RelativeLayout>

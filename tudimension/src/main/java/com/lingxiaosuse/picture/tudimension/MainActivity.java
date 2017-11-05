@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -42,6 +43,7 @@ import com.lingxiaosuse.picture.tudimension.activity.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SearchActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SeeDownLoadImgActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SettingsActivity;
+import com.lingxiaosuse.picture.tudimension.activity.VerticalActivity;
 import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
@@ -73,6 +75,8 @@ public class MainActivity extends BaseActivity {
     FloatingActionButton faButton;
     @BindView(R.id.dl_menu)
     DrawerLayout mDrawerLayout;
+    @BindView(R.id.nav_main)
+    NavigationView navigationView;
     private String[] tabStr = new String[]{"推荐","分类","最新","专辑"};
     private Handler mHandler = new Handler(){
         @Override
@@ -147,6 +151,7 @@ public class MainActivity extends BaseActivity {
         });
 
         setSupportActionBar(toolbar);
+        //设置返回键可用
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         //创建返回键，并实现打开关/闭监听
@@ -168,6 +173,41 @@ public class MainActivity extends BaseActivity {
         mDrawerToggle.syncState();
         mDrawerLayout.setDrawerListener(mDrawerToggle);
 
+        //设置默认选中为首页
+        navigationView.setCheckedItem(R.id.nav_home);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.
+                OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.nav_home:
+                        ToastUtils.show("首页");
+                        StartActivity(MainActivity.class,false);
+                        break;
+                    case R.id.nav_vertical:
+                        ToastUtils.show("手机壁纸");
+                        StartActivity(VerticalActivity.class,false);
+                        break;
+                    case R.id.nav_figure:
+                        ToastUtils.show("斗图");
+                        break;
+                    case R.id.nav_find:
+                        ToastUtils.show("搜图");
+                        break;
+                    case R.id.nav_reception:
+                        ToastUtils.show("好评");
+                        break;
+                    case R.id.nav_exit:
+                        ToastUtils.show("退出");
+                        ActivityController.finishAll();
+                        break;
+                    default:
+                        break;
+                }
+                mDrawerLayout.closeDrawers(); //关闭菜单
+                return true;
+            }
+        });
     }
 
     class MainPageAdapter extends FragmentPagerAdapter{
@@ -281,18 +321,7 @@ public class MainActivity extends BaseActivity {
     public void onBackPressed() {
         long nowTime = System.currentTimeMillis();
         if (nowTime - preTime > 2000){
-            new CookieBar.Builder(this)
-                    .setTitle("提示")
-                    .setMessage("再按一次退出软件")
-                    .setAction("退出", new OnActionClickListener() {
-                        @Override
-                        public void onClick() {
-                            ActivityController.finishAll();
-                        }
-                    })
-                    .setBackgroundColor(R.color.colorPrimary)
-                    .setLayoutGravity(Gravity.BOTTOM)
-                    .show();
+            ToastUtils.show("再按一次退出软件");
             preTime = nowTime;
         }else {
             ActivityController.finishAll();

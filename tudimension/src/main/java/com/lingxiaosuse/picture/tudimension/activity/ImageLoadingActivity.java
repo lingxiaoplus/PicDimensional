@@ -64,6 +64,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
     LinearLayout linearLayout;
     @BindView(R.id.rl_loading)
     RelativeLayout relativeLayout;
+
     private ArrayList<String> picList;
     private ImageLoadAdapter mAdapter;
     private boolean isHot;
@@ -138,6 +139,11 @@ public class ImageLoadingActivity extends AppCompatActivity {
         downloadImg();
     }
 
+    @OnClick(R.id.iv_img_comment)
+    public void imageComment(){
+        //评论界面
+
+    }
     //分享图片
     @OnClick(R.id.iv_img_share)
     public void shareImg(){
