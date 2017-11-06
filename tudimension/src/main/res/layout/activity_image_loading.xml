@@ -72,6 +72,7 @@
                 app:srcCompat="@drawable/ic_img_comment"
                 android:layout_centerInParent="true"
                 android:padding="10dp"
+                android:visibility="invisible"
                 android:background="@drawable/touchable_background"
                 android:layout_marginRight="5dp"/>
         </RelativeLayout>

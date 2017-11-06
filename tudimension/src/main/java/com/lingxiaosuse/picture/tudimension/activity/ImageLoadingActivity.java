@@ -64,8 +64,9 @@ public class ImageLoadingActivity extends AppCompatActivity {
     LinearLayout linearLayout;
     @BindView(R.id.rl_loading)
     RelativeLayout relativeLayout;
-
-    private ArrayList<String> picList;
+    @BindView(R.id.iv_img_comment)
+    ImageView commentImg;
+    private ArrayList<String> picList,IdList;
     private ImageLoadAdapter mAdapter;
     private boolean isHot;
     private File file;
@@ -90,6 +91,8 @@ public class ImageLoadingActivity extends AppCompatActivity {
 
         if(!isHot){
             linearLayout.setBackgroundColor(Color.BLACK);
+            IdList = intent.getStringArrayListExtra("picIdList");
+            commentImg.setVisibility(View.VISIBLE);
         }
         mAdapter = new ImageLoadAdapter(picList,isHot);
         viewPager.setAdapter(mAdapter);
@@ -105,6 +108,9 @@ public class ImageLoadingActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 textCurrent.setText(position+1+"/"+itemCount);
                 mPosition = position;
+                if (!isHot){
+                    id = IdList.get(position);
+                }
             }
 
             @Override
@@ -142,7 +148,12 @@ public class ImageLoadingActivity extends AppCompatActivity {
     @OnClick(R.id.iv_img_comment)
     public void imageComment(){
         //评论界面
-
+        Intent intent = new Intent(getApplicationContext()
+                ,CommentActivity.class);
+        intent.putExtra("id",id);
+        startActivity(intent);
+        //动画
+        overridePendingTransition(R.anim.slide_in_top,R.anim.slide_in_top);
     }
     //分享图片
     @OnClick(R.id.iv_img_share)

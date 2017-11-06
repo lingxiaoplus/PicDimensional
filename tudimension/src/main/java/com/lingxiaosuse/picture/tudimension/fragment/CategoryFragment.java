@@ -65,6 +65,7 @@ public class CategoryFragment extends BaseFragment{
                                 LinearLayoutManager.VERTICAL,false);
                         recyclerView.setLayoutManager(mLayoutManager);
                         mCateAdapter.notifyDataSetChanged();
+
                         mCateAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(View View, int position) {

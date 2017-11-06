@@ -58,6 +58,7 @@ public class BannerDetailActivity extends BaseActivity {
     private int skip = 0;
     private List<BannerModle.ResBean.WallpaperBean> picList = new ArrayList<>();
     private ArrayList<String> picUrlList = new ArrayList<>();
+    private ArrayList<String> IdList = new ArrayList<>();
     @BindView(R.id.main_iv_placeholder)
     SimpleDraweeView mIvPlaceholder; // 大图片
 
@@ -174,10 +175,12 @@ public class BannerDetailActivity extends BaseActivity {
                                     return;
                                 }
                                 picUrlList.clear();
+                                IdList.clear();
                                 for (int i = 0; i < picList.size(); i++) {
                                     if (picUrlList != null){
                                         picUrlList.add(picList.get(i).getImg());
                                     }
+                                    IdList.add(picList.get(i).getId());
                                 }
                                 Intent intent = new Intent(UIUtils.getContext(),
                                         ImageLoadingActivity.class);
@@ -185,6 +188,7 @@ public class BannerDetailActivity extends BaseActivity {
                                 intent.putExtra("itemCount",mAdapter.getItemCount());
                                 intent.putExtra("id",picList.get(position).getId());
                                 intent.putStringArrayListExtra("picList",picUrlList);
+                                intent.putStringArrayListExtra("picIdList",IdList);
                                 startActivity(intent);
                             }
                         });

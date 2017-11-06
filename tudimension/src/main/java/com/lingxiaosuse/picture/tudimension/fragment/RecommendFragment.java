@@ -48,6 +48,7 @@ public class RecommendFragment extends BaseFragment{
     private ArrayList<HomePageModle.Picture> picList = new ArrayList<>();
     private ArrayList<HomePageModle.Picture> picMoreList = new ArrayList<>();//加载更多图片
     private ArrayList<String> picUrlList = new ArrayList<>();//取出图片地址传递给下一个activity
+    private ArrayList<String> picIdList = new ArrayList<>();//取出图片id传递给下一个activity
     private int skip = 0;
 
     @Override
@@ -139,10 +140,12 @@ public class RecommendFragment extends BaseFragment{
                                     return;
                                 }
                                 picUrlList.clear();
+                                picIdList.clear();
                                 for (int i = 0; i < picList.size(); i++) {
                                     if (picUrlList != null){
                                         picUrlList.add(picList.get(i).img);
                                     }
+                                    picIdList.add(picList.get(i).id);
                                 }
                                 Intent intent = new Intent(UIUtils.getContext(),
                                         ImageLoadingActivity.class);
@@ -150,6 +153,7 @@ public class RecommendFragment extends BaseFragment{
                                 intent.putExtra("itemCount",adapter.getItemCount());
                                 intent.putExtra("id",picList.get(position).id);
                                 intent.putStringArrayListExtra("picList",picUrlList);
+                                intent.putStringArrayListExtra("picIdList",picIdList);
                                 Log.i("图片浏览详情页", "传过去的数组大小picUrlList：" +
                                         ""+picUrlList.size()
                                 +"实际大小"+picList.size());
