@@ -11,6 +11,7 @@
     <color name="grey">#000000</color>
     <color name="white">#11111111</color>
     <color name="whiteNor">#FFFFFFFF</color>
+
     <!--splash background color start-->
     <color name="lightblue1">#03A9F4</color>
     <color name="lightblue2">#29B6F6</color>
@@ -18,4 +19,9 @@
     <color name="lightblue4">#81D4FA</color>
     <color name="lightbluelast">#0277BD</color>
     <!--splash background color end-->
+
+    <!--夜间皮肤start-->
+    <color name="colorPrimary_night">#424242</color>
+    <color name="colorPrimaryDark_night">#212121</color>
+    <!--夜间皮肤end-->
 </resources>

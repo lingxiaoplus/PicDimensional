@@ -75,7 +75,7 @@ public class SearchActivity extends BaseActivity {
     private GridLayoutManager mLayoutManager;
 
     private ArrayList<String> picUrlList = new ArrayList<>();
-
+    private ArrayList<String> IdList = new ArrayList<>();
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -193,10 +193,12 @@ public class SearchActivity extends BaseActivity {
                                         return;
                                     }
                                     picUrlList.clear();
+                                    IdList.clear();
                                     for (int i = 0; i < wallPaperList.size(); i++) {
                                         if (picUrlList != null){
                                             picUrlList.add(wallPaperList.get(i).getImg());
                                         }
+                                        IdList.add(wallPaperList.get(i).getId());
                                     }
                                     Intent intent = new Intent(UIUtils.getContext(),
                                             ImageLoadingActivity.class);
@@ -204,6 +206,7 @@ public class SearchActivity extends BaseActivity {
                                     intent.putExtra("itemCount",mAdapter.getItemCount());
                                     intent.putExtra("id",wallPaperList.get(position).getId());
                                     intent.putStringArrayListExtra("picList",picUrlList);
+                                    intent.putStringArrayListExtra("picIdList",IdList);
                                     intent.putExtra("isHot",false); // 判断是否为最新界面传递过来的
                                     startActivity(intent);
                                 }

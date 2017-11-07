@@ -17,159 +17,183 @@
         android:minHeight="?attr/actionBarSize"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-        <android.support.v7.widget.CardView
-            style="@style/cardStyle"
-            card_view:cardCornerRadius="5dp"
-            card_view:cardElevation="5dp"
-            card_view:contentPadding="8dp"
-            android:layout_marginTop="8dp"
-            >
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="常规"
-                    android:textSize="16sp"
-                    android:layout_margin="10dp"
-                    android:textColor="?attr/colorPrimary"/>
-                <RelativeLayout
-                    android:id="@+id/rl_update"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:padding="10dp"
-                    android:background="@drawable/touchable_background_normal">
-                    <TextView
-                        android:id="@+id/tv_update"
-                        android:text="检查更新"
-                        style="@style/textTitle"/>
-                    <TextView
-                        android:id="@+id/tv_update_wifi"
-                        style="@style/textMsg"
-                        android:text="WIFI情况下自动检测更新"
-                        android:layout_below="@id/tv_update"/>
-                    <android.support.v7.widget.SwitchCompat
-                        android:layout_alignParentRight="true"
-                        android:id="@+id/switch_upload"
-                        android:focusable="false"
-                        android:clickable="false"
-                        android:checked="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"/>
-                </RelativeLayout>
-                <RelativeLayout
-                    android:id="@+id/rl_daily"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:padding="10dp"
-                    android:background="@drawable/touchable_background_normal">
-                    <TextView
-                        android:id="@+id/tv_daily"
-                        android:text="启动页面图片"
-                        style="@style/textTitle"/>
-                    <TextView
-                        android:id="@+id/tv_daily_switch"
-                        style="@style/textMsg"
-                        android:text="开启启动页每日图片"
-                        android:layout_below="@id/tv_daily"/>
-                    <android.support.v7.widget.SwitchCompat
-                        android:layout_alignParentRight="true"
-                        android:id="@+id/switch_daily"
-                        android:focusable="false"
-                        android:clickable="false"
-                        android:checked="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"/>
-                </RelativeLayout>
-                <RelativeLayout
-                    android:id="@+id/rl_clear"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_marginTop="10dp"
-                    android:padding="10dp"
-                    android:background="@drawable/touchable_background_normal">
-                    <TextView
-                        android:id="@+id/tv_clear"
-                        android:text="清理缓存"
-                        style="@style/textTitle"/>
-                    <TextView
-                        android:id="@+id/tv_clear_size"
-                        style="@style/textMsg"
-                        android:text="当前缓存的大小为：200MB"
-                        android:layout_below="@id/tv_clear"/>
-                </RelativeLayout>
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
             <android.support.v7.widget.CardView
                 style="@style/cardStyle"
+                android:layout_marginTop="8dp"
                 card_view:cardCornerRadius="5dp"
                 card_view:cardElevation="5dp"
-                card_view:contentPadding="8dp"
-                android:layout_marginTop="8dp"
-                >
+                card_view:contentPadding="8dp">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="其他"
-                        android:textSize="16sp"
                         android:layout_margin="10dp"
-                        android:textColor="?attr/colorPrimary"/>
+                        android:text="常规"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="16sp" />
+
+                    <RelativeLayout
+                        android:id="@+id/rl_update"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/touchable_background_normal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tv_update"
+                            style="@style/textTitle"
+                            android:text="检查更新" />
+
+                        <TextView
+                            android:id="@+id/tv_update_wifi"
+                            style="@style/textMsg"
+                            android:layout_below="@id/tv_update"
+                            android:text="WIFI情况下自动检测更新" />
+
+                        <android.support.v7.widget.SwitchCompat
+                            android:id="@+id/switch_upload"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:checked="true"
+                            android:clickable="false"
+                            android:focusable="false" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_daily"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:background="@drawable/touchable_background_normal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tv_daily"
+                            style="@style/textTitle"
+                            android:text="启动页面图片" />
+
+                        <TextView
+                            android:id="@+id/tv_daily_switch"
+                            style="@style/textMsg"
+                            android:layout_below="@id/tv_daily"
+                            android:text="开启启动页每日图片" />
+
+                        <android.support.v7.widget.SwitchCompat
+                            android:id="@+id/switch_daily"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:checked="true"
+                            android:clickable="false"
+                            android:focusable="false" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_clear"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/touchable_background_normal"
+                        android:padding="10dp">
+
+                        <TextView
+                            android:id="@+id/tv_clear"
+                            style="@style/textTitle"
+                            android:text="清理缓存" />
+
+                        <TextView
+                            android:id="@+id/tv_clear_size"
+                            style="@style/textMsg"
+                            android:layout_below="@id/tv_clear"
+                            android:text="当前缓存的大小为：200MB" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                style="@style/cardStyle"
+                android:layout_marginTop="8dp"
+                card_view:cardCornerRadius="5dp"
+                card_view:cardElevation="5dp"
+                card_view:contentPadding="8dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:text="其他"
+                        android:textColor="?attr/colorPrimary"
+                        android:textSize="16sp" />
+
                     <RelativeLayout
                         android:id="@+id/rl_share"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_marginTop="10dp"
-                        android:padding="10dp"
-                        android:background="@drawable/touchable_background_normal">
+                        android:background="@drawable/touchable_background_normal"
+                        android:padding="10dp">
+
                         <TextView
                             android:id="@+id/tv_share"
-                            android:text="分享给好友"
-                            style="@style/textTitle"/>
+                            style="@style/textTitle"
+                            android:text="分享给好友" />
+
                         <TextView
                             style="@style/textMsg"
-                            android:text="把妹子们分享出去"
-                            android:layout_below="@id/tv_share"/>
+                            android:layout_below="@id/tv_share"
+                            android:text="把妹子们分享出去" />
                     </RelativeLayout>
+
                     <RelativeLayout
-                        android:visibility="gone"
                         android:id="@+id/rl_checkout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="10dp"
                         android:layout_marginTop="10dp"
+                        android:background="@drawable/touchable_background_normal"
                         android:padding="10dp"
-                        android:background="@drawable/touchable_background_normal">
+                        android:visibility="gone"
+                        >
+
                         <TextView
                             android:id="@+id/tv_checkout"
-                            android:text="换肤"
-                            style="@style/textTitle"/>
+                            style="@style/textTitle"
+                            android:text="换肤" />
+
                         <TextView
                             style="@style/textMsg"
-                            android:text="更换皮肤"
-                            android:layout_below="@id/tv_checkout"/>
+                            android:layout_below="@id/tv_checkout"
+                            android:text="更换皮肤" />
                     </RelativeLayout>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

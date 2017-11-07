@@ -1,5 +1,8 @@
 package com.lingxiaosuse.picture.tudimension.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,6 +54,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
     private boolean isFinish;   //是否加载完成 -- 隐藏布局
 
     private String imgRule = "?imageView2/3/h/230"; //图片规则，从服务器取230大小的图片
+    private int mLastPosition = -1;
     public MyRecycleViewAdapter(ArrayList<HomePageModle.Picture> list,
                                 ArrayList<HomePageModle.slidePic> slideList,
                                 Context context){
@@ -192,6 +197,10 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
                 });
             }
 
+            boolean b = Integer.compare(position,mLastPosition) < 0 ? true : false;
+            addInAnimation(((ViewHolder) viewHolder).imageview,b);
+            mLastPosition = position;
+
         }
     }
 
@@ -259,4 +268,34 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void setOnBannerClickListener(OnBannerClickListener mOnBannerClickListener){
         this.mOnBannerClickListener = mOnBannerClickListener;
     }
+
+    /**
+     *  将动画对象加入集合中  根据左右滑动加入不同
+     */
+    private void addInAnimation(View view, boolean buttom) {
+        List<Animator> list = new ArrayList<>();
+        if (buttom) {
+            list.add(ObjectAnimator.ofFloat(view,
+                    "translationY", -view.getMeasuredHeight() * 2, 0));
+        } else {
+            list.add(ObjectAnimator.ofFloat(view,
+                    "translationY", view.getMeasuredHeight() * 2, 0));
+        }
+        list.add(ObjectAnimator.ofFloat(view, "translationY",
+                view.getMeasuredHeight() / 2, 0));
+        list.add(ObjectAnimator.ofFloat(view, "alpha", 0, 1));
+        list.add(ObjectAnimator.ofFloat(view, "scaleX", 0.25f, 1));
+        list.add(ObjectAnimator.ofFloat(view, "scaleY", 0.25f, 1));
+        startAnimation(list);
+    }
+    /**
+     *  开启动画
+     */
+    private void startAnimation(List<Animator> list) {
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.playTogether(list);
+        animatorSet.setInterpolator(new DecelerateInterpolator());
+        animatorSet.start();
+    }
+
 }
