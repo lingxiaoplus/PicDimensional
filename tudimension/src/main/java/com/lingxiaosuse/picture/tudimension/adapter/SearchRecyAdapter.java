@@ -19,8 +19,8 @@ import java.util.List;
 
 public class SearchRecyAdapter extends BaseRecycleAdapter{
 
-    public SearchRecyAdapter(List mList) {
-        super(mList);
+    public SearchRecyAdapter(List mList,int headCont,int footCount) {
+        super(mList,headCont,footCount);
     }
     @Override
     public void bindData(BaseViewHolder holder, int position, List mList) {
@@ -44,5 +44,10 @@ public class SearchRecyAdapter extends BaseRecycleAdapter{
     @Override
     public int getLayoutId() {
         return R.layout.hot_item;
+    }
+
+    @Override
+    public int getHeadLayoutId() {
+        return 0;
     }
 }

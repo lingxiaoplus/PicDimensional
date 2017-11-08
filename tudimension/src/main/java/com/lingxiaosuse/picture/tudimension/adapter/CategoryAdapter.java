@@ -1,6 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.adapter;
 
 import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -18,8 +19,8 @@ public class CategoryAdapter extends BaseRecycleAdapter{
     private SimpleDraweeView pic;
     private TextView textView;
     private List<CategoryModle.ResBean.CategoryBean> mCateList;
-    public CategoryAdapter(List list){
-        super(list);
+    public CategoryAdapter(List list,int headCont,int footCount){
+        super(list,headCont,footCount);
     }
     @Override
     public void bindData(BaseViewHolder holder, int position, List mList) {
@@ -38,5 +39,10 @@ public class CategoryAdapter extends BaseRecycleAdapter{
     @Override
     public int getLayoutId() {
         return R.layout.category_item;
+    }
+
+    @Override
+    public int getHeadLayoutId() {
+        return 0;
     }
 }

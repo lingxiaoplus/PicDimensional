@@ -59,7 +59,7 @@ public class CategoryFragment extends BaseFragment{
                     @Override
                     public void onResponse(Call<CategoryModle> call, Response<CategoryModle> response) {
                         categoryList = response.body().getRes().getCategory();
-                        mCateAdapter = new CategoryAdapter(categoryList);
+                        mCateAdapter = new CategoryAdapter(categoryList,0,0);
                         recyclerView.setAdapter(mCateAdapter);
                         mLayoutManager = new GridLayoutManager(getActivity(),2,
                                 LinearLayoutManager.VERTICAL,false);

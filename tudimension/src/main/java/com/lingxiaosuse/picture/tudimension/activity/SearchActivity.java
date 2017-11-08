@@ -111,7 +111,7 @@ public class SearchActivity extends BaseActivity {
             });
         }
 
-        mAdapter = new SearchRecyAdapter(wallPaperList);
+        mAdapter = new SearchRecyAdapter(wallPaperList,0,1);
         recyclerView.setAdapter(mAdapter);
         mLayoutManager = new GridLayoutManager(getApplicationContext(),2,
                 LinearLayoutManager.VERTICAL,false);

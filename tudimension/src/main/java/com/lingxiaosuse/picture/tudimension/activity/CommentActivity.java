@@ -101,7 +101,7 @@ public class CommentActivity extends BaseActivity {
                         if (commentBeanList.size()>0){
                             linearLayout.setVisibility(View.GONE);
                             recycleComment.setVisibility(View.VISIBLE);
-                            CommentRecycleAdapter mAdapter = new CommentRecycleAdapter(commentBeanList);
+                            CommentRecycleAdapter mAdapter = new CommentRecycleAdapter(commentBeanList,0,1);
                             recycleComment.setAdapter(mAdapter);
                             LinearLayoutManager mLayoutManager =
                                     new LinearLayoutManager(getApplicationContext());

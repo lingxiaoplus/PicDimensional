@@ -68,6 +68,7 @@ dependencies {
     compile 'agency.tango.android:material-intro-screen:0.0.5'
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'com.github.chrisbanes:PhotoView:1.2.6'
+
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

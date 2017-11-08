@@ -19,8 +19,8 @@ public class CommentRecycleAdapter extends BaseRecycleAdapter{
     private SimpleDraweeView headImg;
     private TextView username,time,number,content;
 
-    public CommentRecycleAdapter(List mList) {
-        super(mList);
+    public CommentRecycleAdapter(List mList,int headCont,int footCount) {
+        super(mList,headCont,footCount);
     }
 
     @Override
@@ -42,6 +42,11 @@ public class CommentRecycleAdapter extends BaseRecycleAdapter{
     @Override
     public int getLayoutId() {
         return R.layout.list_comment;
+    }
+
+    @Override
+    public int getHeadLayoutId() {
+        return 0;
     }
 
 }
