@@ -7,15 +7,16 @@
     android:layout_height="match_parent">
 
     <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swip_vertical_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_vertical_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </android.support.constraint.ConstraintLayout>

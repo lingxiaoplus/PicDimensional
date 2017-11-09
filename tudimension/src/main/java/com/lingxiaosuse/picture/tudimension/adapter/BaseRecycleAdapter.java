@@ -219,6 +219,7 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(list);
         animatorSet.setInterpolator(new DecelerateInterpolator());
+        animatorSet.setDuration(500);
         animatorSet.start();
     }
 }

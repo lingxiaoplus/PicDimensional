@@ -198,7 +198,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
             }
 
             boolean b = Integer.compare(position,mLastPosition) < 0 ? true : false;
-            addInAnimation(((ViewHolder) viewHolder).imageview,b);
+            addInAnimation(((ViewHolder) viewHolder).itemView,b);
             mLastPosition = position;
 
         }
