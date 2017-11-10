@@ -1,29 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:floating="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
    >
-    <include layout="@layout/title_bar"/>
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_vertical"
+    <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabBackground="@color/colorPrimary"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:tabIndicatorColor="@color/colorAccent"
-        app:tabTextColor="#fff"
-        app:tabSelectedTextColor="@color/colorAccent"
-        app:tabGravity="fill">
-    </android.support.design.widget.TabLayout>
+        android:theme="@style/Base.ThemeOverlay.AppCompat.Dark.ActionBar">
+        <include layout="@layout/title_bar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways|snap"/>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabBackground="@color/colorPrimary"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:tabIndicatorColor="@color/colorAccent"
+            app:tabTextColor="#fff"
+            app:tabSelectedTextColor="@color/colorAccent"
+            app:tabGravity="fill">
+        </android.support.design.widget.TabLayout>
+    </android.support.design.widget.AppBarLayout>
+
     <android.support.v4.view.ViewPager
         android:id="@+id/pager_vertical"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
-
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
     </android.support.v4.view.ViewPager>
-</LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_vertical"
+        android:visibility="gone"
+        app:fabSize="normal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        floating:srcCompat="@drawable/ic_return_top"
+        android:layout_margin="@dimen/fab_margin"
+        app:backgroundTint="@color/colorPrimary"
+        app:rippleColor="#33728dff"
+        app:layout_behavior="@string/scroll_behavior"/>
+</android.support.design.widget.CoordinatorLayout>

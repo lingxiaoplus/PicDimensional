@@ -48,8 +48,7 @@ public abstract class BaseFragment extends Fragment{
                 }
             });
         }
-        Log.i("code", "setUserVisibleHint: 调用了"+isVisibleToUser
-        +"fabutton："+faButton+"getrecycle()："+getRecycle());
+
     }
 
     protected abstract void initData();

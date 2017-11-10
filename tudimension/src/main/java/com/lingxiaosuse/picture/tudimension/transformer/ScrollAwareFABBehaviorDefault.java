@@ -48,12 +48,11 @@ public class ScrollAwareFABBehaviorDefault extends FloatingActionButton.Behavior
                 }
             });
             visible = false;
-        } else if (dyConsumed < 0) {
+        } else if (dyConsumed  < 0) {
             // User scrolled up and the FAB is currently not visible -> show the FAB
             child.show();
             visible = true;
         }
-        Log.i("code", "dyConsumed: "+dyConsumed);
     }
 
 

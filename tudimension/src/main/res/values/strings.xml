@@ -9,6 +9,7 @@
     <string name="close">close</string>
     <string name="description_head">给你想要的，不想要的也给你</string>
     <string name="default_comment">评论空空如也</string>
+    <string name="scroll_behavior">com.lingxiaosuse.picture.tudimension.transformer.ScrollAwareFABBehaviorDefault</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->
