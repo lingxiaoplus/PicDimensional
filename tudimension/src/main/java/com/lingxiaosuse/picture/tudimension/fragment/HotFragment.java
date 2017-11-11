@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
+import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.HotRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
@@ -47,7 +48,7 @@ public class HotFragment extends BaseFragment{
     private HotRecycleAdapter mAdapter;
     private GridLayoutManager mLayoutManager;
     private int index = 1;
-    private int current = 10;
+    private int current = 20;
     private ArrayList<String> picUrlList = new ArrayList<>();//取出图片地址传递给下一个activity
     private Handler mHandler = new Handler(){
         @Override
@@ -70,6 +71,7 @@ public class HotFragment extends BaseFragment{
         View view = UIUtils.inflate(R.layout.fragment_hot);
         ButterKnife.bind(this,view);
         refreshLayout.setColorSchemeResources(
+                R.color.colorPrimary,
                 android.R.color.holo_blue_light,
                 android.R.color.holo_red_light,
                 android.R.color.holo_orange_light,
@@ -82,43 +84,21 @@ public class HotFragment extends BaseFragment{
         });
         mLayoutManager = new GridLayoutManager(getContext(),2,
                 LinearLayoutManager.VERTICAL,false);
-        mAdapter = new HotRecycleAdapter(previsList);
+        mAdapter = new HotRecycleAdapter(previsList,0,1);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                //得到当前显示的最后一个item的view
-                View lastChildView = recyclerView
-                        .getLayoutManager()
-                        .getChildAt(recyclerView
-                                .getLayoutManager()
-                                .getChildCount()-1);
-                //得到lastChildView的bottom坐标值
-                int lastChildBottom = lastChildView.getBottom();
-                //得到Recyclerview的底部坐标减去底部padding值，也就是显示内容最底部的坐标
-                int recyclerBottom =  recyclerView
-                        .getBottom()-recyclerView.getPaddingBottom();
-                //通过这个lastChildView得到这个view当前的position值
-                int lastPosition  = recyclerView
-                        .getLayoutManager()
-                        .getPosition(lastChildView);
-
-                //判断lastChildView的bottom值跟recyclerBottom
-                //判断lastPosition是不是最后一个position
-                //如果两个条件都满足则说明是真正的滑动到了底部
-                if(lastChildBottom == recyclerBottom &&
-                        lastPosition == recyclerView.getLayoutManager().getItemCount()-1 ){
-                    index++;
-                    if (index<55){
-                        getData(current,index);
-                    }else {
-                        ToastUtils.show("没有数据了");
-                    }
+            public void onLoadMore() {
+                index++;
+                if (index<55){
+                    getData(current,index);
+                }else {
+                    ToastUtils.show("没有数据了");
+                    mAdapter.isFinish(true);
                 }
             }
         });
-
         mAdapter.setOnItemClickListener(new HotRecycleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View View, int position) {

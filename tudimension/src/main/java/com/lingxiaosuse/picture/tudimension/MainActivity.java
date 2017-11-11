@@ -183,6 +183,7 @@ public class MainActivity extends BaseActivity {
                     case R.id.nav_home:
                         ToastUtils.show("首页");
                         StartActivity(MainActivity.class,false);
+                        viewPager.setCurrentItem(0);
                         break;
                     case R.id.nav_vertical:
                         ToastUtils.show("手机壁纸");

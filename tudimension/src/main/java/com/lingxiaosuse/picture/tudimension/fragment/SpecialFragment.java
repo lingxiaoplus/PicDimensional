@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
+import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.SpecialRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.SpecialModle;
@@ -75,7 +76,7 @@ public class SpecialFragment extends BaseFragment{
             @Override
             public void onResponse(Call<SpecialModle> call, Response<SpecialModle> response) {
                 albumBeanList = response.body().getRes().getAlbum();
-                mAdapter = new SpecialRecycleAdapter(albumBeanList);
+                mAdapter = new SpecialRecycleAdapter(albumBeanList,0,1);
                 manager = new LinearLayoutManager(getContext());
                 recyclerView.setLayoutManager(manager);
                 recyclerView.setAdapter(mAdapter);
@@ -86,9 +87,9 @@ public class SpecialFragment extends BaseFragment{
                         getMoreData(30);
                     }
                 });
-                mAdapter.setOnItemClickListener(new SpecialRecycleAdapter.OnItemClickListener() {
+                mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
                     @Override
-                    public void onItemClick(View view, int position, Uri uri) {
+                    public void onItemClick(View View, int position) {
                         Intent intent = new Intent(UIUtils.getContext(),
                                 BannerDetailActivity.class);
                         intent.putExtra("url",albumBeanList.get(position).getLcover());

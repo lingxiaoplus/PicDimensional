@@ -11,9 +11,9 @@
         android:layout_height="wrap_content">
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_meizi_img"
-            android:padding="5dp"
-            android:layout_width="240dp"
-            android:layout_height="320dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            fresco:viewAspectRatio="0.85"
             fresco:progressBarImageScaleType="centerInside"
             fresco:progressBarAutoRotateInterval="2000"
             fresco:progressBarImage="@drawable/ic_loading_default"
