@@ -31,6 +31,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_horizontal"
+        android:layout_margin="10dp"
         android:id="@+id/ll_finish">
         <ImageView
             android:layout_width="30dp"
@@ -43,7 +44,7 @@
             android:layout_gravity="center"
             android:textColor="#4CAF50"
             android:layout_marginLeft="5dp"
-            android:text="图片都被你看光啦"/>
+            android:text="到底啦"/>
     </LinearLayout>
 
 </RelativeLayout>

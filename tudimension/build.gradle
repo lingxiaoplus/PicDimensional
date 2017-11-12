@@ -47,7 +47,7 @@ dependencies {
     //photoview
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'org.zackratos:ultimatebar:1.0.3'
+    compile 'org.zackratos:ultimatebar:1.1.1'
     compile 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
     compile 'com.android.support:cardview-v7:26.+'
     compile 'com.google.code.gson:gson:2.7'

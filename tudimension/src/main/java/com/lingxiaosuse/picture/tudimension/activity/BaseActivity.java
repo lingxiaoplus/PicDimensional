@@ -88,7 +88,8 @@ public class BaseActivity extends AppCompatActivity{
         ultimateBar.setImmersionBar();*/
         //半透明
         ultimateBar = new UltimateBar(this);
-        ultimateBar.setColorBar(ContextCompat.getColor(this, R.color.colorPrimary));
+        ultimateBar.setColorBar(ContextCompat.getColor(this, R.color.colorPrimary),
+                100);
         ActivityController.addActivity(this);
         /*mDownloadIntent = new Intent(this, DownloadService.class);
         startService(mDownloadIntent);

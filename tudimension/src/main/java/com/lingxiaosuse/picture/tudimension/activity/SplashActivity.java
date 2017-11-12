@@ -43,13 +43,13 @@ public class SplashActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         //判断是否打开了日图
-        if (!SpUtils.getBoolean(this,ContentValue.IS_OPEN_DAILY,false)){
+        if (!SpUtils.getBoolean(this,ContentValue.IS_OPEN_DAILY,true)){
             StartActivity(MainActivity.class,true);
         }
 
         ButterKnife.bind(this);
         UltimateBar ultimateBar = new UltimateBar(this);
-        ultimateBar.setImmersionBar();
+        ultimateBar.setImmersionBar(true);
         isFirst = SpUtils.getBoolean(this, ContentValue.ISFIRST_KEY,true);
     }
 

@@ -118,9 +118,12 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
             //头布局
         }else {
             bindData(holder,position,mList);
-            boolean b = Integer.compare(position,mLastPosition) < 0 ? true : false;
-            addInAnimation(mItemView,b);
-            mLastPosition = position;
+            if (!isFinish){
+                //数据加载完成后不要动画，不然动画会重复
+                boolean b = Integer.compare(position,mLastPosition) < 0 ? true : false;
+                addInAnimation(mItemView,b);
+                mLastPosition = position;
+            }
         }
     }
 
@@ -219,7 +222,7 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(list);
         animatorSet.setInterpolator(new DecelerateInterpolator());
-        animatorSet.setDuration(500);
+        animatorSet.setDuration(800);
         animatorSet.start();
     }
 }

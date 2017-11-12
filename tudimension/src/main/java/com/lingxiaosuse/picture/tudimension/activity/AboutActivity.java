@@ -51,8 +51,6 @@ public class AboutActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_about);
-        UltimateBar ultimateBar = new UltimateBar(this);
-        ultimateBar.setImmersionBar();
         ButterKnife.bind(this);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override

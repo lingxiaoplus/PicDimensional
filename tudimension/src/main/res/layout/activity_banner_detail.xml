@@ -10,6 +10,7 @@
         android:id="@+id/main_abl_app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
        >
         <android.support.design.widget.CollapsingToolbarLayout
             android:layout_width="match_parent"
@@ -21,6 +22,7 @@
                 android:id="@+id/main_iv_placeholder"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
+                android:fitsSystemWindows="true"
                 app:progressBarImageScaleType="centerInside"
                 app:progressBarAutoRotateInterval="2000"
                 app:progressBarImage="@drawable/ic_loading_default"/>
@@ -33,38 +35,10 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/main_tb_toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="66dp"
+                android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
-                android:minHeight="?attr/actionBarSize"
-                android:fitsSystemWindows="true"
-                app:theme="@style/ThemeOverlay.AppCompat.Light">
-                <RelativeLayout
-                    android:id="@+id/rl_banner_back"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:fitsSystemWindows="true"
-                    android:background="?android:attr/selectableItemBackground"
-                    >
-                <ImageView
-                    android:id="@+id/iv_banner_back"
-                    android:layout_width="40dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/ic_back"
-                    android:layout_centerVertical="true"
-                    />
-                    <TextView
-                        android:id="@+id/tv_banner_title"
-                        android:layout_toRightOf="@id/iv_banner_back"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="title"
-                        android:textSize="18sp"
-                        android:textColor="#fff"
-                        android:layout_marginLeft="5dp"
-                        android:maxLines="1"
-                        android:layout_centerVertical="true"/>
-                </RelativeLayout>
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
             </android.support.v7.widget.Toolbar>
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>

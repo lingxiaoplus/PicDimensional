@@ -1,5 +1,6 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.activity.VerticalActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.VerticalAdapter;
@@ -45,7 +47,9 @@ public class VerticalFragment extends Fragment{
     private FloatingActionButton faButton;
     private StaggeredGridLayoutManager manager;
     private VerticalActivity activity;
-
+    private List<VerticalModle.ResBean.VerticalBean> verticalBeanList;
+    private ArrayList<String> picIdList = new ArrayList<>();
+    private ArrayList<String> picUrlList = new ArrayList<>();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,13 +79,34 @@ public class VerticalFragment extends Fragment{
                     @Override
                     public void onResponse(Call<VerticalModle> call,
                                            Response<VerticalModle> response) {
-                        List<VerticalModle.ResBean.VerticalBean> verticalBeanList =
-                                response.body().getRes().getVertical();
+                        verticalBeanList = response.body().getRes().getVertical();
                         mPicList.addAll(verticalBeanList);
                         mAdapter.notifyDataSetChanged();
                         if (refreshLayout.isRefreshing()){
                             refreshLayout.setRefreshing(false);
                         }
+                        picUrlList.clear();
+                        picIdList.clear();
+                        for (int i = 0; i < mPicList.size(); i++) {
+                            picIdList.add(mPicList.get(i).getId());
+                            picUrlList.add(mPicList.get(i).getImg());
+                        }
+
+                        mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(View View, int position) {
+                                Intent intent = new Intent(UIUtils.getContext(),
+                                        ImageLoadingActivity.class);
+                                intent.putExtra("position",position);
+                                intent.putExtra("itemCount",mAdapter.getItemCount());
+                                intent.putExtra("id",mPicList.get(position).getId());
+                                intent.putExtra("isHot",true);
+                                intent.putExtra("isVertical",true);
+                                intent.putStringArrayListExtra("picList",picUrlList);
+                                intent.putStringArrayListExtra("picIdList",picIdList);
+                                startActivity(intent);
+                            }
+                        });
                     }
 
                     @Override

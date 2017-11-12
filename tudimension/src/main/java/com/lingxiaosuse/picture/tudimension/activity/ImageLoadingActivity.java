@@ -18,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -68,7 +69,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
     ImageView commentImg;
     private ArrayList<String> picList,IdList;
     private ImageLoadAdapter mAdapter;
-    private boolean isHot;
+    private boolean isHot,isVertical;
     private File file;
 
     @Override
@@ -76,7 +77,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_loading);
         UltimateBar ultimateBar = new UltimateBar(this);
-        ultimateBar.setImmersionBar();
+        ultimateBar.setImmersionBar(true);
         ButterKnife.bind(this);
         intent = getIntent();
         initData();
@@ -87,10 +88,15 @@ public class ImageLoadingActivity extends AppCompatActivity {
         itemCount = intent.getIntExtra("itemCount",0);
         id = intent.getStringExtra("id");
         isHot = intent.getBooleanExtra("isHot",false); //判断是否是hot界面
+        isVertical = intent.getBooleanExtra("isVertical",false); //判断是否是壁纸界面
         picList = intent.getStringArrayListExtra("picList");
 
         if(!isHot){
             linearLayout.setBackgroundColor(Color.BLACK);
+            IdList = intent.getStringArrayListExtra("picIdList");
+            commentImg.setVisibility(View.VISIBLE);
+        }
+        if (isVertical){
             IdList = intent.getStringArrayListExtra("picIdList");
             commentImg.setVisibility(View.VISIBLE);
         }
@@ -101,14 +107,13 @@ public class ImageLoadingActivity extends AppCompatActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
                 textCurrent.setText(position+1+"/"+itemCount);
                 mPosition = position;
-                if (!isHot){
+                if (!isHot || isVertical){
                     id = IdList.get(position);
                 }
             }

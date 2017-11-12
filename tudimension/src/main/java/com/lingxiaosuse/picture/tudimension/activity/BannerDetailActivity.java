@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -33,9 +34,6 @@ import com.lingxiaosuse.picture.tudimension.retrofit.BannerInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-
-import org.zackratos.ultimatebar.UltimateBar;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,20 +63,14 @@ public class BannerDetailActivity extends BaseActivity {
     @BindView(R.id.main_abl_app_bar)
     AppBarLayout mAblAppBar; // 整个可以滑动的AppBar
 
-    @BindView(R.id.tv_banner_title)
-    TextView textTitle; // 标题栏Title
 
     @BindView(R.id.main_tb_toolbar)
     Toolbar mTbToolbar; // 工具栏
 
-    @BindView(R.id.iv_banner_back)
-    ImageView imageBack;
 
     @BindView(R.id.rv_banner)
     RecyclerView recyclerView;
 
-    @BindView(R.id.rl_banner_back)
-    RelativeLayout relativeLayout;
     private RecyclerView.LayoutManager mLayoutManager;
     private BannerRecycleAdapter mAdapter;
 
@@ -87,10 +79,12 @@ public class BannerDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_banner_detail);
         ButterKnife.bind(this);
-        UltimateBar ultimateBar = new UltimateBar(this);
-        ultimateBar.setImmersionBar();
+        ultimateBar.setTransparentBar(
+                ContextCompat.getColor(UIUtils.getContext(),
+                R.color.colorPrimary),
+                0);
         // AppBar的监听
-        mAblAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+        /*mAblAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 int maxScroll = appBarLayout.getTotalScrollRange();
@@ -98,7 +92,7 @@ public class BannerDetailActivity extends BaseActivity {
                 //handleAlphaOnTitle(percentage);
                 handleToolbarTitleVisibility(percentage);
             }
-        });
+        });*/
         // or 网格布局，可以设置列数和方向，是否反向显示
         mLayoutManager = new GridLayoutManager(this,1,
                 LinearLayoutManager.VERTICAL,false);
@@ -119,18 +113,14 @@ public class BannerDetailActivity extends BaseActivity {
             Uri uri = Uri.parse(url);
             mIvPlaceholder.setImageURI(uri);
             getDataFromServere(type,id,false);
-            mTbToolbar.setTitle("");
-            textTitle.setText(title);
+            mTbToolbar.setTitle(title);
+            setSupportActionBar(mTbToolbar);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
         }catch (Exception e){
             e.printStackTrace();
         }
 
-        relativeLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
     }
 
     private void getDataFromServere(final String type, final String id, final boolean isGetMore) {
@@ -257,5 +247,15 @@ public class BannerDetailActivity extends BaseActivity {
         alphaAnimation.setDuration(duration);
         alphaAnimation.setFillAfter(true);
         v.startAnimation(alphaAnimation);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
     }
 }

@@ -160,14 +160,17 @@ public class MainActivity extends BaseActivity {
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                ultimateBar.setColorBarForDrawer(getResources().getColor(R.color.colorAccent));
+                ultimateBar.setColorBarForDrawer
+                        (ContextCompat.getColor(UIUtils.getContext(), R.color.colorPrimary),
+                                100);
 
             }
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 ultimateBar.setColorBar(ContextCompat.getColor(UIUtils.getContext(),
-                        R.color.colorPrimary));
+                        R.color.colorPrimary),
+                        100);
             }
         };
         mDrawerToggle.syncState();

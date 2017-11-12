@@ -11,12 +11,14 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.CommentRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CommentModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.CommentInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,6 +38,10 @@ public class CommentActivity extends BaseActivity {
     @BindView(R.id.swip_comment)
     SwipeRefreshLayout swipComment;
     private String id;
+    private List<CommentModle.ResBean.CommentBean> commentBeanList;
+    private List<CommentModle.ResBean.CommentBean> mBeanList = new ArrayList<>();
+    private int skip = 0;
+    private CommentRecycleAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,7 @@ public class CommentActivity extends BaseActivity {
         ButterKnife.bind(this);
         id = getIntent().getStringExtra("id");
         initView();
-        getDataFromeServer();
+        getDataFromeServer(skip);
     }
 
     private void initView() {
@@ -56,7 +62,22 @@ public class CommentActivity extends BaseActivity {
         swipComment.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getDataFromeServer();
+                getDataFromeServer(0);
+            }
+        });
+
+        mAdapter = new CommentRecycleAdapter(mBeanList,0,1);
+        recycleComment.setAdapter(mAdapter);
+        LinearLayoutManager mLayoutManager =
+                new LinearLayoutManager(getApplicationContext());
+        recycleComment.setLayoutManager(mLayoutManager);
+        mAdapter.notifyDataSetChanged();
+
+        mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
+            @Override
+            public void onLoadMore() {
+                skip+=30;
+                getDataFromeServer(skip);
             }
         });
     }
@@ -67,7 +88,7 @@ public class CommentActivity extends BaseActivity {
             return;
         }
         swipComment.setRefreshing(true);
-        getDataFromeServer();
+        getDataFromeServer(0);
     }
 
     @Override
@@ -89,27 +110,25 @@ public class CommentActivity extends BaseActivity {
         overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_top);
     }
 
-    private void getDataFromeServer(){
+    private void getDataFromeServer(int skip){
         RetrofitHelper.getInstance(this)
                 .getInterface(CommentInterface.class)
-                .commentModle(id)
+                .commentModle(id,30,skip)
                 .enqueue(new Callback<CommentModle>() {
                     @Override
                     public void onResponse(Call<CommentModle> call, Response<CommentModle> response) {
-                        List<CommentModle.ResBean.CommentBean>
-                                commentBeanList = response.body().getRes().getComment();
-                        if (commentBeanList.size()>0){
+                        commentBeanList = response.body().getRes().getComment();
+                        mBeanList.addAll(commentBeanList);
+                        if (mBeanList.size()>0){
                             linearLayout.setVisibility(View.GONE);
                             recycleComment.setVisibility(View.VISIBLE);
-                            CommentRecycleAdapter mAdapter = new CommentRecycleAdapter(commentBeanList,0,1);
-                            recycleComment.setAdapter(mAdapter);
-                            LinearLayoutManager mLayoutManager =
-                                    new LinearLayoutManager(getApplicationContext());
-                            recycleComment.setLayoutManager(mLayoutManager);
                             mAdapter.notifyDataSetChanged();
                         }else {
                             linearLayout.setVisibility(View.VISIBLE);
                             recycleComment.setVisibility(View.GONE);
+                        }
+                        if (commentBeanList.size()<30){
+                            mAdapter.isFinish(true);
                         }
                         if (swipComment.isRefreshing()){
                             swipComment.setRefreshing(false);
