@@ -31,22 +31,29 @@ public abstract class BaseFragment extends Fragment{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        //暂时解决fab点击的问题
-        faButton = getActivity()
-                .findViewById(R.id.fab_main);
+        if (getRecycle() != null){
+            //暂时解决fab点击的问题
+            faButton = getActivity()
+                    .findViewById(R.id.fab_main);
+        }
         initData();
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser && faButton != null && getRecycle() != null){
-            faButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getRecycle().smoothScrollToPosition(0);
-                }
-            });
+        if (isVisibleToUser && faButton != null){
+            if (getRecycle() != null){
+                faButton.show();
+                faButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        getRecycle().smoothScrollToPosition(0);
+                    }
+                });
+            }else {
+                faButton.hide();
+            }
         }
 
     }
@@ -55,6 +62,9 @@ public abstract class BaseFragment extends Fragment{
 
     public abstract View initView();
 
+    /**
+     *fab的滑动显示与隐藏，需要用到recyclerview
+     */
     public abstract RecyclerView getRecycle();
 
 }

@@ -8,10 +8,12 @@ import android.view.View;
 
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
+import com.lingxiaosuse.picture.tudimension.activity.CategoryDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.CategoryAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
-import com.lingxiaosuse.picture.tudimension.retrofit.CategoryInterface;
+import com.lingxiaosuse.picture.tudimension.modle.CategoryVerticalModle;
+import com.lingxiaosuse.picture.tudimension.retrofit.CategoryVerticalInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
@@ -23,19 +25,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by lingxiao on 2017/8/28.
+ * Created by lingxiao on 17-11-13.
  */
 
-public class CategoryFragment extends BaseFragment{
+public class CategoryVerticalFragment extends BaseFragment{
     private RecyclerView recyclerView;
-    private List<CategoryModle.ResBean.CategoryBean> categoryList = new ArrayList<>();
+    private List<CategoryVerticalModle.ResBean.CategoryBean> categoryList = new ArrayList<>();
     private CategoryAdapter mCateAdapter;
     private GridLayoutManager mLayoutManager;
-
     @Override
     protected void initData() {
         getCategory();
     }
+
+
     @Override
     public View initView() {
         View view = UIUtils.inflate(R.layout.fragment_category);
@@ -48,18 +51,16 @@ public class CategoryFragment extends BaseFragment{
         return null;
     }
 
-    /**
-     *从服务器上获取分类信息
-     */
-    private void getCategory(){
-        RetrofitHelper.getInstance(UIUtils.getContext())
-                .getInterface(CategoryInterface.class)
+    private void getCategory() {
+        RetrofitHelper
+                .getInstance(UIUtils.getContext())
+                .getInterface(CategoryVerticalInterface.class)
                 .categoryModle()
-                .enqueue(new Callback<CategoryModle>() {
+                .enqueue(new Callback<CategoryVerticalModle>() {
                     @Override
-                    public void onResponse(Call<CategoryModle> call, Response<CategoryModle> response) {
+                    public void onResponse(Call<CategoryVerticalModle> call, Response<CategoryVerticalModle> response) {
                         categoryList = response.body().getRes().getCategory();
-                        mCateAdapter = new CategoryAdapter(categoryList,0,0,false);
+                        mCateAdapter = new CategoryAdapter(categoryList,0,0,true);
                         recyclerView.setAdapter(mCateAdapter);
                         mLayoutManager = new GridLayoutManager(getActivity(),2,
                                 LinearLayoutManager.VERTICAL,false);
@@ -72,7 +73,7 @@ public class CategoryFragment extends BaseFragment{
                                 /*Intent intent = new Intent(UIUtils.getContext(),CategoryDetailActivity.class);
                                 startActivity(intent);*/
                                 Intent intent = new Intent(UIUtils.getContext(),
-                                        BannerDetailActivity.class);
+                                        CategoryDetailActivity.class);
                                 intent.putExtra("url",categoryList.get(position).getCover());
                                 intent.putExtra("desc",categoryList.get(position).getName());
                                 intent.putExtra("id",categoryList.get(position).getId());
@@ -84,9 +85,10 @@ public class CategoryFragment extends BaseFragment{
                     }
 
                     @Override
-                    public void onFailure(Call<CategoryModle> call, Throwable t) {
+                    public void onFailure(Call<CategoryVerticalModle> call, Throwable t) {
 
                     }
                 });
     }
+
 }

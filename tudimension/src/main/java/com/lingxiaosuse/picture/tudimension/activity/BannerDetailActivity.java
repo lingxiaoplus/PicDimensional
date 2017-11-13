@@ -94,7 +94,7 @@ public class BannerDetailActivity extends BaseActivity {
             }
         });*/
         // or 网格布局，可以设置列数和方向，是否反向显示
-        mLayoutManager = new GridLayoutManager(this,1,
+        mLayoutManager = new GridLayoutManager(this,3,
                 LinearLayoutManager.VERTICAL,false);
         initIntentValue(); //接受intent参数
 
@@ -112,21 +112,36 @@ public class BannerDetailActivity extends BaseActivity {
             final String type = getIntent().getStringExtra("type");
             Uri uri = Uri.parse(url);
             mIvPlaceholder.setImageURI(uri);
-            getDataFromServere(type,id,false);
+            mAdapter = new BannerRecycleAdapter(picList,
+                    UIUtils.getContext()
+            );
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setAdapter(mAdapter);
+            getDataFromServere(type,id);
             mTbToolbar.setTitle(title);
             setSupportActionBar(mTbToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setHomeButtonEnabled(true);
+
+            mAdapter.setRefreshListener(new BannerRecycleAdapter.onLoadmoreListener() {
+                @Override
+                public void onLoadMore(int position) {
+                    if (skip <300){
+                        skip+=30;
+                        getDataFromServere(type,id);
+                    }else {
+                        skip = 0;
+                        mAdapter.isFinish(true);
+                    }
+                }
+            });
         }catch (Exception e){
             e.printStackTrace();
         }
 
     }
 
-    private void getDataFromServere(final String type, final String id, final boolean isGetMore) {
-        if (isGetMore){
-            skip+=30;
-        }
+    private void getDataFromServere(final String type, final String id) {
         RetrofitHelper
                 .getInstance(this)
                 .getInterface(BannerInterface.class)
@@ -134,30 +149,10 @@ public class BannerDetailActivity extends BaseActivity {
                 .enqueue(new Callback<BannerModle>() {
                     @Override
                     public void onResponse(Call<BannerModle> call, Response<BannerModle> response) {
-                        picList = response.body().getRes().getWallpaper();
-                        if (isGetMore){
-                            if (skip <300){
-                                picList.addAll(picList);
-                            }else {
-                                skip = 0;
-                                mAdapter.isFinish(true);
-                            }
-                        }
-                        mAdapter = new BannerRecycleAdapter(picList,
-                                UIUtils.getContext()
-                        );
-                        recyclerView.setLayoutManager(mLayoutManager);
-                        recyclerView.setAdapter(mAdapter);
-                        mAdapter.setRefreshListener(new BannerRecycleAdapter.onLoadmoreListener() {
-                            @Override
-                            public void onLoadMore(int position) {
-                                if (picList.size()<30){
-                                    mAdapter.isFinish(true);
-                                }else {
-                                    getDataFromServere(type,id,true);
-                                }
-                            }
-                        });
+                        List<BannerModle.ResBean.WallpaperBean> mBeanList =
+                                response.body().getRes().getWallpaper();
+                        picList.addAll(mBeanList);
+                        mAdapter.notifyDataSetChanged();
                         mAdapter.setOnItemClickListener(new BannerRecycleAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position, Uri uri) {

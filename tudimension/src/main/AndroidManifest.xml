@@ -42,7 +42,7 @@
         </activity>
         <activity android:name=".activity.BaseActivity" />
         <activity android:name=".activity.ImageLoadingActivity" />
-        <activity android:name=".activity.CategoryActivity" />
+        <activity android:name=".activity.CategoryDetailActivity" />
         <activity android:name=".activity.BannerDetailActivity" />
         <activity
             android:name=".activity.AboutActivity"

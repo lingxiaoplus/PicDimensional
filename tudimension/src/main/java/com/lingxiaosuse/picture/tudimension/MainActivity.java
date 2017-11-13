@@ -197,6 +197,7 @@ public class MainActivity extends BaseActivity {
                         break;
                     case R.id.nav_find:
                         ToastUtils.show("搜图");
+                        showSelectDia();
                         break;
                     case R.id.nav_reception:
                         ToastUtils.show("好评");
@@ -330,5 +331,26 @@ public class MainActivity extends BaseActivity {
         }else {
             ActivityController.finishAll();
         }
+    }
+    /**
+     *对话框选择搜图接口
+     */
+    private void showSelectDia(){
+        String[] items = {"百度识图", "搜狗识图","谷歌识图"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("请选择搜图接口");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                if (i == 0){
+                    ToastUtils.show("baidu");
+                }else if (i ==1){
+                    ToastUtils.show("sougou");
+                }else {
+                    ToastUtils.show("google");
+                }
+            }
+        });
+        builder.show();
     }
 }

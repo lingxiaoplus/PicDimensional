@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.fragment.CategoryVerticalFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.VerticalFragment;
 
 import butterknife.BindView;
@@ -98,6 +99,7 @@ public class VerticalActivity extends BaseActivity {
                 bundle.putString("order", "hot");
             } else {
                 bundle.putString("order", "category");
+                return new CategoryVerticalFragment();
             }
             fragment.setArguments(bundle);
             return fragment;
