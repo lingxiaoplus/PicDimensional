@@ -2,17 +2,21 @@ package com.lingxiaosuse.picture.tudimension;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.didikee.donate.AlipayDonate;
 import android.didikee.donate.WeiXinDonate;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -36,6 +40,7 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.ActivityController;
@@ -44,10 +49,13 @@ import com.lingxiaosuse.picture.tudimension.activity.SearchActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SeeDownLoadImgActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SettingsActivity;
 import com.lingxiaosuse.picture.tudimension.activity.VerticalActivity;
+import com.lingxiaosuse.picture.tudimension.activity.WebActivity;
 import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.modle.FileUploadModle;
 import com.lingxiaosuse.picture.tudimension.receiver.NetworkReceiver;
+import com.lingxiaosuse.picture.tudimension.retrofit.FileUploadInterface;
 import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.AnimationUtils;
 import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
@@ -63,6 +71,15 @@ import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends BaseActivity {
     @BindView(R.id.tab_main)
@@ -95,6 +112,11 @@ public class MainActivity extends BaseActivity {
     private NetworkReceiver mNetworkChangeListener;
     private View dialogView;
     private ActionBarDrawerToggle mDrawerToggle;
+    private FileUploadInterface fileUploadInterface;
+    //调用系统相册-选择图片
+    private static final int IMAGE = 1;
+    private ProgressDialog uploadDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -349,8 +371,83 @@ public class MainActivity extends BaseActivity {
                 }else {
                     ToastUtils.show("google");
                 }
+                //调用相册
+                Intent intent = new Intent(Intent.ACTION_PICK,
+                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, IMAGE);
             }
         });
         builder.show();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获取图片路径
+        if (requestCode == IMAGE && resultCode == MainActivity.RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            String imagePath = c.getString(columnIndex);
+            showUploadDialog();
+            uploadFile(imagePath);
+            c.close();
+        }
+    }
+
+    private void showUploadDialog() {
+        uploadDialog = new ProgressDialog(this);
+        uploadDialog.setMessage("正在上传");
+        uploadDialog.show();
+    }
+
+    private void uploadFile(String filePath){
+        String url = "http://shitu.baidu.com";
+        if(fileUploadInterface == null) {
+            OkHttpClient client = new OkHttpClient.Builder().build();
+            fileUploadInterface = new Retrofit.Builder()
+                    .baseUrl(url)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(client)
+                    .build().create(FileUploadInterface.class);
+        }
+        //构建要上传的文件
+        File file = new File(filePath);
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("application/otcet-stream"), file);
+
+        MultipartBody.Part body =
+                MultipartBody
+                        .Part
+                        .createFormData("upload",
+                                file.getName(), requestFile);
+
+        String descriptionStr = "upload";
+        RequestBody description =
+                RequestBody.create(
+                        MediaType.parse("multipart/form-data"), descriptionStr);
+        Call<FileUploadModle> call =
+                fileUploadInterface.fileModle(description,body);
+        call.enqueue(new Callback<FileUploadModle>() {
+            @Override
+            public void onResponse(Call<FileUploadModle> call, Response<FileUploadModle> response) {
+                String url = response.body().getUrl();
+                String querySign = response.body().getQuerySign();
+                ToastUtils.show(url);
+                uploadDialog.dismiss();
+                Intent intent = new Intent(getApplicationContext()
+                ,WebActivity.class);
+                intent.putExtra("url",url+"&"+querySign);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<FileUploadModle> call, Throwable t) {
+
+            }
+        });
     }
 }

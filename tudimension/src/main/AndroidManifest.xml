@@ -77,7 +77,8 @@
             android:exported="true" />
 
         <activity android:name=".activity.VerticalActivity" />
-        <activity android:name=".activity.CommentActivity"></activity>
+        <activity android:name=".activity.CommentActivity" />
+        <activity android:name=".activity.WebActivity"></activity>
     </application>
 
 </manifest>
