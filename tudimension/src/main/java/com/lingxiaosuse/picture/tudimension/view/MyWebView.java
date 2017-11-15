@@ -10,6 +10,7 @@ import android.webkit.WebView;
  */
 
 public class MyWebView extends WebView{
+    //添加滑动监听,不然会和swiperefrelayout滑动冲突
     private OnScrollChangedCallback callback;
     public MyWebView(Context context) {
         super(context);

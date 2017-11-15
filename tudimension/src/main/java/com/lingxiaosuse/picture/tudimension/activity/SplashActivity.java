@@ -14,6 +14,7 @@ import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.HotModle;
 import com.lingxiaosuse.picture.tudimension.modle.VersionModle;
+import com.lingxiaosuse.picture.tudimension.modle.VerticalModle;
 import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
@@ -33,11 +34,12 @@ import okhttp3.Response;
 
 public class SplashActivity extends BaseActivity {
 
-    private List<HotModle.ResultsBean> resultList;
+    private List<VerticalModle.ResBean.VerticalBean> resultList;
     @BindView(R.id.splash_image)
     SimpleDraweeView draweeView;
     private boolean isFirst;
-
+    private String url = "http://service.picasso.adesk.com/v1/vertical/vertical" +
+            "?limit=30?adult=false&first=1&order=hot";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,7 +59,7 @@ public class SplashActivity extends BaseActivity {
     protected void onStart() {
         super.onStart();
         chcekVersion();
-        HttpUtils.doGet(ContentValue.GANKURL + "30/1", new Callback() {
+        HttpUtils.doGet(url, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 UIUtils.runOnUIThread(new Runnable() {
@@ -75,18 +77,18 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (resultList == null){
-                    resultList = new ArrayList<HotModle.ResultsBean>();
+                    resultList = new ArrayList<>();
                 }
                 String result = response.body().string();
                 Gson gson = new Gson();
-                HotModle hotModle = gson.fromJson(result,HotModle.class);
-                resultList = hotModle.getResults();
+                VerticalModle verticalModle = gson.fromJson(result,VerticalModle.class);
+                resultList = verticalModle.getRes().getVertical();
                 UIUtils.runOnUIThread(new Runnable() {
                     @Override
                     public void run() {
                         Random random = new Random();
                         int result = random.nextInt(resultList.size());
-                        Uri uri = Uri.parse(resultList.get(result).getUrl());
+                        Uri uri = Uri.parse(resultList.get(result).getImg());
                         draweeView.setImageURI(uri);
                         startAnim();
                     }
@@ -161,5 +163,13 @@ public class SplashActivity extends BaseActivity {
                 SpUtils.putString(UIUtils.getContext(),ContentValue.DOWNLOAD_URL,modle.getDownloadUrl());
             }
         });
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus){
+            ultimateBar.setHideBar(true);
+        }
     }
 }

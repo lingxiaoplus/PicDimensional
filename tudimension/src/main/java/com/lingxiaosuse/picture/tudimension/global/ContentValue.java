@@ -36,4 +36,7 @@ public class ContentValue {
     public static String PATH = Environment
             .getExternalStorageDirectory()
             .getAbsolutePath() + "/tudimension";
+
+    //百度识图
+    public static String BAIDU_URL = "http://image.baidu.com/wiseshitu?guss=1&queryImageUrl=";
 }

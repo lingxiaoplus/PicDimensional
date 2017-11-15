@@ -65,9 +65,21 @@ public class SettingsActivity extends BaseActivity {
     }
 
     private void getCacheSize() {
-        Fresco.getImagePipelineFactory().getMainFileCache().trimToMinimum();
-        long size = Fresco.getImagePipelineFactory().getMainFileCache().getSize();
-        clearSize.setText(getDataSize(size));
+        //子线程中计算,放在主线程可能会造成卡顿
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Fresco.getImagePipelineFactory().getMainFileCache().trimToMinimum();
+                final long size = Fresco.getImagePipelineFactory().getMainFileCache().getSize();
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        clearSize.setText(getDataSize(size));
+                    }
+                });
+            }
+        }).start();
+
     }
 
     private void initToolbar() {

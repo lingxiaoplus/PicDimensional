@@ -2,7 +2,6 @@ package com.lingxiaosuse.picture.tudimension.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +14,6 @@ import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.VerticalAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryDetailModle;
-import com.lingxiaosuse.picture.tudimension.modle.VerticalModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.CategoryDetailInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
@@ -76,7 +74,7 @@ public class CategoryDetailFragment extends BaseFragment{
 
     @Override
     public View initView() {
-        View view = UIUtils.inflate(R.layout.vertical_pager_item);
+        View view = UIUtils.inflate(R.layout.fragment_vertical_pager);
         refreshLayout = view.findViewById(R.id.swip_vertical_item);
         mRecyclerView = view.findViewById(R.id.recycle_vertical_item);
         manager = new StaggeredGridLayoutManager(3,

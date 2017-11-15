@@ -14,4 +14,11 @@
         fresco:progressBarAutoRotateInterval="2000"
         fresco:progressBarImage="@drawable/ic_loading_default"
         />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/ic_launcher"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="150dp"/>
 </RelativeLayout>

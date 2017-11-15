@@ -3,6 +3,8 @@ package com.lingxiaosuse.picture.tudimension;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -206,26 +208,22 @@ public class MainActivity extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.nav_home:
-                        ToastUtils.show("首页");
                         StartActivity(MainActivity.class,false);
                         viewPager.setCurrentItem(0);
                         break;
                     case R.id.nav_vertical:
-                        ToastUtils.show("手机壁纸");
                         StartActivity(VerticalActivity.class,false);
                         break;
-                    case R.id.nav_figure:
+                    /*case R.id.nav_figure:
                         ToastUtils.show("斗图");
-                        break;
+                        break;*/
                     case R.id.nav_find:
-                        ToastUtils.show("搜图");
                         showSelectDia();
                         break;
                     case R.id.nav_reception:
-                        ToastUtils.show("好评");
+                        goToMarket(MainActivity.this,getPackageName());
                         break;
                     case R.id.nav_exit:
-                        ToastUtils.show("退出");
                         ActivityController.finishAll();
                         break;
                     default:
@@ -364,17 +362,21 @@ public class MainActivity extends BaseActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(getApplicationContext()
+                        ,WebActivity.class);
                 if (i == 0){
-                    ToastUtils.show("baidu");
+                    //调用相册
+                    intent = new Intent(Intent.ACTION_PICK,
+                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(intent, IMAGE);
                 }else if (i ==1){
-                    ToastUtils.show("sougou");
+                    intent.putExtra("url","http://pic.sogou.com/");
+                    startActivity(intent);
                 }else {
-                    ToastUtils.show("google");
+                    intent.putExtra("url","https://images.google.com/imghp?hl=zh-CN&gws_rd=ssl");
+                    startActivity(intent);
                 }
-                //调用相册
-                Intent intent = new Intent(Intent.ACTION_PICK,
-                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, IMAGE);
+
             }
         });
         builder.show();
@@ -400,6 +402,7 @@ public class MainActivity extends BaseActivity {
 
     private void showUploadDialog() {
         uploadDialog = new ProgressDialog(this);
+        uploadDialog.setTitle(getResources().getString(R.string.app_name));
         uploadDialog.setMessage("正在上传");
         uploadDialog.show();
     }
@@ -434,9 +437,8 @@ public class MainActivity extends BaseActivity {
         call.enqueue(new Callback<FileUploadModle>() {
             @Override
             public void onResponse(Call<FileUploadModle> call, Response<FileUploadModle> response) {
-                String url = response.body().getUrl();
+                String url = ContentValue.BAIDU_URL+response.body().getUrl();
                 String querySign = response.body().getQuerySign();
-                ToastUtils.show(url);
                 uploadDialog.dismiss();
                 Intent intent = new Intent(getApplicationContext()
                 ,WebActivity.class);
@@ -449,5 +451,18 @@ public class MainActivity extends BaseActivity {
 
             }
         });
+    }
+
+    /**
+     *@param packageName 目标应用的包名
+     */
+    public static void goToMarket(Context context, String packageName) {
+        Uri uri = Uri.parse("market://details?id=" + packageName);
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            context.startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

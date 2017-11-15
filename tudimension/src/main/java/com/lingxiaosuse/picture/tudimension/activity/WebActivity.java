@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -28,7 +29,6 @@ public class WebActivity extends BaseActivity {
     ProgressBar pbWeb;
     @BindView(R.id.swip_web)
     SwipeRefreshLayout swipWeb;
-    private String mUrl = "http://image.baidu.com/wiseshitu?guss=1&queryImageUrl=";
     private String url;
 
     @Override
@@ -40,7 +40,7 @@ public class WebActivity extends BaseActivity {
         initSwipeLayout();
         setToolbarBack(toolbarTitle);
         Intent intent = getIntent();
-        url = mUrl+intent.getStringExtra("url");
+        url = intent.getStringExtra("url");
 
         webView.loadUrl(url);
         webView.setWebViewClient(new WebViewClient() {
@@ -117,5 +117,13 @@ public class WebActivity extends BaseActivity {
         });
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                finish();
+                break;
+        }
+        return true;
+    }
 }

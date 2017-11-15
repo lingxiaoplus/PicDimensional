@@ -6,8 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
@@ -53,7 +51,7 @@ public class VerticalFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = UIUtils.inflate(R.layout.vertical_pager_item);
+        View view = UIUtils.inflate(R.layout.fragment_vertical_pager);
         refreshLayout = view.findViewById(R.id.swip_vertical_item);
         mRecyclerView = view.findViewById(R.id.recycle_vertical_item);
         manager = new StaggeredGridLayoutManager(3,
