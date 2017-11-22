@@ -1,18 +1,18 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
+import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
-import com.lingxiaosuse.picture.tudimension.modle.HotModle;
 import com.lingxiaosuse.picture.tudimension.modle.VersionModle;
 import com.lingxiaosuse.picture.tudimension.modle.VerticalModle;
 import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
@@ -34,25 +34,35 @@ import okhttp3.Response;
 
 public class SplashActivity extends BaseActivity {
 
+    @BindView(R.id.tv_next)
+    TextView tvNext;
     private List<VerticalModle.ResBean.VerticalBean> resultList;
     @BindView(R.id.splash_image)
     SimpleDraweeView draweeView;
     private boolean isFirst;
     private String url = "http://service.picasso.adesk.com/v1/vertical/vertical" +
             "?limit=30?adult=false&first=1&order=hot";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         //判断是否打开了日图
-        if (!SpUtils.getBoolean(this,ContentValue.IS_OPEN_DAILY,true)){
-            StartActivity(MainActivity.class,true);
+        if (!SpUtils.getBoolean(this, ContentValue.IS_OPEN_DAILY, true)) {
+            StartActivity(MainActivity.class, true);
         }
 
         ButterKnife.bind(this);
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar(true);
-        isFirst = SpUtils.getBoolean(this, ContentValue.ISFIRST_KEY,true);
+        isFirst = SpUtils.getBoolean(this, ContentValue.ISFIRST_KEY, true);
+
+        tvNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StartActivity(MainActivity.class, true);
+            }
+        });
     }
 
     @Override
@@ -65,23 +75,24 @@ public class SplashActivity extends BaseActivity {
                 UIUtils.runOnUIThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (isFirst){
-                            StartActivity(IndicatorActivity.class,true);
-                        }else {
-                            StartActivity(MainActivity.class,true);
+                        if (isFirst) {
+                            StartActivity(IndicatorActivity.class, true);
+                        } else {
+                            StartActivity(MainActivity.class, true);
                         }
 
                     }
                 });
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (resultList == null){
+                if (resultList == null) {
                     resultList = new ArrayList<>();
                 }
                 String result = response.body().string();
                 Gson gson = new Gson();
-                VerticalModle verticalModle = gson.fromJson(result,VerticalModle.class);
+                VerticalModle verticalModle = gson.fromJson(result, VerticalModle.class);
                 resultList = verticalModle.getRes().getVertical();
                 UIUtils.runOnUIThread(new Runnable() {
                     @Override
@@ -97,7 +108,7 @@ public class SplashActivity extends BaseActivity {
         });
     }
 
-    private void startAnim(){
+    private void startAnim() {
         AnimationSet animationSet = new AnimationSet(true);
             /*
                 参数解释：
@@ -113,8 +124,8 @@ public class SplashActivity extends BaseActivity {
                    （第五个参数，第六个参数），（第七个参数,第八个参数）是用来指定缩放的中心点
                     0.5f代表从中心缩放
              */
-        ScaleAnimation scaleAnimation = new ScaleAnimation(1f,1.05f,1f,1.05f,
-                Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f);
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 1.05f, 1f, 1.05f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         //3秒完成动画
         scaleAnimation.setDuration(3000);
         //将AlphaAnimation这个已经设置好的动画添加到 AnimationSet中
@@ -130,10 +141,10 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (isFirst){
-                    StartActivity(IndicatorActivity.class,true);
-                }else {
-                    StartActivity(MainActivity.class,true);
+                if (isFirst) {
+                    StartActivity(IndicatorActivity.class, true);
+                } else {
+                    StartActivity(MainActivity.class, true);
                 }
             }
 
@@ -145,9 +156,9 @@ public class SplashActivity extends BaseActivity {
     }
 
     /**
-     *从服务器获取版本信息并保存
+     * 从服务器获取版本信息并保存
      */
-    private void chcekVersion(){
+    private void chcekVersion() {
         HttpUtils.doGet(ContentValue.UPDATEURL, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -158,9 +169,9 @@ public class SplashActivity extends BaseActivity {
                 String result = response.body().string();
                 Gson gson = new Gson();
                 VersionModle modle = gson.fromJson(result, VersionModle.class);
-                SpUtils.putInt(UIUtils.getContext(),ContentValue.VERSION_CODE,modle.getVersionCode());
-                SpUtils.putString(UIUtils.getContext(),ContentValue.VERSION_DES,modle.getVersionDes());
-                SpUtils.putString(UIUtils.getContext(),ContentValue.DOWNLOAD_URL,modle.getDownloadUrl());
+                SpUtils.putInt(UIUtils.getContext(), ContentValue.VERSION_CODE, modle.getVersionCode());
+                SpUtils.putString(UIUtils.getContext(), ContentValue.VERSION_DES, modle.getVersionDes());
+                SpUtils.putString(UIUtils.getContext(), ContentValue.DOWNLOAD_URL, modle.getDownloadUrl());
             }
         });
     }
@@ -168,7 +179,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
-        if (hasFocus){
+        if (hasFocus) {
             ultimateBar.setHideBar(true);
         }
     }

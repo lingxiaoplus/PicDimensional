@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 
 /**
@@ -20,7 +21,6 @@ import com.lingxiaosuse.picture.tudimension.R;
 public abstract class BaseFragment extends Fragment{
 
     public FloatingActionButton faButton;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

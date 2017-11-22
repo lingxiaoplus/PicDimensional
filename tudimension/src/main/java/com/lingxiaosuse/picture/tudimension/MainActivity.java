@@ -12,9 +12,8 @@ import android.database.Cursor;
 import android.didikee.donate.AlipayDonate;
 import android.didikee.donate.WeiXinDonate;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -28,21 +27,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.RotateAnimation;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.ActivityController;
@@ -58,15 +48,11 @@ import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.FileUploadModle;
 import com.lingxiaosuse.picture.tudimension.receiver.NetworkReceiver;
 import com.lingxiaosuse.picture.tudimension.retrofit.FileUploadInterface;
-import com.lingxiaosuse.picture.tudimension.service.DownloadService;
-import com.lingxiaosuse.picture.tudimension.utils.AnimationUtils;
 import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-import com.lingxiaosuse.picture.tudimension.view.LeafLoadingView;
-import com.liuguangqiang.cookie.CookieBar;
-import com.liuguangqiang.cookie.OnActionClickListener;
+import com.lingxiaosuse.picture.tudimension.view.WaveLoading;
 
 import java.io.File;
 import java.io.InputStream;
@@ -96,16 +82,18 @@ public class MainActivity extends BaseActivity {
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_main)
     NavigationView navigationView;
-    private String[] tabStr = new String[]{"推荐","分类","最新","专辑"};
-    private Handler mHandler = new Handler(){
+    @BindView(R.id.pb_menu)
+    WaveLoading pbMenu;
+    private String[] tabStr = new String[]{"推荐", "分类", "最新", "专辑"};
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 2){
+            if (msg.what == 2) {
                 //默认是自动更新的
                 boolean isCheck = SpUtils
-                        .getBoolean(UIUtils.getContext(), ContentValue.IS_CHECK,true);
-                if (isCheck){
+                        .getBoolean(UIUtils.getContext(), ContentValue.IS_CHECK, true);
+                if (isCheck) {
                     checkUpdate();
                 }
             }
@@ -118,7 +106,6 @@ public class MainActivity extends BaseActivity {
     //调用系统相册-选择图片
     private static final int IMAGE = 1;
     private ProgressDialog uploadDialog;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +113,7 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         //tabLayout = (TabLayout) findViewById(R.id.tab_main);
         initView();
-        PremessionUtils.getPremession(this,getString(R.string.permession_title),
+        PremessionUtils.getPremession(this, getString(R.string.permession_title),
                 getString(R.string.permession_message),
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 }
@@ -135,6 +122,7 @@ public class MainActivity extends BaseActivity {
                     public void onPermissionGet() {
                         ToastUtils.show("已获取权限");
                     }
+
                     @Override
                     public void onPermissionDenied() {
                         ToastUtils.show("获取权限失败");
@@ -146,7 +134,7 @@ public class MainActivity extends BaseActivity {
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         filter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
         filter.addAction("android.net.wifi.STATE_CHANGE");
-        registerReceiver(mNetworkChangeListener,filter);
+        registerReceiver(mNetworkChangeListener, filter);
     }
 
     private void initView() {
@@ -189,6 +177,7 @@ public class MainActivity extends BaseActivity {
                                 100);
 
             }
+
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
@@ -206,13 +195,13 @@ public class MainActivity extends BaseActivity {
                 OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()){
+                switch (item.getItemId()) {
                     case R.id.nav_home:
-                        StartActivity(MainActivity.class,false);
+                        StartActivity(MainActivity.class, false);
                         viewPager.setCurrentItem(0);
                         break;
                     case R.id.nav_vertical:
-                        StartActivity(VerticalActivity.class,false);
+                        StartActivity(VerticalActivity.class, false);
                         break;
                     /*case R.id.nav_figure:
                         ToastUtils.show("斗图");
@@ -221,7 +210,7 @@ public class MainActivity extends BaseActivity {
                         showSelectDia();
                         break;
                     case R.id.nav_reception:
-                        goToMarket(MainActivity.this,getPackageName());
+                        goToMarket(MainActivity.this, getPackageName());
                         break;
                     case R.id.nav_exit:
                         ActivityController.finishAll();
@@ -235,19 +224,22 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    class MainPageAdapter extends FragmentPagerAdapter{
+    class MainPageAdapter extends FragmentPagerAdapter {
         public MainPageAdapter(FragmentManager fm) {
             super(fm);
         }
+
         @Override
         public int getCount() {
             return tabStr.length;
         }
+
         @Override
         public Fragment getItem(int position) {
             BaseFragment fragment = FragmentFactory.createFragment(position);
             return fragment;
         }
+
         @Override
         public CharSequence getPageTitle(int position) {
             return tabStr[position];
@@ -257,32 +249,32 @@ public class MainActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PremessionUtils.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        PremessionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_support:
                 showDialog();
                 break;
             case R.id.menu_setting:
-                StartActivity(SettingsActivity.class,false);
+                StartActivity(SettingsActivity.class, false);
                 break;
             case R.id.menu_about:
-                StartActivity(AboutActivity.class,false);
+                StartActivity(AboutActivity.class, false);
                 break;
             case R.id.menu_download:
-                StartActivity(SeeDownLoadImgActivity.class,false);
+                StartActivity(SeeDownLoadImgActivity.class, false);
                 break;
             case R.id.menu_search:
-                StartActivity(SearchActivity.class,false);
+                StartActivity(SearchActivity.class, false);
                 break;
         }
         return true;
@@ -296,10 +288,10 @@ public class MainActivity extends BaseActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (i == 0){
+                if (i == 0) {
                     ToastUtils.show("支付宝");
                     donateAlipay("FKX014647ZUX0IO5DJW109");
-                }else {
+                } else {
                     ToastUtils.show("请从相册中选择第一张二维码");
                     donateWeixin();
                 }
@@ -310,6 +302,7 @@ public class MainActivity extends BaseActivity {
 
     /**
      * 支付宝支付
+     *
      * @param payCode 收款码后面的字符串；例如：收款二维码里面的字符串为 https://qr.alipay.com/stx00187oxldjvyo3ofaw60 ，则
      *                payCode = stx00187oxldjvyo3ofaw60
      *                注：不区分大小写
@@ -336,44 +329,46 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mNetworkChangeListener != null){
+        if (mNetworkChangeListener != null) {
             unregisterReceiver(mNetworkChangeListener);
         }
     }
 
     long preTime = 0;
+
     @Override
     public void onBackPressed() {
         long nowTime = System.currentTimeMillis();
-        if (nowTime - preTime > 2000){
+        if (nowTime - preTime > 2000) {
             ToastUtils.show("再按一次退出软件");
             preTime = nowTime;
-        }else {
+        } else {
             ActivityController.finishAll();
         }
     }
+
     /**
-     *对话框选择搜图接口
+     * 对话框选择搜图接口
      */
-    private void showSelectDia(){
-        String[] items = {"百度识图", "搜狗识图","谷歌识图"};
+    private void showSelectDia() {
+        String[] items = {"百度识图", "搜狗识图", "谷歌识图"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("请选择搜图接口");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent intent = new Intent(getApplicationContext()
-                        ,WebActivity.class);
-                if (i == 0){
+                        , WebActivity.class);
+                if (i == 0) {
                     //调用相册
                     intent = new Intent(Intent.ACTION_PICK,
-                            android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(intent, IMAGE);
-                }else if (i ==1){
-                    intent.putExtra("url","http://pic.sogou.com/");
+                } else if (i == 1) {
+                    intent.putExtra("url", "http://pic.sogou.com/");
                     startActivity(intent);
-                }else {
-                    intent.putExtra("url","https://images.google.com/imghp?hl=zh-CN&gws_rd=ssl");
+                } else {
+                    intent.putExtra("url", "https://images.google.com/imghp?hl=zh-CN&gws_rd=ssl");
                     startActivity(intent);
                 }
 
@@ -407,9 +402,9 @@ public class MainActivity extends BaseActivity {
         uploadDialog.show();
     }
 
-    private void uploadFile(String filePath){
+    private void uploadFile(String filePath) {
         String url = "http://shitu.baidu.com";
-        if(fileUploadInterface == null) {
+        if (fileUploadInterface == null) {
             OkHttpClient client = new OkHttpClient.Builder().build();
             fileUploadInterface = new Retrofit.Builder()
                     .baseUrl(url)
@@ -433,16 +428,16 @@ public class MainActivity extends BaseActivity {
                 RequestBody.create(
                         MediaType.parse("multipart/form-data"), descriptionStr);
         Call<FileUploadModle> call =
-                fileUploadInterface.fileModle(description,body);
+                fileUploadInterface.fileModle(description, body);
         call.enqueue(new Callback<FileUploadModle>() {
             @Override
             public void onResponse(Call<FileUploadModle> call, Response<FileUploadModle> response) {
-                String url = ContentValue.BAIDU_URL+response.body().getUrl();
+                String url = ContentValue.BAIDU_URL + response.body().getUrl();
                 String querySign = response.body().getQuerySign();
                 uploadDialog.dismiss();
                 Intent intent = new Intent(getApplicationContext()
-                ,WebActivity.class);
-                intent.putExtra("url",url+"&"+querySign);
+                        , WebActivity.class);
+                intent.putExtra("url", url + "&" + querySign);
                 startActivity(intent);
             }
 
@@ -454,7 +449,7 @@ public class MainActivity extends BaseActivity {
     }
 
     /**
-     *@param packageName 目标应用的包名
+     * @param packageName 目标应用的包名
      */
     public static void goToMarket(Context context, String packageName) {
         Uri uri = Uri.parse("market://details?id=" + packageName);

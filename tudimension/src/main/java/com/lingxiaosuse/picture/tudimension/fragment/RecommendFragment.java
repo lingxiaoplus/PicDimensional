@@ -53,8 +53,8 @@ public class RecommendFragment extends BaseFragment{
 
     @Override
     protected void initData() {
+        waveLoading = getActivity().findViewById(R.id.pb_menu);
         getData(30,0);
-
         faButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -68,8 +68,6 @@ public class RecommendFragment extends BaseFragment{
         View view = View.inflate(UIUtils.getContext(), R.layout.fragment_recommend,null);
         recycleView = view.findViewById(R.id.rv_main);
         swipeLayout = view.findViewById(R.id.sl_main);
-        waveLoading = view.findViewById(R.id.pb_main);
-
         //设置item之间的间隔
         SpaceItemDecoration space = new SpaceItemDecoration(10);
         recycleView.addItemDecoration(space);

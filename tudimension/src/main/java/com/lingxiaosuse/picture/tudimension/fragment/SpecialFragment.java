@@ -19,6 +19,7 @@ import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.retrofit.SpecialInterface;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.WaveLoading;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +101,7 @@ public class SpecialFragment extends BaseFragment{
                         startActivity(intent);
                     }
                 });
+
             }
             @Override
             public void onFailure(Call<SpecialModle> call, Throwable t) {

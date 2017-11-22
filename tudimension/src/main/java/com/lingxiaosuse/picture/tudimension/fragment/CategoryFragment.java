@@ -1,6 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +32,7 @@ public class CategoryFragment extends BaseFragment{
     private List<CategoryModle.ResBean.CategoryBean> categoryList = new ArrayList<>();
     private CategoryAdapter mCateAdapter;
     private GridLayoutManager mLayoutManager;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void initData() {
@@ -40,6 +42,14 @@ public class CategoryFragment extends BaseFragment{
     public View initView() {
         View view = UIUtils.inflate(R.layout.fragment_category);
         recyclerView = view.findViewById(R.id.rv_category);
+        refreshLayout = view.findViewById(R.id.swip_category);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getCategory();
+            }
+        });
         return view;
     }
 
@@ -81,6 +91,10 @@ public class CategoryFragment extends BaseFragment{
                                 startActivity(intent);
                             }
                         });
+
+                        if (refreshLayout.isRefreshing()){
+                            refreshLayout.setRefreshing(false);
+                        }
                     }
 
                     @Override
