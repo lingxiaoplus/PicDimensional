@@ -23,9 +23,9 @@
         </com.lingxiaosuse.picture.tudimension.view.MyWebView>
         <ProgressBar
             android:id="@+id/pb_web"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="2dp" />
     </FrameLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>
