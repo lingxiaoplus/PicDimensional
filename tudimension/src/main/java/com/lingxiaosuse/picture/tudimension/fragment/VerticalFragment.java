@@ -87,7 +87,8 @@ public class VerticalFragment extends Fragment{
                         picIdList.clear();
                         for (int i = 0; i < mPicList.size(); i++) {
                             picIdList.add(mPicList.get(i).getId());
-                            picUrlList.add(mPicList.get(i).getImg());
+                            //获取url，getimg无法获取文件名，所以用getwp
+                            picUrlList.add(mPicList.get(i).getWp());
                         }
 
                         mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
