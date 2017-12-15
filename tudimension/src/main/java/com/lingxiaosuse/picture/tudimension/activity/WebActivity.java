@@ -3,14 +3,20 @@ package com.lingxiaosuse.picture.tudimension.activity;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.ValueCallback;
@@ -19,8 +25,10 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.view.MyWebView;
 
 import butterknife.BindView;
@@ -50,6 +58,7 @@ public class WebActivity extends BaseActivity {
         initSwipeLayout();
         setToolbarBack(toolbarTitle);
         Intent intent = getIntent();
+        toolbarTitle.setTitle(intent.getStringExtra("title"));
         url = intent.getStringExtra("url");
 
         webView.loadUrl(url);
@@ -182,6 +191,15 @@ public class WebActivity extends BaseActivity {
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.menu_web_share:
+                showShare(url);
+                break;
+            case R.id.menu_web_copy:
+                copyImgUrl();
+                break;
+            case R.id.menu_web_browser:
+                chooseBrower(url);
+                break;
         }
         return true;
     }
@@ -223,5 +241,35 @@ public class WebActivity extends BaseActivity {
         }
         uploadMessageAboveL.onReceiveValue(results);
         uploadMessageAboveL = null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.web_menu, menu);
+        return true;
+    }
+
+    private void copyImgUrl() {
+        ClipboardManager manager = (ClipboardManager)
+                getSystemService(Context.CLIPBOARD_SERVICE);
+        // 创建普通字符型ClipData
+        ClipData mClipData = ClipData.newPlainText("Label", url);
+        // 将ClipData内容放到系统剪贴板里。
+        manager.setPrimaryClip(mClipData);
+        ToastUtils.show("复制成功!");
+    }
+
+    private void chooseBrower(String url){
+        Uri uri = Uri.parse(url);
+        Intent urlIntent = new Intent();
+        urlIntent.setAction(Intent.ACTION_VIEW);
+        urlIntent.setData(uri);
+        startActivity(Intent.createChooser(urlIntent, "请选择一个浏览器打开"));
+    }
+    private void showShare(String url){
+        Intent textIntent = new Intent(Intent.ACTION_SEND);
+        textIntent.setType("text/plain");
+        textIntent.putExtra(Intent.EXTRA_TEXT, url);
+        startActivity(Intent.createChooser(textIntent, "分享"));
     }
 }

@@ -3,7 +3,10 @@ package com.lingxiaosuse.picture.tudimension.activity;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -294,18 +297,30 @@ public class ImageLoadingActivity extends AppCompatActivity {
     }
 
     private void showDialog() {
-        String[] items = {"下载", "取消"};
+        String[] items = {"下载", "复制下载链接", "取消"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == 0){
                     downloadImg();
+                }else if (i == 1){
+                    copyImgUrl();
                 }else {
-
+                    
                 }
             }
         });
         builder.show();
+    }
+
+    private void copyImgUrl() {
+        ClipboardManager manager = (ClipboardManager)
+                getSystemService(Context.CLIPBOARD_SERVICE);
+        // 创建普通字符型ClipData
+        ClipData mClipData = ClipData.newPlainText("Label", picList.get(mPosition));
+        // 将ClipData内容放到系统剪贴板里。
+        manager.setPrimaryClip(mClipData);
+        ToastUtils.show("复制成功!");
     }
 }

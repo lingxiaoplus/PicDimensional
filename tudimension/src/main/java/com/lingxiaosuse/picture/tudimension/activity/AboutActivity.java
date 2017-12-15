@@ -129,13 +129,6 @@ public class AboutActivity extends BaseActivity {
                 break;
         }
     }
-
-    //跳转到网页
-    public void goToInternet(Context context, String marketUrl){
-        Uri uri = Uri.parse(marketUrl);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        context.startActivity(intent);
-    }
     /**
      *@param packageName 目标应用的包名
      */

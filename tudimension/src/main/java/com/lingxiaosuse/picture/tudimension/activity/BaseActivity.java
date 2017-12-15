@@ -2,6 +2,7 @@ package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
@@ -246,5 +247,12 @@ public class BaseActivity extends AppCompatActivity{
         }
         toolbar.setTitle("");
 
+    }
+
+    //跳转到网页
+    public void goToInternet(Context context, String marketUrl){
+        Uri uri = Uri.parse(marketUrl);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        context.startActivity(intent);
     }
 }

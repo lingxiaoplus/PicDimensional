@@ -162,6 +162,7 @@ public class MainActivity extends BaseActivity {
             }
         });
 
+
         setSupportActionBar(toolbar);
         //设置返回键可用
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -363,12 +364,16 @@ public class MainActivity extends BaseActivity {
                     //调用相册
                     intent = new Intent(Intent.ACTION_PICK,
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.putExtra("title","百度识图");
                     startActivityForResult(intent, IMAGE);
                 } else if (i == 1) {
                     intent.putExtra("url", "http://pic.sogou.com/");
+                    intent.putExtra("title","搜狗识图");
                     startActivity(intent);
                 } else {
                     intent.putExtra("url", "https://images.google.com/imghp?hl=zh-CN&gws_rd=ssl");
+                    intent.putExtra("title","谷歌识图");
+                    ToastUtils.show("请自备梯子");
                     startActivity(intent);
                 }
 
