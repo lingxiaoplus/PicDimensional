@@ -80,6 +80,7 @@ public class RecommendFragment extends BaseFragment{
             }
         });
         swipeLayout.setColorSchemeResources(
+                R.color.colorPrimary,
                 android.R.color.holo_blue_light,
                 android.R.color.holo_red_light,
                 android.R.color.holo_orange_light,

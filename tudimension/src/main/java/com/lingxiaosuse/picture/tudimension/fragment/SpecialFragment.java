@@ -54,6 +54,7 @@ public class SpecialFragment extends BaseFragment{
         View view = UIUtils.inflate(R.layout.fragment_special);
         ButterKnife.bind(this,view);
         swipeRefreshLayout.setColorSchemeResources(
+                R.color.colorPrimary,
                 android.R.color.holo_blue_light,
                 android.R.color.holo_red_light,
                 android.R.color.holo_orange_light,

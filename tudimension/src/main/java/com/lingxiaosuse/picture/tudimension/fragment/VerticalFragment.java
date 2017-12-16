@@ -54,6 +54,14 @@ public class VerticalFragment extends Fragment{
         View view = UIUtils.inflate(R.layout.fragment_vertical_pager);
         refreshLayout = view.findViewById(R.id.swip_vertical_item);
         mRecyclerView = view.findViewById(R.id.recycle_vertical_item);
+
+        refreshLayout.setColorSchemeResources(
+                R.color.colorPrimary,
+                android.R.color.holo_blue_light,
+                android.R.color.holo_red_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light
+        );
         manager = new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
