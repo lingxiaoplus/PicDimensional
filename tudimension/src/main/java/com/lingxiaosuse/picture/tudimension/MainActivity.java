@@ -12,6 +12,7 @@ import android.database.Cursor;
 import android.didikee.donate.AlipayDonate;
 import android.didikee.donate.WeiXinDonate;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -30,10 +31,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.ActivityController;
 import com.lingxiaosuse.picture.tudimension.activity.BaseActivity;
@@ -46,8 +51,12 @@ import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.FileUploadModle;
+import com.lingxiaosuse.picture.tudimension.modle.HitokotoModle;
+import com.lingxiaosuse.picture.tudimension.modle.HotModle;
 import com.lingxiaosuse.picture.tudimension.receiver.NetworkReceiver;
 import com.lingxiaosuse.picture.tudimension.retrofit.FileUploadInterface;
+import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
+import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
@@ -55,6 +64,7 @@ import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.WaveLoading;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 import butterknife.BindView;
@@ -106,6 +116,9 @@ public class MainActivity extends BaseActivity {
     //调用系统相册-选择图片
     private static final int IMAGE = 1;
     private ProgressDialog uploadDialog;
+    private TextView hitokoto;
+    private RelativeLayout reHeadLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +126,8 @@ public class MainActivity extends BaseActivity {
         ButterKnife.bind(this);
         //tabLayout = (TabLayout) findViewById(R.id.tab_main);
         initView();
+        //初始化headlayout
+        initHeadLayout();
         PremessionUtils.getPremession(this, getString(R.string.permession_title),
                 getString(R.string.permession_message),
                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -135,6 +150,37 @@ public class MainActivity extends BaseActivity {
         filter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
         filter.addAction("android.net.wifi.STATE_CHANGE");
         registerReceiver(mNetworkChangeListener, filter);
+    }
+
+    private void initHeadLayout() {
+        View headerLayout =
+                navigationView.inflateHeaderView(R.layout.nav_header);
+        hitokoto = headerLayout.findViewById(R.id.tv_hitokoto);
+        reHeadLayout = headerLayout.findViewById(R.id.rl_head_menu);
+        getHeadText();
+    }
+
+    private void getHeadText() {
+        HttpUtils.doGet(ContentValue.HITOKOTO_URL, new okhttp3.Callback() {
+            @Override
+            public void onFailure(okhttp3.Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
+                String result = response.body().string();
+                Gson gson = new Gson();
+                final HitokotoModle hotModle =
+                        gson.fromJson(result,HitokotoModle.class);
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        hitokoto.setText(hotModle.getHitokoto());
+                    }
+                });
+            }
+        });
     }
 
     private void initView() {

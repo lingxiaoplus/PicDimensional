@@ -186,7 +186,13 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
                     .build();
             ((ViewHolder) viewHolder).imageview.setController(controller);
             //((ViewHolder) viewHolder).imageview.setImageURI(uri);
-            ((ViewHolder) viewHolder).textView.setText(list.get(position).desc);
+            if (list.get(position).desc.isEmpty()){
+                ((ViewHolder) viewHolder).textView.setVisibility(View.GONE);
+            }else {
+                ((ViewHolder) viewHolder).textView.setVisibility(View.VISIBLE);
+                ((ViewHolder) viewHolder).textView.setText(list.get(position).desc);
+            }
+
             //设置点击事件
             if (mOnItemClickListener != null){
                 ((ViewHolder) viewHolder).imageview.setOnClickListener(new View.OnClickListener() {

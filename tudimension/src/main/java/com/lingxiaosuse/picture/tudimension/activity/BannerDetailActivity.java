@@ -1,39 +1,27 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BannerRecycleAdapter;
-import com.lingxiaosuse.picture.tudimension.adapter.MyRecycleViewAdapter;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.BannerInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
-import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +37,8 @@ public class BannerDetailActivity extends BaseActivity {
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS = 0.3f;
 
     private static final int ALPHA_ANIMATIONS_DURATION = 200;
+    @BindView(R.id.swip_banner)
+    SwipeRefreshLayout swipBanner;
 
     private boolean mIsTheTitleVisible = false;
     private boolean mIsTheTitleContainerVisible = true;
@@ -81,7 +71,7 @@ public class BannerDetailActivity extends BaseActivity {
         ButterKnife.bind(this);
         ultimateBar.setTransparentBar(
                 ContextCompat.getColor(UIUtils.getContext(),
-                R.color.colorPrimary),
+                        R.color.colorPrimary),
                 0);
         // AppBar的监听
         /*mAblAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
@@ -94,17 +84,18 @@ public class BannerDetailActivity extends BaseActivity {
             }
         });*/
         // or 网格布局，可以设置列数和方向，是否反向显示
-        mLayoutManager = new GridLayoutManager(this,3,
-                LinearLayoutManager.VERTICAL,false);
+        mLayoutManager = new GridLayoutManager(this, 3,
+                LinearLayoutManager.VERTICAL, false);
         initIntentValue(); //接受intent参数
 
         //initParallaxValues(); // 自动滑动效果
     }
+
     /**
-     *用于根据传递过来的值初始化控件
+     * 用于根据传递过来的值初始化控件
      */
-    private void initIntentValue(){
-        try{
+    private void initIntentValue() {
+        try {
             String url = getIntent().getStringExtra("url");
             String message = getIntent().getStringExtra("desc");
             final String id = getIntent().getStringExtra("id");
@@ -117,7 +108,7 @@ public class BannerDetailActivity extends BaseActivity {
             );
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(mAdapter);
-            getDataFromServere(type,id);
+            getDataFromServere(type, id);
             mTbToolbar.setTitle(title);
             setSupportActionBar(mTbToolbar);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -126,16 +117,23 @@ public class BannerDetailActivity extends BaseActivity {
             mAdapter.setRefreshListener(new BannerRecycleAdapter.onLoadmoreListener() {
                 @Override
                 public void onLoadMore(int position) {
-                    if (skip <300){
-                        skip+=30;
-                        getDataFromServere(type,id);
-                    }else {
+                    if (skip < 300) {
+                        skip += 30;
+                        getDataFromServere(type, id);
+                    } else {
                         skip = 0;
                         mAdapter.isFinish(true);
                     }
                 }
             });
-        }catch (Exception e){
+
+            swipBanner.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    getDataFromServere(type,id);
+                }
+            });
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -145,7 +143,7 @@ public class BannerDetailActivity extends BaseActivity {
         RetrofitHelper
                 .getInstance(this)
                 .getInterface(BannerInterface.class)
-                .bannerModle(type,id,30,skip,false,"hot")
+                .bannerModle(type, id, 30, skip, false, "hot")
                 .enqueue(new Callback<BannerModle>() {
                     @Override
                     public void onResponse(Call<BannerModle> call, Response<BannerModle> response) {
@@ -156,32 +154,38 @@ public class BannerDetailActivity extends BaseActivity {
                         mAdapter.setOnItemClickListener(new BannerRecycleAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(View view, int position, Uri uri) {
-                                if (null == picUrlList){
+                                if (null == picUrlList) {
                                     return;
                                 }
                                 picUrlList.clear();
                                 IdList.clear();
                                 for (int i = 0; i < picList.size(); i++) {
-                                    if (picUrlList != null){
+                                    if (picUrlList != null) {
                                         picUrlList.add(picList.get(i).getImg());
                                     }
                                     IdList.add(picList.get(i).getId());
                                 }
                                 Intent intent = new Intent(UIUtils.getContext(),
                                         ImageLoadingActivity.class);
-                                intent.putExtra("position",position);
-                                intent.putExtra("itemCount",mAdapter.getItemCount());
-                                intent.putExtra("id",picList.get(position).getId());
-                                intent.putStringArrayListExtra("picList",picUrlList);
-                                intent.putStringArrayListExtra("picIdList",IdList);
+                                intent.putExtra("position", position);
+                                intent.putExtra("itemCount", mAdapter.getItemCount());
+                                intent.putExtra("id", picList.get(position).getId());
+                                intent.putStringArrayListExtra("picList", picUrlList);
+                                intent.putStringArrayListExtra("picIdList", IdList);
                                 startActivity(intent);
                             }
                         });
+
+                        if (swipBanner.isRefreshing()){
+                            swipBanner.setRefreshing(false);
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<BannerModle> call, Throwable t) {
-
+                        if (swipBanner.isRefreshing()){
+                            swipBanner.setRefreshing(false);
+                        }
                     }
                 });
     }

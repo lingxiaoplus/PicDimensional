@@ -39,4 +39,6 @@ public class ContentValue {
 
     //百度识图
     public static String BAIDU_URL = "http://image.baidu.com/wiseshitu?guss=1&queryImageUrl=";
+    //一言
+    public static String HITOKOTO_URL = "http://api.hitokoto.cn/";
 }
