@@ -38,6 +38,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.ActivityController;
@@ -52,9 +53,11 @@ import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.FileUploadModle;
 import com.lingxiaosuse.picture.tudimension.modle.HitokotoModle;
+import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.modle.HotModle;
 import com.lingxiaosuse.picture.tudimension.receiver.NetworkReceiver;
 import com.lingxiaosuse.picture.tudimension.retrofit.FileUploadInterface;
+import com.lingxiaosuse.picture.tudimension.retrofit.HomePageInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
@@ -66,6 +69,8 @@ import com.lingxiaosuse.picture.tudimension.view.WaveLoading;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -118,6 +123,7 @@ public class MainActivity extends BaseActivity {
     private ProgressDialog uploadDialog;
     private TextView hitokoto;
     private RelativeLayout reHeadLayout;
+    private SimpleDraweeView simpleDraweeView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -156,8 +162,31 @@ public class MainActivity extends BaseActivity {
         View headerLayout =
                 navigationView.inflateHeaderView(R.layout.nav_header);
         hitokoto = headerLayout.findViewById(R.id.tv_hitokoto);
-        reHeadLayout = headerLayout.findViewById(R.id.rl_head_menu);
+        simpleDraweeView = headerLayout.findViewById(R.id.image_head_background);
         getHeadText();
+        getHeadBackground();
+    }
+
+    private void getHeadBackground() {
+        RetrofitHelper.getInstance(UIUtils.getContext())
+                .getInterface(HomePageInterface.class)
+                .homePageModle(30,0,false)
+                .enqueue(new Callback<HomePageModle>() {
+                    @Override
+                    public void onResponse(Call<HomePageModle> call, Response<HomePageModle> response) {
+                        List<HomePageModle.Picture> picList =
+                                response.body().res.getWallpaper();
+                        Random random = new Random();
+                        int result = random.nextInt(picList.size());
+                        Uri uri = Uri.parse(picList.get(result).getImg());
+                        simpleDraweeView.setImageURI(uri);
+                    }
+
+                    @Override
+                    public void onFailure(Call<HomePageModle> call, Throwable t) {
+
+                    }
+                });
     }
 
     private void getHeadText() {

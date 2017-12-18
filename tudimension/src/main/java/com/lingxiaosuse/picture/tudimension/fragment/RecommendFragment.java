@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.google.gson.GsonBuilder;
+import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.SpaceItemDecoration;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
@@ -23,9 +24,12 @@ import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.retrofit.HomePageInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
+import com.lingxiaosuse.picture.tudimension.utils.DownloadImgUtils;
+import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.WaveLoading;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import retrofit2.Call;
