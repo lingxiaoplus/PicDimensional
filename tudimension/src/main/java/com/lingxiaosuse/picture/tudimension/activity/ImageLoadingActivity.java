@@ -13,11 +13,13 @@ import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,10 +56,6 @@ import butterknife.OnClick;
 
 public class ImageLoadingActivity extends AppCompatActivity {
 
-    private Intent intent;
-    private int mPosition;
-    private int itemCount;
-    private String id;
     @BindView(R.id.tv_image_loading)
     TextView textCurrent;
     @BindView(R.id.vp_image_load)
@@ -70,9 +68,13 @@ public class ImageLoadingActivity extends AppCompatActivity {
     RelativeLayout relativeLayout;
     @BindView(R.id.iv_img_comment)
     ImageView commentImg;
-    private ArrayList<String> picList,IdList;
+    private Intent intent;
+    private int mPosition;
+    private int itemCount;
+    private String id;
+    private ArrayList<String> picList, IdList;
     private ImageLoadAdapter mAdapter;
-    private boolean isHot,isVertical;
+    private boolean isHot, isVertical;
     private File file;
 
     @Override
@@ -87,26 +89,26 @@ public class ImageLoadingActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mPosition = intent.getIntExtra("position",0);
-        itemCount = intent.getIntExtra("itemCount",0);
+        mPosition = intent.getIntExtra("position", 0);
+        itemCount = intent.getIntExtra("itemCount", 0);
         id = intent.getStringExtra("id");
-        isHot = intent.getBooleanExtra("isHot",false); //判断是否是hot界面
-        isVertical = intent.getBooleanExtra("isVertical",false); //判断是否是壁纸界面
+        isHot = intent.getBooleanExtra("isHot", false); //判断是否是hot界面
+        isVertical = intent.getBooleanExtra("isVertical", false); //判断是否是壁纸界面
         picList = intent.getStringArrayListExtra("picList");
 
-        if(!isHot){
+        if (!isHot) {
             linearLayout.setBackgroundColor(Color.BLACK);
             IdList = intent.getStringArrayListExtra("picIdList");
             commentImg.setVisibility(View.VISIBLE);
         }
-        if (isVertical){
+        if (isVertical) {
             IdList = intent.getStringArrayListExtra("picIdList");
             commentImg.setVisibility(View.VISIBLE);
         }
-        mAdapter = new ImageLoadAdapter(picList,isHot);
+        mAdapter = new ImageLoadAdapter(picList, isHot);
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mPosition);
-        textCurrent.setText(mPosition+1+"/"+itemCount);
+        textCurrent.setText(mPosition + 1 + "/" + itemCount);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -114,9 +116,9 @@ public class ImageLoadingActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                textCurrent.setText(position+1+"/"+itemCount);
+                textCurrent.setText(position + 1 + "/" + itemCount);
                 mPosition = position;
-                if (!isHot || isVertical){
+                if (!isHot || isVertical) {
                     id = IdList.get(position);
                 }
             }
@@ -128,7 +130,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
         });
 
         //给viewpager设置动画
-        viewPager.setPageTransformer(true,new DepthPageTransformer());
+        viewPager.setPageTransformer(true, new DepthPageTransformer());
 
         //设置viewpager的点击事件
         mAdapter.setOnItemclick(new ImageLoadAdapter.OnItemClickListener() {
@@ -144,37 +146,50 @@ public class ImageLoadingActivity extends AppCompatActivity {
             }
         });
     }
+
     @OnClick(R.id.iv_image_back)
-    public void imageBack(){
+    public void imageBack() {
         finish();
     }
+
     @OnClick(R.id.iv_image_save)
-    public void imageSave(final View view){
+    public void imageSave(final View view) {
         downloadImg();
     }
 
     @OnClick(R.id.iv_img_comment)
-    public void imageComment(){
+    public void imageComment() {
         //评论界面
         Intent intent = new Intent(getApplicationContext()
-                ,CommentActivity.class);
-        intent.putExtra("id",id);
+                , CommentActivity.class);
+        intent.putExtra("id", id);
         startActivity(intent);
         //动画
-        overridePendingTransition(R.anim.slide_in_top,R.anim.slide_in_top);
+        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_in_top);
     }
+
     //分享图片
     @OnClick(R.id.iv_img_share)
-    public void shareImg(){
-        DownloadImgUtils.downLoadImg(Uri.parse(picList.get(mPosition)), new DownloadImgUtils.OnDownloadListener(){
+    public void shareImg() {
+        DownloadImgUtils.downLoadImg(Uri.parse(picList.get(mPosition)), new DownloadImgUtils.OnDownloadListener() {
 
             @Override
             public void onDownloadSuccess(Bitmap bitmap) {
                 saveBitmapFile(bitmap);
                 Intent shareImgIntent = new Intent(Intent.ACTION_SEND);
                 shareImgIntent.setType("image/*");
-                Uri u = Uri.fromFile(file);
-                shareImgIntent.putExtra(Intent.EXTRA_STREAM, u);
+                Uri uri;
+                //android7.0
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    shareImgIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    uri = FileProvider.getUriForFile(UIUtils.getContext(),
+                            UIUtils.getContext().getApplicationContext().getPackageName() + ".fileprovider",
+                            file);
+                } else {
+                    uri = Uri.fromFile(file);
+                    shareImgIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+                shareImgIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 startActivity(shareImgIntent);
             }
 
@@ -185,15 +200,15 @@ public class ImageLoadingActivity extends AppCompatActivity {
         });
     }
 
-    public String saveBitmapFile(Bitmap bitmap){
+    public String saveBitmapFile(Bitmap bitmap) {
         String path = ContentValue.PATH;
         String msg = "保存成功";
-        File fileDir =new File(path);//将要保存图片的文件夹
-        if (!fileDir.exists() || fileDir.isFile()){
+        File fileDir = new File(path);//将要保存图片的文件夹
+        if (!fileDir.exists() || fileDir.isFile()) {
             fileDir.mkdirs();
         }
-        file = new File(path+"/"+id+mPosition+".jpg");
-        if (file.exists()){
+        file = new File(path + "/" + id + mPosition + ".jpg");
+        if (file.exists()) {
             msg = "图片已经保存了！";
             return msg;
         }
@@ -205,7 +220,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
             e.printStackTrace();
             msg = "保存失败";
             return msg;
-        }finally {
+        } finally {
             try {
                 bos.flush();
                 bos.close();
@@ -234,16 +249,16 @@ public class ImageLoadingActivity extends AppCompatActivity {
     }
 
     /**
-     *隐藏底部导航栏
+     * 隐藏底部导航栏
      */
     private void toggleButtomView() {
         float current = relativeLayout.getTranslationY();
         ObjectAnimator animator = ObjectAnimator
-                .ofFloat(relativeLayout, "translationY", current, current == 0 ? relativeLayout.getHeight()+100 : 0);
+                .ofFloat(relativeLayout, "translationY", current, current == 0 ? relativeLayout.getHeight() + 100 : 0);
         animator.start();
     }
 
-    private void downloadImg(){
+    private void downloadImg() {
         DownloadUtils.get().download(true, picList.get(mPosition), "tudimension", new DownloadUtils.OnDownloadListener() {
             @Override
             public void onDownloadSuccess(File file) {
@@ -258,13 +273,14 @@ public class ImageLoadingActivity extends AppCompatActivity {
                         ToastUtils.show("下载完成");
                     }
                 });
-                try {
+                //下载大图会发生oom
+                /*try {
                     MediaStore.Images.Media.insertImage(UIUtils.getContext()
                                     .getContentResolver(),
                             file.getAbsolutePath(), file.getName(), null);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
-                }
+                }*/
                 // 最后通知图库更新
                 UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                         Uri.fromFile(new File(file.getPath()))));
@@ -275,7 +291,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
                 UIUtils.runOnUIThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtils.show("正在下载"+progress+"%");
+                        ToastUtils.show("正在下载" + progress + "%");
                     }
                 });
             }
@@ -302,12 +318,12 @@ public class ImageLoadingActivity extends AppCompatActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (i == 0){
+                if (i == 0) {
                     downloadImg();
-                }else if (i == 1){
+                } else if (i == 1) {
                     copyImgUrl();
-                }else {
-                    
+                } else {
+
                 }
             }
         });

@@ -163,6 +163,8 @@ public class MainActivity extends BaseActivity {
                 navigationView.inflateHeaderView(R.layout.nav_header);
         hitokoto = headerLayout.findViewById(R.id.tv_hitokoto);
         simpleDraweeView = headerLayout.findViewById(R.id.image_head_background);
+        SimpleDraweeView headImage = headerLayout.findViewById(R.id.image_head);
+        headImage.setVisibility(View.GONE);
         getHeadText();
         getHeadBackground();
     }

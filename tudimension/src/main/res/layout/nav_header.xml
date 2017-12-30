@@ -13,6 +13,7 @@
         fresco:placeholderImageScaleType="focusCrop"/>
 
     <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/image_head"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"

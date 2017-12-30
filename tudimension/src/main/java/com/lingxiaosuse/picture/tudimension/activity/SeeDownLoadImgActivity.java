@@ -129,15 +129,20 @@ public class SeeDownLoadImgActivity extends BaseActivity {
     }
 
     private List<File> getFiles(File file){
-        File[] fileList = file.listFiles();
-        for (File f:fileList) {
-            if (f.isFile()){
-                mFileList.add(f);
-            }else {
-                getFiles(f);
+        try {
+            File[] fileList = file.listFiles();
+            for (File f:fileList) {
+                if (f.isFile()){
+                    mFileList.add(f);
+                }else {
+                    getFiles(f);
+                }
             }
+            return mFileList;
+        }catch (NullPointerException e){
+            ToastUtils.show("出错了："+e.getMessage());
         }
-        return mFileList;
+        return null;
     }
 
     @Override

@@ -11,6 +11,7 @@
     <color name="grey">#000000</color>
     <color name="white">#11111111</color>
     <color name="whiteNor">#FFFFFFFF</color>
+    <color name="trans">#00000000</color>
 
     <!--splash background color start-->
     <color name="lightblue1">#03A9F4</color>

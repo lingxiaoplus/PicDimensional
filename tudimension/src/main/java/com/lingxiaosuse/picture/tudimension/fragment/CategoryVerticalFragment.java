@@ -1,6 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
 import android.content.Intent;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -33,6 +34,8 @@ public class CategoryVerticalFragment extends BaseFragment{
     private List<CategoryVerticalModle.ResBean.CategoryBean> categoryList = new ArrayList<>();
     private CategoryAdapter mCateAdapter;
     private GridLayoutManager mLayoutManager;
+    private SwipeRefreshLayout refreshLayout;
+
     @Override
     protected void initData() {
         getCategory();
@@ -43,6 +46,20 @@ public class CategoryVerticalFragment extends BaseFragment{
     public View initView() {
         View view = UIUtils.inflate(R.layout.fragment_category);
         recyclerView = view.findViewById(R.id.rv_category);
+        refreshLayout = view.findViewById(R.id.swip_category);
+        refreshLayout.setColorSchemeResources(
+                R.color.colorPrimary,
+                android.R.color.holo_blue_light,
+                android.R.color.holo_red_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light
+        );
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getCategory();
+            }
+        });
         return view;
     }
 
@@ -82,11 +99,16 @@ public class CategoryVerticalFragment extends BaseFragment{
                                 startActivity(intent);
                             }
                         });
+                        if (refreshLayout.isRefreshing()){
+                            refreshLayout.setRefreshing(false);
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<CategoryVerticalModle> call, Throwable t) {
-
+                        if (refreshLayout.isRefreshing()){
+                            refreshLayout.setRefreshing(false);
+                        }
                     }
                 });
     }
