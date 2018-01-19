@@ -40,6 +40,7 @@ import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.liuguangqiang.cookie.CookieBar;
+import com.liuguangqiang.cookie.OnActionClickListener;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
@@ -269,6 +270,14 @@ public class ImageLoadingActivity extends AppCompatActivity {
                                 .setTitle("提示")
                                 .setMessage("下载成功")
                                 .setBackgroundColor(R.color.colorPrimary)
+                                .setAction("查看", new OnActionClickListener() {
+                                    @Override
+                                    public void onClick() {
+                                        //跳转到本地图片浏览界面
+                                        Intent intent = new Intent(UIUtils.getContext(),SeeDownLoadImgActivity.class);
+                                        startActivity(intent);
+                                    }
+                                })
                                 .show();
                         ToastUtils.show("下载完成");
                     }

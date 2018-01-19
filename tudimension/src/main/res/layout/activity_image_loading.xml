@@ -26,7 +26,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="30dp"
             >
-            <android.support.v7.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/iv_image_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                 app:srcCompat="@drawable/ic_img_back"
                 android:layout_marginLeft="5dp"
                 android:layout_centerVertical="true"
-                android:background="@drawable/touchable_background"/>
+                />
             <TextView
                 android:id="@+id/tv_image_loading"
                 android:layout_toRightOf="@id/iv_image_back"
@@ -44,7 +44,7 @@
                 android:textColor="#fff"
                 android:layout_centerInParent="true"
                 android:text="123"/>
-            <android.support.v7.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/iv_image_save"
                 android:layout_centerInParent="true"
                 android:layout_alignParentRight="true"
@@ -53,8 +53,8 @@
                 android:padding="7dp"
                 android:layout_marginRight="5dp"
                 app:srcCompat="@drawable/ic_img_save"
-                android:background="@drawable/touchable_background"/>
-            <android.support.v7.widget.AppCompatImageView
+                />
+            <ImageView
                 android:id="@+id/iv_img_share"
                 android:layout_toLeftOf="@id/iv_image_save"
                 android:layout_width="wrap_content"
@@ -62,9 +62,9 @@
                 app:srcCompat="@drawable/ic_img_share"
                 android:layout_centerInParent="true"
                 android:padding="10dp"
-                android:background="@drawable/touchable_background"
+
                 android:layout_marginRight="5dp"/>
-            <android.support.v7.widget.AppCompatImageView
+            <ImageView
                 android:id="@+id/iv_img_comment"
                 android:layout_toLeftOf="@id/iv_img_share"
                 android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:visibility="invisible"
-                android:background="@drawable/touchable_background"
+
                 android:layout_marginRight="5dp"/>
         </RelativeLayout>
 

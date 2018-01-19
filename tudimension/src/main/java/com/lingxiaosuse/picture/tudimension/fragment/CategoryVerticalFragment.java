@@ -60,6 +60,7 @@ public class CategoryVerticalFragment extends BaseFragment{
                 getCategory();
             }
         });
+        refreshLayout.setRefreshing(true);
         return view;
     }
 

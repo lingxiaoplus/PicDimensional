@@ -21,6 +21,7 @@ public interface BannerInterface {
             @Path("id") String id,
             @Query("limit") int limit,
             @Query("skip") int skip,
+            //@Query("first") int first,
             @Query("adult") boolean adult,
             @Query("order") String order
     );

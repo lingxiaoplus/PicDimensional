@@ -69,14 +69,14 @@ public class SeeDownLoadImgActivity extends BaseActivity {
         toolbar.setTitle("下载的图片");
         File file = new File(ContentValue.PATH);
         List<File> fileList = getFiles(file);
-        if (fileList.size() != 0){
+        if (null != fileList && fileList.size() != 0){
             textNull.setVisibility(View.GONE);
-        }
-        for (int i = 0; i < fileList.size(); i++) {
-            //Log.i("下载的图片路径", fileList.get(i).getAbsolutePath());
-            String path = "file://"+fileList.get(i).getAbsolutePath();
-            //String path = fileList.get(i).getAbsolutePath();
-            mPicList.add(path);
+            for (int i = 0; i < fileList.size(); i++) {
+                //Log.i("下载的图片路径", fileList.get(i).getAbsolutePath());
+                String path = "file://"+fileList.get(i).getAbsolutePath();
+                //String path = fileList.get(i).getAbsolutePath();
+                mPicList.add(path);
+            }
         }
         mLayoutManager = new GridLayoutManager(this,2,
                 LinearLayoutManager.VERTICAL,false);
@@ -140,7 +140,8 @@ public class SeeDownLoadImgActivity extends BaseActivity {
             }
             return mFileList;
         }catch (NullPointerException e){
-            ToastUtils.show("出错了："+e.getMessage());
+            //ToastUtils.show("出错了："+e.getMessage());
+            Log.i("seedownloadimgact", "出错了");
         }
         return null;
     }

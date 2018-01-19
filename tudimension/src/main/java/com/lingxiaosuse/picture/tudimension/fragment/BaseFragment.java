@@ -66,5 +66,4 @@ public abstract class BaseFragment extends Fragment{
      *fab的滑动显示与隐藏，需要用到recyclerview
      */
     public abstract RecyclerView getRecycle();
-
 }

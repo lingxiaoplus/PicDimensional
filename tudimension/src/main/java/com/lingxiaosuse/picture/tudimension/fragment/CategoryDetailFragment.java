@@ -106,7 +106,8 @@ public class CategoryDetailFragment extends BaseFragment{
                         picIdList.clear();
                         for (int i = 0; i < mPicList.size(); i++) {
                             picIdList.add(mPicList.get(i).getId());
-                            picUrlList.add(mPicList.get(i).getImg());
+                            //修复图片名字识别失败
+                            picUrlList.add(mPicList.get(i).getWp());
                         }
 
                         mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {

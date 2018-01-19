@@ -14,4 +14,12 @@
         frecso:progressBarAutoRotateInterval="2000"
         frecso:progressBarImage="@drawable/ic_loading_default"
         />
+    <TextView
+        android:id="@+id/tv_mzitu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:visibility="gone"
+        style="@style/textTitle"/>
 </LinearLayout>

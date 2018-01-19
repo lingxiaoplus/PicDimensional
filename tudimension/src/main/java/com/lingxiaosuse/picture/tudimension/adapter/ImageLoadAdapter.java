@@ -9,7 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
@@ -47,6 +51,7 @@ public class ImageLoadAdapter extends PagerAdapter{
                 image = view.findViewById(R.id.simple_pager_load_hot);
                 Uri uri = Uri.parse(urlList.get(position));
                 Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
+                setControll(uri);
                 image.setImageURI(uri);
                 container.addView(view);
                 setOnclick(image);
@@ -56,6 +61,7 @@ public class ImageLoadAdapter extends PagerAdapter{
                 image = view.findViewById(R.id.simple_pager_load);
                 Uri uri = Uri.parse(urlList.get(position)+imgRule);
                 Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
+                setControll(uri);
                 image.setImageURI(uri);
                 container.addView(view);
                 setOnclick(image);
@@ -109,5 +115,15 @@ public class ImageLoadAdapter extends PagerAdapter{
                 return false;
             }
         });
+    }
+
+    private void setControll(Uri uri){
+        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+                .setLocalThumbnailPreviewsEnabled(true)
+                .build();
+        DraweeController controller = Fresco.newDraweeControllerBuilder()
+                .setImageRequest(request)
+                .setOldController(image.getController())
+                .build();
     }
 }

@@ -1,6 +1,8 @@
 package com.lingxiaosuse.picture.tudimension;
 
 import android.Manifest;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -43,6 +45,7 @@ import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.ActivityController;
 import com.lingxiaosuse.picture.tudimension.activity.BaseActivity;
+import com.lingxiaosuse.picture.tudimension.activity.MzituActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SearchActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SeeDownLoadImgActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SettingsActivity;
@@ -182,6 +185,7 @@ public class MainActivity extends BaseActivity {
                         int result = random.nextInt(picList.size());
                         Uri uri = Uri.parse(picList.get(result).getImg());
                         simpleDraweeView.setImageURI(uri);
+
                     }
 
                     @Override
@@ -253,6 +257,7 @@ public class MainActivity extends BaseActivity {
                 ultimateBar.setColorBarForDrawer
                         (ContextCompat.getColor(UIUtils.getContext(), R.color.colorPrimary),
                                 100);
+                startPropertyAnim(simpleDraweeView,1f,3f,1f,10000);
 
             }
 
@@ -292,6 +297,10 @@ public class MainActivity extends BaseActivity {
                         break;
                     case R.id.nav_exit:
                         ActivityController.finishAll();
+                        break;
+                    case R.id.nav_mzitu:
+                        //mzitu 爬虫
+                        StartActivity(MzituActivity.class,false);
                         break;
                     default:
                         break;
@@ -541,5 +550,27 @@ public class MainActivity extends BaseActivity {
         } catch (ActivityNotFoundException e) {
             e.printStackTrace();
         }
+    }
+    // 动画实际执行
+    private void startPropertyAnim(View view,float oldValue1,float nowValue,float oldValue2,long time) {
+        AnimatorSet set = new AnimatorSet();
+        // 将一个TextView沿垂直方向先从原大小（1f）放大到5倍大小（5f），然后再变回原大小。
+        ObjectAnimator animY = ObjectAnimator.ofFloat(view, "scaleY", oldValue1, nowValue,oldValue2);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(view, "scaleX", oldValue1, nowValue,oldValue2);
+        set.play(animX).with(animY);
+        set.setDuration(time);
+        // 回调监听，可以有也可以无。
+        // 根据情况，如果需要监听动画执行到何种“进度”，那么就监听之。
+        /*anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (Float) animation.getAnimatedValue();
+                Log.d("zhangphil", value + "");
+            }
+        });*/
+
+        // 正式开始启动执行动画
+        set.start();
     }
 }

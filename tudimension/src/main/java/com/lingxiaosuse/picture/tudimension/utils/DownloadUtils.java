@@ -4,6 +4,8 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -42,7 +44,12 @@ public class DownloadUtils {
      * @param listener 下载监听
      */
     public void download(final boolean isImg,final String url, final String saveDir, final OnDownloadListener listener) {
-        Request request = new Request.Builder().url(url).build();
+        Request request = new Request
+                .Builder()
+                .addHeader("Referer", ContentValue.MZITU_URL)
+                .addHeader("User-Agent",ContentValue.USER_AGENT)
+                .url(url)
+                .build();
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {

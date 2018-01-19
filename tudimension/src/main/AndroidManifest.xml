@@ -27,10 +27,10 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MyMainTheme"
-        android:largeHeap="true">
+        android:theme="@style/MyMainTheme">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask" />
@@ -79,17 +79,21 @@
 
         <activity android:name=".activity.VerticalActivity" />
         <activity android:name=".activity.CommentActivity" />
-        <activity android:name=".activity.WebActivity"></activity>
+        <activity android:name=".activity.WebActivity" />
 
         <receiver android:name=".widget.MyWidgetProvider">
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
+
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="com.seewo.homewidgets.action.CLICK" />
             </intent-filter>
         </receiver>
+
+        <activity android:name=".activity.MzituActivity" />
+        <activity android:name=".activity.MzituDetailActivity"></activity>
     </application>
 
 </manifest>

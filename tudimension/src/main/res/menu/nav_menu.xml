@@ -8,6 +8,11 @@
         <item android:id="@+id/nav_vertical"
             android:icon="@drawable/ic_img_vertical"
             android:title="手机壁纸"
+            >
+        </item>
+        <item android:id="@+id/nav_mzitu"
+            android:icon="@drawable/ic_img_home"
+            android:title="mzitu"
             />
         <!--<item android:id="@+id/nav_figure"-->
             <!--android:icon="@drawable/ic_img_figure"-->

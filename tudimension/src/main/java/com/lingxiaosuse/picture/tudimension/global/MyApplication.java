@@ -5,7 +5,9 @@ import android.content.Context;
 import android.os.Handler;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.tencent.bugly.crashreport.CrashReport;
 
 
@@ -21,7 +23,8 @@ public class MyApplication extends Application{
     @Override
     public void onCreate() {
         super.onCreate();
-        Fresco.initialize(this);
+        FrescoHelper.initFresco(this);
+        //Fresco.initialize(this);
         mContext = getApplicationContext();
         mHandler = new Handler();
         mainThreadId = android.os.Process.myPid();

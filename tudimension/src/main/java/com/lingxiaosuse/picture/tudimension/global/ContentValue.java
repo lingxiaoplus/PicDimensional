@@ -41,4 +41,8 @@ public class ContentValue {
     public static String BAIDU_URL = "http://image.baidu.com/wiseshitu?guss=1&queryImageUrl=";
     //一言
     public static String HITOKOTO_URL = "http://api.hitokoto.cn/";
+    //mzitu网址
+    public static String MZITU_URL = "http://www.mzitu.com/";
+    //浏览器标志
+    public static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0";
 }
