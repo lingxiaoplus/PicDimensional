@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
+import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.util.List;
 

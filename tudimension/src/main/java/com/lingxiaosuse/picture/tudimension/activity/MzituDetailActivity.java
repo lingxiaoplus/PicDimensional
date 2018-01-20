@@ -16,6 +16,7 @@ import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
@@ -33,6 +34,7 @@ import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MzituDetailActivity extends BaseActivity {
 
@@ -207,5 +209,17 @@ public class MzituDetailActivity extends BaseActivity {
         Pattern pattern = Pattern.compile(regIP);
         Matcher matcher = pattern.matcher(msg);
         return matcher.replaceAll("");
+    }
+
+    @OnClick(R.id.iv_mzitu_detail_collect)
+    public void onCollect(View v){
+        // TODO: 2018/1/20 这里需要用sqlite 
+        String url =SpUtils.getString(getApplicationContext(),ContentValue.COLLECT_URL,"");
+        if (url.contains(imgUrl)){
+            ToastUtils.show("已经收藏过了！");
+        }else {
+            SpUtils.putString(getApplicationContext(),ContentValue.COLLECT_URL,url+imgUrl);
+            ToastUtils.show("收藏成功！");
+        }
     }
 }

@@ -13,6 +13,8 @@ import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.fragment.CategoryVerticalFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.VerticalFragment;
+import com.lingxiaosuse.picture.tudimension.fragment.mzitu.AllFragment;
+import com.lingxiaosuse.picture.tudimension.fragment.mzitu.DailyFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.MzituFragment;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
@@ -143,6 +145,16 @@ public class MzituActivity extends BaseActivity {
                 bundle.putString("type", "taiwan");
             }else if (position == 4){
                 bundle.putString("type", "mm");
+            }else if (position == 5){
+                bundle.putString("type", "zipai");
+                DailyFragment dailyFragment = new DailyFragment();
+                dailyFragment.setArguments(bundle);
+                return dailyFragment;
+            }else if (position == 6){
+                bundle.putString("type", "all");
+                AllFragment allFragment = new AllFragment();
+                allFragment.setArguments(bundle);
+                return allFragment;
             }else {
                 bundle.putString("type", "");
             }

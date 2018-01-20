@@ -15,6 +15,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.util.ArrayList;
@@ -56,6 +57,10 @@ public class ImageLoadAdapter extends PagerAdapter{
                 container.addView(view);
                 setOnclick(image);
                 setOnLongClick(image);
+                //设置宽高自适应
+                FrescoHelper.setControllerListener(image,
+                        uri,
+                        FrescoHelper.getScreenWidth(UIUtils.getContext()));
             }else {
                 view = UIUtils.inflate(R.layout.pager_load);
                 image = view.findViewById(R.id.simple_pager_load);
@@ -66,7 +71,12 @@ public class ImageLoadAdapter extends PagerAdapter{
                 container.addView(view);
                 setOnclick(image);
                 setOnLongClick(image);
+                //设置宽高自适应
+                FrescoHelper.setControllerListener(image,
+                        uri,
+                        FrescoHelper.getScreenWidth(UIUtils.getContext()));
             }
+
         }catch (Exception e){
             e.printStackTrace();
         }
