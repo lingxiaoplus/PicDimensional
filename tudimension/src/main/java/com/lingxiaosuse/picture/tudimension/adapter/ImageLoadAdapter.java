@@ -17,6 +17,8 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.ZoomableDrawwView;
+import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 
 import java.util.ArrayList;
 
@@ -26,12 +28,17 @@ import java.util.ArrayList;
 
 public class ImageLoadAdapter extends PagerAdapter{
     private ArrayList<String> urlList;
-    private SimpleDraweeView image;
+    private ZoomableDrawwView image;
     private boolean isHot;
     private String imgRule ="?imageView2/3/h/1080";
+    private ZoomableViewpager viewpager;
     public ImageLoadAdapter(ArrayList<String> urlList,boolean isHot){
         this.urlList = urlList;
         this.isHot = isHot;
+    }
+
+    public void setMoveListener(ZoomableViewpager viewpager){
+        this.viewpager = viewpager;
     }
     @Override
     public int getCount() {
@@ -57,6 +64,7 @@ public class ImageLoadAdapter extends PagerAdapter{
                 container.addView(view);
                 setOnclick(image);
                 setOnLongClick(image);
+                image.setOnMovingListener(viewpager);
                 //设置宽高自适应
                 FrescoHelper.setControllerListener(image,
                         uri,
@@ -104,25 +112,23 @@ public class ImageLoadAdapter extends PagerAdapter{
     public interface onItemLongClickListener{
         void onLongClick();
     }
-    private void setOnclick(SimpleDraweeView view){
-        view.setOnClickListener(new View.OnClickListener() {
+    private void setOnclick(ZoomableDrawwView view){
+        view.setOnClickListener(new ZoomableDrawwView.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick() {
                 if (listener != null){
                     listener.onClick();
                 }
             }
         });
     }
-    private void setOnLongClick(SimpleDraweeView view){
-        view.setOnLongClickListener(new View.OnLongClickListener() {
+    private void setOnLongClick(ZoomableDrawwView view){
+        view.setOnLongClickListener(new ZoomableDrawwView.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View view) {
+            public void onLongClick() {
                 if (longClickListener != null){
                     longClickListener.onLongClick();
-                    return true;
                 }
-                return false;
             }
         });
     }

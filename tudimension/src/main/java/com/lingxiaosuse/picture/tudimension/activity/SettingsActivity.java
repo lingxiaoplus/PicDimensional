@@ -26,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+
 public class SettingsActivity extends BaseActivity {
     @BindView(R.id.toolbar_setting)
     Toolbar toolbar;

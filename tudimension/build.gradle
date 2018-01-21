@@ -8,8 +8,8 @@ android {
         applicationId "com.lingxiaosuse.picture.tudimension"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 8
-        versionName "1.7"
+        versionCode 9
+        versionName "1.8"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -73,6 +73,7 @@ dependencies {
     compile 'org.jsoup:jsoup:1.11.2'
     // your project's other dependencies
     compile "com.facebook.fresco:imagepipeline-okhttp3:0.12.0+"
+
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 }

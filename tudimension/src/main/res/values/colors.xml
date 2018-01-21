@@ -3,7 +3,7 @@
     <!--3F51B5  FF4081-->
     <color name="colorPrimary">#66BB6A</color>
     <color name="colorPrimaryDark">#4CAF50</color>
-    <color name="colorAccent">#ff4081</color>
+    <color name="colorAccent">#FFFFFFFF</color>
 
     <color name="colorWhite">#11111111</color>
     <color name="colorTrans">#80000000</color>
@@ -21,8 +21,4 @@
     <color name="lightbluelast">#0277BD</color>
     <!--splash background color end-->
 
-    <!--夜间皮肤start-->
-    <color name="colorPrimary_night">#424242</color>
-    <color name="colorPrimaryDark_night">#212121</color>
-    <!--夜间皮肤end-->
 </resources>

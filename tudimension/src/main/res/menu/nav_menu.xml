@@ -14,6 +14,10 @@
             android:icon="@drawable/ic_img_mzitu"
             android:title="妹子图(mzitu.com)"
             />
+        <item android:id="@+id/nav_sousiba"
+            android:icon="@drawable/ic_img_mzitu"
+            android:title="搜丝吧(sousiba.com)"
+            />
         <!--<item android:id="@+id/nav_figure"-->
             <!--android:icon="@drawable/ic_img_figure"-->
             <!--android:title="斗图专题"/>-->

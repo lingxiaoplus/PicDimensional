@@ -39,6 +39,8 @@ import com.lingxiaosuse.picture.tudimension.utils.DownloadImgUtils;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.PhotoViewPager;
+import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 import com.liuguangqiang.cookie.CookieBar;
 import com.liuguangqiang.cookie.OnActionClickListener;
 
@@ -60,7 +62,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
     @BindView(R.id.tv_image_loading)
     TextView textCurrent;
     @BindView(R.id.vp_image_load)
-    ViewPager viewPager;
+    ZoomableViewpager viewPager;
     @BindView(R.id.iv_image_save)
     ImageView saveImg;
     @BindView(R.id.ll_loading)
@@ -98,7 +100,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
         picList = intent.getStringArrayListExtra("picList");
 
         if (!isHot) {
-            linearLayout.setBackgroundColor(Color.BLACK);
+            //linearLayout.setBackgroundColor(Color.BLACK);
             IdList = intent.getStringArrayListExtra("picIdList");
             commentImg.setVisibility(View.VISIBLE);
         }
@@ -107,6 +109,7 @@ public class ImageLoadingActivity extends AppCompatActivity {
             commentImg.setVisibility(View.VISIBLE);
         }
         mAdapter = new ImageLoadAdapter(picList, isHot);
+        mAdapter.setMoveListener(viewPager);
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mPosition);
         textCurrent.setText(mPosition + 1 + "/" + itemCount);

@@ -19,6 +19,7 @@ import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFact
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.ImageInfo;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.widget.ZoomableDrawwView;
 
 import java.io.File;
 import java.io.IOException;
@@ -86,7 +87,7 @@ public class FrescoHelper {
     /**
      *通过imageWidth 的宽度，自动适应高度
      */
-    public static void setControllerListener(final SimpleDraweeView simpleDraweeView, Uri imageUri, final int imageWidth){
+    public static void setControllerListener(final ZoomableDrawwView simpleDraweeView, Uri imageUri, final int imageWidth){
         final ViewGroup.LayoutParams layoutParams = simpleDraweeView.getLayoutParams();
         ControllerListener controllerListener = new BaseControllerListener<ImageInfo>(){
             @Override

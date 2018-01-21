@@ -140,6 +140,10 @@ public class DailyFragment extends BaseFragment{
                         mImgList.add(imgUrl);
                     }
 
+
+                }catch (Exception e){
+                    Log.i("DailyFragment", e.getMessage());
+                }finally {
                     UIUtils.runOnUIThread(new Runnable() {
                         @Override
                         public void run() {
@@ -150,10 +154,6 @@ public class DailyFragment extends BaseFragment{
                             mAdapter.isFinish(true);
                         }
                     });
-                }catch (Exception e){
-                    if (swipMzitu.isRefreshing()){
-                        swipMzitu.setRefreshing(false);
-                    }
                 }
             }
         }).start();

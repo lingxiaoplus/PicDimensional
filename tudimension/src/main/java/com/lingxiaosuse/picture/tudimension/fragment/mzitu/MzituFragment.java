@@ -145,18 +145,19 @@ public class MzituFragment extends BaseFragment{
                     }
                 }catch (Exception e){
 
+                }finally {
+                    UIUtils.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.notifyDataSetChanged();
+                            if (swipMzitu.isRefreshing()){
+                                swipMzitu.setRefreshing(false);
+                            }
+
+                        }
+                    });
                 }
 
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.notifyDataSetChanged();
-                        if (swipMzitu.isRefreshing()){
-                            swipMzitu.setRefreshing(false);
-                        }
-
-                    }
-                });
             }
         }).start();
     }

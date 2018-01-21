@@ -112,10 +112,11 @@ public class MzituDetailActivity extends BaseActivity {
                 });
                 } catch (final Exception e) {
                     e.printStackTrace();
+                }finally {
                     UIUtils.runOnUIThread(new Runnable() {
                         @Override
                         public void run() {
-                            ToastUtils.show(e.getMessage()+"请重试");
+                            //ToastUtils.show(e.getMessage()+"请重试");
                             if (swipMzituDetail.isRefreshing()){
                                 swipMzituDetail.setRefreshing(false);
                             }

@@ -48,4 +48,7 @@ public class ContentValue {
 
     //收藏的网址
     public static String COLLECT_URL = "collect_url";
+
+    //搜丝吧
+    public static String SOUSIBA_URL = "http://www.sousi88.cc";
 }

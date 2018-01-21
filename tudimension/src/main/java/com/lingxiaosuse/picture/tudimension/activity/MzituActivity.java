@@ -6,13 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
-import com.lingxiaosuse.picture.tudimension.fragment.CategoryVerticalFragment;
-import com.lingxiaosuse.picture.tudimension.fragment.VerticalFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.AllFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.DailyFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.MzituFragment;
@@ -25,7 +24,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,6 +49,7 @@ public class MzituActivity extends BaseActivity {
         ButterKnife.bind(this);
         setToolbarBack(toolbarTitle);
         toolbarTitle.setTitle("mzitu");
+
         initTab();
         initPager();
     }
@@ -61,6 +60,7 @@ public class MzituActivity extends BaseActivity {
     }
 
     private void initTab() {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -75,35 +75,40 @@ public class MzituActivity extends BaseActivity {
                     Connection.Response response = connection.execute();
                     response.cookies();
                     doc = connection.get();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //获取tab的数据
-                Element elementDiv = doc.getElementById("menu-nav");
-                //Elements elementsUl = elementDiv.getElementsByTag("ul");
-                Elements elements = elementDiv.getElementsByTag("li");
-                for (Element element : elements) {
-                    //Elements elements1 = element.children();
-                    final String targetTitle = element.getElementsByTag("a").attr("title");
-                    final String targetUrl = element.getElementsByTag("a").attr("href");
-                    //ToastUtils.show(targetUrl);
-                    tabTitle.add(targetTitle);
+
+                    //获取tab的数据
+                    Element elementDiv = doc.getElementById("menu-nav");
+                    //Elements elementsUl = elementDiv.getElementsByTag("ul");
+                    Elements elements = elementDiv.getElementsByTag("li");
+                    for (Element element : elements) {
+                        //Elements elements1 = element.children();
+                        final String targetTitle = element.getElementsByTag("a").attr("title");
+                        final String targetUrl = element.getElementsByTag("a").attr("href");
+                        //ToastUtils.show(targetUrl);
+                        tabTitle.add(targetTitle);
                     /*String img = elements1.get(0).getElementsByTag("img").first().attr("data-src");
                     if (img.contains(".jpg")) {
                         int a = img.indexOf(".jpg");
                         img = img.substring(0, a + 4);
                     }*/
-                }
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < tabTitle.size(); i++) {
-                            tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
-                        }
-                        mAdapter.notifyDataSetChanged();
-                        tabMzitu.setupWithViewPager(pagerMzitu);
                     }
-                });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.i("MzituActivity", e.getMessage());
+                } finally {
+                    UIUtils.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (int i = 0; i < tabTitle.size(); i++) {
+                                tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
+                            }
+                            mAdapter.notifyDataSetChanged();
+                            tabMzitu.setupWithViewPager(pagerMzitu);
+
+                        }
+                    });
+                }
+
             }
 
         }).start();
@@ -139,23 +144,23 @@ public class MzituActivity extends BaseActivity {
                 bundle.putString("type", "");
             } else if (position == 1) {
                 bundle.putString("type", "xinggan");
-            } else if (position == 2){
+            } else if (position == 2) {
                 bundle.putString("type", "japan");
-            }else if (position == 3){
+            } else if (position == 3) {
                 bundle.putString("type", "taiwan");
-            }else if (position == 4){
+            } else if (position == 4) {
                 bundle.putString("type", "mm");
-            }else if (position == 5){
+            } else if (position == 5) {
                 bundle.putString("type", "zipai");
                 DailyFragment dailyFragment = new DailyFragment();
                 dailyFragment.setArguments(bundle);
                 return dailyFragment;
-            }else if (position == 6){
+            } else if (position == 6) {
                 bundle.putString("type", "all");
                 AllFragment allFragment = new AllFragment();
                 allFragment.setArguments(bundle);
                 return allFragment;
-            }else {
+            } else {
                 bundle.putString("type", "");
             }
             fragment.setArguments(bundle);

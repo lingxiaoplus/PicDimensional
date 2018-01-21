@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-        <android.support.v4.view.ViewPager
+        <com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager
             android:id="@+id/vp_image_load"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
-        </android.support.v4.view.ViewPager>
+        </com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager>
         <RelativeLayout
             android:id="@+id/rl_loading"
             android:layout_width="match_parent"

@@ -51,6 +51,7 @@ import com.lingxiaosuse.picture.tudimension.activity.SeeDownLoadImgActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SettingsActivity;
 import com.lingxiaosuse.picture.tudimension.activity.VerticalActivity;
 import com.lingxiaosuse.picture.tudimension.activity.WebActivity;
+import com.lingxiaosuse.picture.tudimension.activity.sousiba.SousibaActivity;
 import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
@@ -301,6 +302,10 @@ public class MainActivity extends BaseActivity {
                     case R.id.nav_mzitu:
                         //mzitu 爬虫
                         StartActivity(MzituActivity.class,false);
+                        break;
+                    case R.id.nav_sousiba:
+
+                        StartActivity(SousibaActivity.class,false);
                         break;
                     default:
                         break;
