@@ -94,7 +94,8 @@
 
         <activity android:name=".activity.MzituActivity" />
         <activity android:name=".activity.MzituDetailActivity" />
-        <activity android:name=".activity.sousiba.SousibaActivity"></activity>
+        <activity android:name=".activity.sousiba.SousibaActivity" />
+        <activity android:name=".activity.sousiba.SousibaDetailActivity"></activity>
     </application>
 
 </manifest>

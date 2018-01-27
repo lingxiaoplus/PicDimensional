@@ -10,6 +10,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.ZoomableDrawwView;
 
 import java.util.List;
 

@@ -1,5 +1,6 @@
 package com.lingxiaosuse.picture.tudimension.adapter;
 
+import android.graphics.drawable.Animatable;
 import android.net.Uri;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -10,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
@@ -22,13 +26,18 @@ import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 
 import java.util.ArrayList;
 
+import me.relex.photodraweeview.OnPhotoTapListener;
+import me.relex.photodraweeview.PhotoDraweeView;
+
+import static android.provider.CalendarContract.CalendarCache.URI;
+
 /**
  * Created by lingxiao on 2017/8/29.
  */
 
 public class ImageLoadAdapter extends PagerAdapter{
     private ArrayList<String> urlList;
-    private ZoomableDrawwView image;
+    private PhotoDraweeView image;
     private boolean isHot;
     private String imgRule ="?imageView2/3/h/1080";
     private ZoomableViewpager viewpager;
@@ -59,30 +68,30 @@ public class ImageLoadAdapter extends PagerAdapter{
                 image = view.findViewById(R.id.simple_pager_load_hot);
                 Uri uri = Uri.parse(urlList.get(position));
                 Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
-                setControll(uri);
-                image.setImageURI(uri);
+                setControll(uri,image);
+                image.setPhotoUri(uri);
                 container.addView(view);
                 setOnclick(image);
                 setOnLongClick(image);
-                image.setOnMovingListener(viewpager);
+                //image.setOnMovingListener(viewpager);
                 //设置宽高自适应
-                FrescoHelper.setControllerListener(image,
+                /*FrescoHelper.setControllerListener(image,
                         uri,
-                        FrescoHelper.getScreenWidth(UIUtils.getContext()));
+                        FrescoHelper.getScreenWidth(UIUtils.getContext()));*/
             }else {
                 view = UIUtils.inflate(R.layout.pager_load);
                 image = view.findViewById(R.id.simple_pager_load);
                 Uri uri = Uri.parse(urlList.get(position)+imgRule);
                 Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
-                setControll(uri);
-                image.setImageURI(uri);
+                setControll(uri,image);
+                image.setPhotoUri(uri);
                 container.addView(view);
                 setOnclick(image);
                 setOnLongClick(image);
                 //设置宽高自适应
-                FrescoHelper.setControllerListener(image,
+                /*FrescoHelper.setControllerListener(image,
                         uri,
-                        FrescoHelper.getScreenWidth(UIUtils.getContext()));
+                        FrescoHelper.getScreenWidth(UIUtils.getContext()));*/
             }
 
         }catch (Exception e){
@@ -112,34 +121,68 @@ public class ImageLoadAdapter extends PagerAdapter{
     public interface onItemLongClickListener{
         void onLongClick();
     }
-    private void setOnclick(ZoomableDrawwView view){
-        view.setOnClickListener(new ZoomableDrawwView.OnClickListener() {
+    private void setOnclick(PhotoDraweeView view){
+       /* view.setOnClickListener(new ZoomableDrawwView.OnClickListener() {
             @Override
             public void onClick() {
                 if (listener != null){
                     listener.onClick();
                 }
             }
+        });*/
+        view.setOnPhotoTapListener(new OnPhotoTapListener() {
+            @Override
+            public void onPhotoTap(View view, float x, float y) {
+                if (listener != null){
+                    listener.onClick();
+                }
+            }
         });
     }
-    private void setOnLongClick(ZoomableDrawwView view){
-        view.setOnLongClickListener(new ZoomableDrawwView.OnLongClickListener() {
+    private void setOnLongClick(PhotoDraweeView view){
+        /*view.setOnLongClickListener(new ZoomableDrawwView.OnLongClickListener() {
             @Override
             public void onLongClick() {
                 if (longClickListener != null){
                     longClickListener.onLongClick();
                 }
             }
+        });*/
+
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                if (longClickListener != null){
+                    longClickListener.onLongClick();
+                }
+                return true;
+            }
         });
     }
 
-    private void setControll(Uri uri){
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
+    private void setControll(Uri uri,final PhotoDraweeView mPhotoDraweeView){
+        /*ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setLocalThumbnailPreviewsEnabled(true)
                 .build();
         DraweeController controller = Fresco.newDraweeControllerBuilder()
                 .setImageRequest(request)
                 .setOldController(image.getController())
-                .build();
+                .build();*/
+
+        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+        controller.setUri(uri);
+        controller.setAutoPlayAnimations(true);
+        controller.setOldController(mPhotoDraweeView.getController());
+        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                super.onFinalImageSet(id, imageInfo, animatable);
+                if (imageInfo == null || mPhotoDraweeView == null) {
+                    return;
+                }
+                mPhotoDraweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
+            }
+        });
+        mPhotoDraweeView.setController(controller.build());
     }
 }

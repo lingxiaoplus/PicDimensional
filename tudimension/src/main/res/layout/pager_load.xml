@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
-    <com.lingxiaosuse.picture.tudimension.widget.ZoomableDrawwView
+    <me.relex.photodraweeview.PhotoDraweeView
         android:id="@+id/simple_pager_load"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         fresco:viewAspectRatio="1.2"
         fresco:progressBarImageScaleType="centerInside"
         fresco:progressBarAutoRotateInterval="2000"

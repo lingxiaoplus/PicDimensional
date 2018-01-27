@@ -16,6 +16,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -26,11 +27,16 @@ import com.lingxiaosuse.picture.tudimension.adapter.LocalImgAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.rxbus.DeleteEvent;
 import com.lingxiaosuse.picture.tudimension.rxbus.RxBus;
+import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -54,6 +60,7 @@ public class SeeDownLoadImgActivity extends BaseActivity {
     private LinearLayoutManager mLayoutManager;
     private LocalImgAdapter mAdapter;
     private Subscription rxSubscription;
+    private List<File> fileList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +76,7 @@ public class SeeDownLoadImgActivity extends BaseActivity {
         toolbar.setTitle("下载的图片");
         File file = new File(ContentValue.PATH);
         List<File> fileList = getFiles(file);
+
         if (null != fileList && fileList.size() != 0){
             textNull.setVisibility(View.GONE);
             for (int i = 0; i < fileList.size(); i++) {
@@ -124,8 +132,89 @@ public class SeeDownLoadImgActivity extends BaseActivity {
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.menu_time_order:
+                timeOrder(mFileList);
+                break;
+            case R.id.menu_size_order:
+                sizeOrder(mFileList);
+                break;
         }
         return true;
+    }
+
+    private void sizeOrder(List<File> fileList) {
+        try {
+            File file1,file2,file;
+            long size1,size2;
+            for (int i = 0; i < fileList.size()-1; i++) {
+                file1 = fileList.get(i);
+                for (int j = i+1; j < fileList.size(); j++) {
+                    file2 = fileList.get(j);
+                    size1 = getFileSize(file1);
+                    size2 = getFileSize(file2);
+                    if (size1 > size2){
+                        file = file1;
+                        fileList.set(i,file2);
+                        fileList.set(j,file);
+                    }
+                }
+            }
+            mPicList.clear();
+            for (int i = 0; i < fileList.size(); i++) {
+                //Log.i("下载的图片路径", fileList.get(i).getAbsolutePath());
+                String path = "file://"+fileList.get(i).getAbsolutePath();
+                //String path = fileList.get(i).getAbsolutePath();
+                mPicList.add(path);
+            }
+            mAdapter.notifyDataSetChanged();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void timeOrder(List<File> fileList){
+        try {
+            File file1,file2,file;
+            Date date1,date2;
+            for (int i = 0; i < fileList.size()-1; i++) {
+                file1 = fileList.get(i);
+                for (int j = i+1; j < fileList.size(); j++) {
+                    file2 = fileList.get(j);
+                    date1 = StringUtils.longToDate(file1.lastModified(), "yyyy-MM-dd HH:mm:ss");
+                    date2 = StringUtils.longToDate(file2.lastModified(), "yyyy-MM-dd HH:mm:ss");
+
+                    if (date1.before(date2)){
+                        file = file1;
+                        fileList.set(i,file2);
+                        fileList.set(j,file);
+                    }
+                }
+            }
+            mPicList.clear();
+            for (int i = 0; i < fileList.size(); i++) {
+                //Log.i("下载的图片路径", fileList.get(i).getAbsolutePath());
+                String path = "file://"+fileList.get(i).getAbsolutePath();
+                //String path = fileList.get(i).getAbsolutePath();
+                mPicList.add(path);
+            }
+            mAdapter.notifyDataSetChanged();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+    public long getFileSize(File file) throws Exception {
+        if (file == null) {
+            return 0;
+        }
+        long size = 0;
+        if (file.exists()) {
+            FileInputStream fis = null;
+            fis = new FileInputStream(file);
+            size = fis.available();
+            fis.close();
+        }
+        return size;
     }
 
     private List<File> getFiles(File file){
@@ -153,5 +242,11 @@ public class SeeDownLoadImgActivity extends BaseActivity {
         if (!rxSubscription.isUnsubscribed()){
             rxSubscription.unsubscribe();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.see_local_img, menu);
+        return true;
     }
 }
