@@ -60,6 +60,7 @@ public class SpecialFragment extends BaseFragment{
                 android.R.color.holo_orange_light,
                 android.R.color.holo_green_light
         );
+        swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

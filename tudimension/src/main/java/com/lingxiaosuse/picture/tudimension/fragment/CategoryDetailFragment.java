@@ -41,6 +41,8 @@ public class CategoryDetailFragment extends BaseFragment{
     private ArrayList<String> picIdList = new ArrayList<>();
     private ArrayList<String> picUrlList = new ArrayList<>();
     private VerticalAdapter mAdapter;
+    private FloatingActionButton floatingActionButton;
+
     @Override
     protected void initData() {
         try {
@@ -74,12 +76,27 @@ public class CategoryDetailFragment extends BaseFragment{
 
     @Override
     public View initView() {
-        View view = UIUtils.inflate(R.layout.fragment_vertical_pager);
+        View view = View.inflate(getContext(),R.layout.fragment_vertical_pager,null);
         refreshLayout = view.findViewById(R.id.swip_vertical_item);
         mRecyclerView = view.findViewById(R.id.recycle_vertical_item);
+        floatingActionButton = view.findViewById(R.id.fab_vertical_fragment);
         manager = new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
+
+        refreshLayout.setRefreshing(true);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0){
+                    floatingActionButton.hide();
+                }else {
+                    floatingActionButton.show();
+                }
+            }
+        });
         return view;
     }
 

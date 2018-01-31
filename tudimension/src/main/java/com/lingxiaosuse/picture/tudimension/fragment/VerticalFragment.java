@@ -48,13 +48,15 @@ public class VerticalFragment extends Fragment{
     private List<VerticalModle.ResBean.VerticalBean> verticalBeanList;
     private ArrayList<String> picIdList = new ArrayList<>();
     private ArrayList<String> picUrlList = new ArrayList<>();
+    private FloatingActionButton floatingActionButton;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = UIUtils.inflate(R.layout.fragment_vertical_pager);
+        View view = View.inflate(getContext(),R.layout.fragment_vertical_pager,null);
         refreshLayout = view.findViewById(R.id.swip_vertical_item);
         mRecyclerView = view.findViewById(R.id.recycle_vertical_item);
-
+        floatingActionButton = view.findViewById(R.id.fab_vertical_fragment);
         refreshLayout.setColorSchemeResources(
                 R.color.colorPrimary,
                 android.R.color.holo_blue_light,
@@ -65,11 +67,28 @@ public class VerticalFragment extends Fragment{
         manager = new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
-        activity = (VerticalActivity) getActivity();
-        activity.setOnFabClick(new VerticalActivity.FabClickListener() {
+        refreshLayout.setRefreshing(true);
+
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onTabClick() {
-                Log.i("code", "fragment接受到了事件: "+mRecyclerView);
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy>0){
+                    floatingActionButton.hide();
+                }else {
+                    floatingActionButton.show();
+                }
+            }
+        });
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
                 mRecyclerView.smoothScrollToPosition(0);
             }
         });
@@ -151,6 +170,8 @@ public class VerticalFragment extends Fragment{
                     getDataFromServer(30,0,order);
                 }
             });
+
+            activity = (VerticalActivity) getActivity();
         }catch (NullPointerException e){
             Log.i("verticalFragment", "获取bundle数据失败");
         }
@@ -159,6 +180,15 @@ public class VerticalFragment extends Fragment{
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser && null != activity){
+            activity.setOnFabClick(new VerticalActivity.FabClickListener() {
+                @Override
+                public void onTabClick() {
+                    Log.i("code", "fragment接受到了事件: "+mRecyclerView);
+                    mRecyclerView.smoothScrollToPosition(0);
+                }
+            });
+        }
     }
 
 }

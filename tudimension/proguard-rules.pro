@@ -180,3 +180,8 @@ public static ** valueOf(java.lang.String);
 #bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
+
+#jsoup
+-dontwarn org.jsoup.**
+-keep class org.jsoup.**{*;}
+-keeppackagenames org.jsoup.nodes

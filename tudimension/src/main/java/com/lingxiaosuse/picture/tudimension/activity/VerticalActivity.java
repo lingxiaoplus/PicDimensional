@@ -54,7 +54,8 @@ public class VerticalActivity extends BaseActivity {
                 VerticalPagerAdapter(getSupportFragmentManager());
         pagerVertical.setAdapter(mPagerAdapter);
         pagerVertical.setCurrentItem(0);
-
+        //加载三个页面
+        pagerVertical.setOffscreenPageLimit(3);
         fabVertical.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

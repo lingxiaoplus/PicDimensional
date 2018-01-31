@@ -121,7 +121,7 @@ public class AboutActivity extends BaseActivity {
                 }
                 break;
             case R.id.card_about_gank:
-                ToastUtils.show("点击了干货集中营");
+
                 goToInternet(AboutActivity.this,"http://gank.io");
                 break;
             case R.id.card_about_me:

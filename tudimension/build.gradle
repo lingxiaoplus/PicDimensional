@@ -8,8 +8,8 @@ android {
         applicationId "com.lingxiaosuse.picture.tudimension"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 9
-        versionName "1.8"
+        versionCode 10
+        versionName "1.9"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 

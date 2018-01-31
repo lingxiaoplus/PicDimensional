@@ -43,7 +43,7 @@ public class CategoryFragment extends BaseFragment{
         View view = UIUtils.inflate(R.layout.fragment_category);
         recyclerView = view.findViewById(R.id.rv_category);
         refreshLayout = view.findViewById(R.id.swip_category);
-
+        refreshLayout.setRefreshing(true);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

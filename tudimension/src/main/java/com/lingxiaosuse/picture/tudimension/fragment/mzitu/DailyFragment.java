@@ -15,6 +15,7 @@ import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import org.jsoup.Connection;
@@ -42,12 +43,13 @@ public class DailyFragment extends BaseFragment{
     private MzituRecyclerAdapter mAdapter;
     private List<String> mImgList = new ArrayList<>();  //存放图片地址
 
+    private String mUrl;
     @Override
     protected void initData() {
         Bundle bundle = getArguments();
         type = bundle.getString("type");
-
-        getDataFromJsoup(mPage);
+        mUrl = ContentValue.MZITU_URL+type;
+        getDataFromJsoup();
     }
 
     @Override
@@ -60,7 +62,7 @@ public class DailyFragment extends BaseFragment{
         swipMzitu.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getDataFromJsoup(mPage);
+                getDataFromJsoup();
             }
         });
         initRecyclerView();
@@ -88,18 +90,12 @@ public class DailyFragment extends BaseFragment{
         rvMzitu.setAdapter(mAdapter);
         //mAdapter.setTitle(mTitleList);
 
-        /*mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
+        mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
             @Override
             public void onLoadMore() {
-                if (mPage<150){
-                    mPage++;
-                    initJsoup(mPage);
-                }else {
-                    mAdapter.isFinish(true);
-                }
-
+                getDataFromJsoup();
             }
-        });*/
+        });
 
         mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
             @Override
@@ -116,11 +112,11 @@ public class DailyFragment extends BaseFragment{
         });
     }
 
-    private void getDataFromJsoup(final int page) {
+    private void getDataFromJsoup() {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                Connection connection = Jsoup.connect(ContentValue.MZITU_URL+type)
+                Connection connection = Jsoup.connect(mUrl)
                         .timeout(5000);
                 Document doc = null;
                 try {
@@ -134,12 +130,26 @@ public class DailyFragment extends BaseFragment{
                 try {
                     Element elementHome = doc.getElementById("comments");
                     Elements elementImgs = elementHome.getElementsByTag("li");
+                    //获取到当前页数
+                    Elements pageSize = elementHome.getElementsByClass("pagenavi-cm");
                     for (Element elementImg:elementImgs) {
                         final String imgUrl = elementImg.getElementsByTag("img").attr("src");
                         Log.i("图片地址", "run: "+imgUrl);
                         mImgList.add(imgUrl);
                     }
 
+                    for (Element element: pageSize) {
+                        String pageStr = element.getElementsByTag("span").text();
+                        String pagePattern = StringUtils.getPatternPageNum(pageStr);
+                        int page = Integer.valueOf(pagePattern);
+                        if (page > 1){
+                            page--;
+                        }else {
+                            mAdapter.isFinish(true);
+                        }
+
+                        mUrl = ContentValue.MZITU_URL + type + "/comment-page-"+page+"/#comments";
+                    }
 
                 }catch (Exception e){
                     Log.i("DailyFragment", e.getMessage());
@@ -151,7 +161,7 @@ public class DailyFragment extends BaseFragment{
                             if (swipMzitu.isRefreshing()){
                                 swipMzitu.setRefreshing(false);
                             }
-                            mAdapter.isFinish(true);
+
                         }
                     });
                 }

@@ -9,6 +9,8 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 检验字符串是否合法
@@ -105,5 +107,16 @@ public class StringUtils {
         } else {
             return "0";
         }
+    }
+
+    /**
+     *格式化字符串为数字
+     */
+    public static String getPatternPageNum(String msg) {
+        String regIP = "[^0-9]";
+        //编译正则表达式
+        Pattern pattern = Pattern.compile(regIP);
+        Matcher matcher = pattern.matcher(msg);
+        return matcher.replaceAll("");
     }
 }

@@ -17,6 +17,7 @@
         <item android:id="@+id/nav_sousiba"
             android:icon="@drawable/ic_img_mzitu"
             android:title="搜丝吧(sousiba.com)"
+            android:visible="false"
             />
         <!--<item android:id="@+id/nav_figure"-->
             <!--android:icon="@drawable/ic_img_figure"-->

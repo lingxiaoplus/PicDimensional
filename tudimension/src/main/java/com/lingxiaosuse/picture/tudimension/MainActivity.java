@@ -184,7 +184,7 @@ public class MainActivity extends BaseActivity {
                                 response.body().res.getWallpaper();
                         Random random = new Random();
                         int result = random.nextInt(picList.size());
-                        Uri uri = Uri.parse(picList.get(result).getImg());
+                        Uri uri = Uri.parse(picList.get(result).getPreview()+ContentValue.imgRule);
                         simpleDraweeView.setImageURI(uri);
 
                     }

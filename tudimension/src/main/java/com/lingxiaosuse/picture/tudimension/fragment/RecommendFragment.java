@@ -76,7 +76,7 @@ public class RecommendFragment extends BaseFragment{
         SpaceItemDecoration space = new SpaceItemDecoration(10);
         recycleView.addItemDecoration(space);
 
-
+        swipeLayout.setRefreshing(true);
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

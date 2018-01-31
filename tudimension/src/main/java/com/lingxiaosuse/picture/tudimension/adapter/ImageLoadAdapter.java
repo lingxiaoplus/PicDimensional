@@ -66,7 +66,7 @@ public class ImageLoadAdapter extends PagerAdapter{
             if (isHot){
                 view = UIUtils.inflate(R.layout.pager_load_hot);
                 image = view.findViewById(R.id.simple_pager_load_hot);
-                Uri uri = Uri.parse(urlList.get(position));
+                Uri uri = Uri.parse(urlList.get(position)+imgRule);
                 Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
                 setControll(uri,image);
                 image.setPhotoUri(uri);

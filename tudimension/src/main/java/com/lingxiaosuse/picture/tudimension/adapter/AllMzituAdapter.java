@@ -19,6 +19,11 @@ public class AllMzituAdapter extends BaseRecycleAdapter{
     private List<String> titleList;
     private CardView cardView;
     private int[] color = {R.color.colorPrimary,
+            R.color.red400,
+            R.color.purple400,
+            R.color.pink400,
+            R.color.deepPurple400,
+            R.color.indigo400,
             android.R.color.holo_blue_light,
             android.R.color.holo_red_light,
             android.R.color.holo_orange_light,
@@ -38,7 +43,7 @@ public class AllMzituAdapter extends BaseRecycleAdapter{
 
         cardView = (CardView) holder.getView(R.id.card_mzitu_root);
 
-        int colorNum = random.nextInt(5);
+        int colorNum = random.nextInt(color.length);
         //cardView.setCardBackgroundColor();
         cardView.setBackgroundResource(color[colorNum]);
         textView.setText(titleList.get(position));
