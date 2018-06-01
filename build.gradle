@@ -3,6 +3,10 @@
 buildscript {
     repositories {
         jcenter()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
@@ -17,9 +21,39 @@ allprojects {
         jcenter()
         //捐赠
         maven { url 'https://jitpack.io' }
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 }
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+ext{
+    //版本号相关
+    versionCode = 11
+    versionName = '2.0.0'
+    minSdkVersion = 19
+    targetSdkVersion = 26
+    compileSdkVersion = 26
+    buildToolsVersion = "26.0.0"
+    //依赖库相关
+    supportVersion = '26.1.0'
+    butterknifeVersion = '8.7.0'
+    circleimageVersion = '2.2.0'
+    constraintVersion = "1.0.2"
+    //自定义snackber
+    ultimatebarVersion = "1.1.1"
+    gsonVersion = "2.7"
+    frescoVersion = "0.12.0"
+    retrofitVersion = "2.1.0"
+    bannerVersion = "1.4.9"
+    rxandroidVersion = "1.2.0"
+    rxjavaVersion = "2.1.1"
+    rxjavaAdapterVersion = "2.3.0"
+    photoViewVersion = "1.2.6"
+    //拦截器
+    interceptorVersion = "3.10.0"
 }

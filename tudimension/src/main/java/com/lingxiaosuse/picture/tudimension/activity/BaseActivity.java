@@ -1,5 +1,6 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
@@ -112,6 +113,7 @@ public class BaseActivity extends AppCompatActivity{
             finish();
         }
     }
+
     /**
      *检查更新
      */

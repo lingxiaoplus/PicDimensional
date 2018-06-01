@@ -3,27 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_search"
-        android:title="搜索"
+        android:title="@string/action_search"
         android:icon="@drawable/ic_img_search"
         app:showAsAction="always"/>
     <item
         android:id="@+id/menu_support"
-        android:title="捐赠与支持"
+        android:title="@string/action_money"
         app:showAsAction="never"
         />
     <item
         android:id="@+id/menu_download"
-        android:title="查看下载图片"
+        android:title="@string/action_see_download_img"
         app:showAsAction="never"
         />
     <item
         android:id="@+id/menu_setting"
-        android:title="设置"
+        android:title="@string/action_settings"
         app:showAsAction="never"
         />
     <item
         android:id="@+id/menu_about"
-        android:title="关于"
+        android:title="@string/action_about"
         app:showAsAction="never"
         />
 </menu>

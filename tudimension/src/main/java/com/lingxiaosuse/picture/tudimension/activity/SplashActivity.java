@@ -1,6 +1,9 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.app.ActivityOptions;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
@@ -49,7 +52,7 @@ public class SplashActivity extends BaseActivity {
         setContentView(R.layout.activity_splash);
         //判断是否打开了日图
         if (!SpUtils.getBoolean(this, ContentValue.IS_OPEN_DAILY, true)) {
-            StartActivity(MainActivity.class, true);
+            startActWithAnim();
         }
 
         ButterKnife.bind(this);
@@ -60,7 +63,7 @@ public class SplashActivity extends BaseActivity {
         tvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StartActivity(MainActivity.class, true);
+                startActWithAnim();
             }
         });
     }
@@ -68,44 +71,50 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        chcekVersion();
-        HttpUtils.doGet(url, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isFirst) {
-                            StartActivity(IndicatorActivity.class, true);
-                        } else {
-                            StartActivity(MainActivity.class, true);
+        try {
+            chcekVersion();
+            HttpUtils.doGet(url, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    UIUtils.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isFirst) {
+                                StartActivity(IndicatorActivity.class, true);
+                            } else {
+                                startActWithAnim();
+                            }
+
                         }
-
-                    }
-                });
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (resultList == null) {
-                    resultList = new ArrayList<>();
+                    });
                 }
-                String result = response.body().string();
-                Gson gson = new Gson();
-                VerticalModle verticalModle = gson.fromJson(result, VerticalModle.class);
-                resultList = verticalModle.getRes().getVertical();
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Random random = new Random();
-                        int result = random.nextInt(resultList.size());
-                        Uri uri = Uri.parse(resultList.get(result).getImg());
-                        draweeView.setImageURI(uri);
-                        startAnim();
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if (resultList == null) {
+                        resultList = new ArrayList<>();
                     }
-                });
-            }
-        });
+                    String result = response.body().string();
+                    Gson gson = new Gson();
+                    VerticalModle verticalModle = gson.fromJson(result, VerticalModle.class);
+                    resultList = verticalModle.getRes().getVertical();
+                    UIUtils.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Random random = new Random();
+                            int result = random.nextInt(resultList.size());
+                            Uri uri = Uri.parse(resultList.get(result).getImg());
+                            draweeView.setImageURI(uri);
+                            startAnim();
+                        }
+                    });
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+            startActWithAnim();
+        }
+
     }
 
     private void startAnim() {
@@ -144,7 +153,7 @@ public class SplashActivity extends BaseActivity {
                 if (isFirst) {
                     StartActivity(IndicatorActivity.class, true);
                 } else {
-                    StartActivity(MainActivity.class, true);
+                    startActWithAnim();
                 }
             }
 
@@ -181,6 +190,16 @@ public class SplashActivity extends BaseActivity {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             ultimateBar.setHideBar(true);
+        }
+    }
+
+    private void startActWithAnim(){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //转场动画
+            startActivity(new Intent(getApplicationContext(), MainActivity.class),
+                    ActivityOptions.makeSceneTransitionAnimation(SplashActivity.this).toBundle());
+        }else {
+            StartActivity(MainActivity.class, true);
         }
     }
 }

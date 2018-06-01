@@ -16,6 +16,7 @@ import android.didikee.donate.WeiXinDonate;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -33,6 +34,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.transition.Explode;
+import android.transition.Slide;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -132,6 +135,15 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //转场动画
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Slide slide = new Slide();
+            slide.setDuration(1000);
+            //Explode explode = new Explode();
+            //explode.setDuration(500);
+            getWindow().setEnterTransition(slide);
+            getWindow().setExitTransition(slide);
+        }
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         //tabLayout = (TabLayout) findViewById(R.id.tab_main);
