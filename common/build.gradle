@@ -29,13 +29,19 @@ dependencies {
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
 
     compile "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjavaVersion"
+    compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxandroidVersion"
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.rxjavaAdapterVersion"
     compile "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.interceptorVersion"//拦截器
     compile "com.youth.banner:banner:$rootProject.ext.bannerVersion"
-    compile "io.reactivex:rxandroid:$rootProject.ext.rxandroidVersion"
+    //implementation "io.reactivex:rxandroid:$rootProject.ext.rxandroidVersion"
 
+    compile "com.trello.rxlifecycle2:rxlifecycle:$rootProject.ext.rxlifescyleVersion"
+    // If you want to use Android Lifecycle for providers
+    compile "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rootProject.ext.rxlifescyleVersion"
+    // If you want pre-written Activities and Fragments you can subclass as providers
+    compile "com.trello.rxlifecycle2:rxlifecycle-components:$rootProject.ext.rxlifescyleVersion"
 
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     testCompile 'junit:junit:4.12'

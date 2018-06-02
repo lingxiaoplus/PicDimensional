@@ -7,9 +7,10 @@ buildscript {
             url 'https://maven.google.com/'
             name 'Google'
         }
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.1.0'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -50,9 +51,10 @@ ext{
     frescoVersion = "0.12.0"
     retrofitVersion = "2.1.0"
     bannerVersion = "1.4.9"
-    rxandroidVersion = "1.2.0"
+    rxandroidVersion = "2.0.2"
     rxjavaVersion = "2.1.1"
     rxjavaAdapterVersion = "2.3.0"
+    rxlifescyleVersion = "2.2.1"
     photoViewVersion = "1.2.6"
     //拦截器
     interceptorVersion = "3.10.0"

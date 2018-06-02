@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         applicationId "com.lingxiaosuse.picture.tudimension"
@@ -36,6 +35,7 @@ android {
             universalApk true
         }
     }
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
@@ -69,7 +69,7 @@ dependencies {
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.ext.retrofitVersion"
     compile "com.youth.banner:banner:$rootProject.ext.bannerVersion"
-    compile "io.reactivex:rxandroid:$rootProject.ext.rxandroidVersion"
+    //compile "io.reactivex:rxandroid:$rootProject.ext.rxandroidVersion"
     compile "com.github.chrisbanes:PhotoView:$rootProject.ext.photoViewVersion"
     compile 'com.liuguangqiang.cookie:library:0.2'
     compile 'com.github.didikee:AndroidDonate:0.1.0'
