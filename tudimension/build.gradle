@@ -43,8 +43,11 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
     //捐赠
+
     //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
+
     //photoview
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
     compile "com.android.support:cardview-v7:$rootProject.ext.supportVersion"
@@ -54,21 +57,20 @@ dependencies {
     compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintVersion"
     compile "org.zackratos:ultimatebar:$rootProject.ext.ultimatebarVersion"
     compile 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
-
     compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
-
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     compile "com.facebook.fresco:fresco:$rootProject.ext.frescoVersion"
     compile "com.facebook.fresco:webpsupport:$rootProject.ext.frescoVersion"
     compile "com.facebook.fresco:animated-webp:$rootProject.ext.frescoVersion"
+
     // 支持 GIF 动图，需要添加
     compile "com.facebook.fresco:animated-gif:$rootProject.ext.frescoVersion"
-
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
     compile "com.squareup.retrofit2:adapter-rxjava:$rootProject.ext.retrofitVersion"
     compile "com.youth.banner:banner:$rootProject.ext.bannerVersion"
+
     //compile "io.reactivex:rxandroid:$rootProject.ext.rxandroidVersion"
     compile "com.github.chrisbanes:PhotoView:$rootProject.ext.photoViewVersion"
     compile 'com.liuguangqiang.cookie:library:0.2'
@@ -77,8 +79,10 @@ dependencies {
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'me.relex:photodraweeview:1.1.3'
     compile 'org.jsoup:jsoup:1.11.2'
+
     // your project's other dependencies
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.12.0+'
     testCompile 'junit:junit:4.12'
     compile project(':lang')
+    implementation project(':common')
 }

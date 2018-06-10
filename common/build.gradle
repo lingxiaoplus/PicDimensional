@@ -27,6 +27,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
+    compile "org.zackratos:ultimatebar:$rootProject.ext.ultimatebarVersion"
 
     compile "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjavaVersion"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxandroidVersion"
@@ -42,7 +43,6 @@ dependencies {
     compile "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rootProject.ext.rxlifescyleVersion"
     // If you want pre-written Activities and Fragments you can subclass as providers
     compile "com.trello.rxlifecycle2:rxlifecycle-components:$rootProject.ext.rxlifescyleVersion"
-
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.2', {

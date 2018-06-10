@@ -104,6 +104,7 @@ public class BaseActivity extends AppCompatActivity{
         //解绑服务
         //unbindService(connection);
         //stopService(mDownloadIntent);
+        mHandler.removeMessages(0);
         ActivityController.removeActivity(this);
     }
 

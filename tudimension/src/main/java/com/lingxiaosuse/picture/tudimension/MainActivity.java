@@ -43,6 +43,9 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.RetrofitTest;
+import com.camera.lingxiao.common.observer.HttpRxCallback;
+import com.camera.lingxiao.common.utills.LogUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
@@ -324,6 +327,24 @@ public class MainActivity extends BaseActivity {
                 }
                 mDrawerLayout.closeDrawers(); //关闭菜单
                 return true;
+            }
+        });
+
+        RetrofitTest test = new RetrofitTest();
+        test.login(new HttpRxCallback() {
+            @Override
+            public void onSuccess(Object... object) {
+                LogUtils.i("success:  "+object[0].toString());
+            }
+
+            @Override
+            public void onError(int code, String desc) {
+                LogUtils.i("error:  "+desc);
+            }
+
+            @Override
+            public void onCancel() {
+
             }
         });
     }
