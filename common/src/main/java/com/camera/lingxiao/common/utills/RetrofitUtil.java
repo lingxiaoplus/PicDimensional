@@ -1,5 +1,7 @@
 package com.camera.lingxiao.common.utills;
 
+import com.camera.lingxiao.common.app.ContentValue;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -8,10 +10,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUtil {
-    /**
-     * 接口地址
-     */
-    public static final String BASE_API = "http://www.lingxiaosuse.cn/";
+
     public static final int CONNECT_TIME_OUT = 30;//连接超时时长x秒
     public static final int READ_TIME_OUT = 30;//读数据超时时长x秒
     public static final int WRITE_TIME_OUT = 30;//写数据接超时时长x秒
@@ -51,7 +50,7 @@ public class RetrofitUtil {
     public Retrofit retrofit(){
         Retrofit retrofit = new Retrofit.Builder()
                 .client(okHttpClient())
-                .baseUrl(BASE_API)
+                .baseUrl(ContentValue.BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())  //指定Gson作为解析Json数据的Converter
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) //指定使用RxJava 作为CallAdapter
                 .build();

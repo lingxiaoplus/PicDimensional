@@ -11,6 +11,7 @@ import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.MainActivity;
@@ -45,17 +46,18 @@ public class SplashActivity extends BaseActivity {
     private boolean isFirst;
     private String url = "http://service.picasso.adesk.com/v1/vertical/vertical" +
             "?limit=30?adult=false&first=1&order=hot";
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+    protected int getContentLayoutId() {
         //判断是否打开了日图
         if (!SpUtils.getBoolean(this, ContentValue.IS_OPEN_DAILY, true)) {
             startActWithAnim();
         }
+        return R.layout.activity_splash;
+    }
 
-        ButterKnife.bind(this);
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         UltimateBar ultimateBar = new UltimateBar(this);
         ultimateBar.setImmersionBar(true);
         isFirst = SpUtils.getBoolean(this, ContentValue.ISFIRST_KEY, true);
@@ -69,8 +71,8 @@ public class SplashActivity extends BaseActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void initData() {
+        super.initData();
         try {
             chcekVersion();
             HttpUtils.doGet(url, new Callback() {
@@ -168,6 +170,7 @@ public class SplashActivity extends BaseActivity {
      * 从服务器获取版本信息并保存
      */
     private void chcekVersion() {
+
         HttpUtils.doGet(ContentValue.UPDATEURL, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
