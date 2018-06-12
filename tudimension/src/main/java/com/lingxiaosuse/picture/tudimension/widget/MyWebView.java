@@ -1,4 +1,4 @@
-package com.lingxiaosuse.picture.tudimension.view;
+package com.lingxiaosuse.picture.tudimension.widget;
 
 import android.content.Context;
 import android.support.v4.widget.SwipeRefreshLayout;

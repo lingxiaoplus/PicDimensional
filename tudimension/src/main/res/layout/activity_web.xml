@@ -17,11 +17,11 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <com.lingxiaosuse.picture.tudimension.view.MyWebView
+        <com.lingxiaosuse.picture.tudimension.widget.MyWebView
             android:id="@+id/web_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </com.lingxiaosuse.picture.tudimension.view.MyWebView>
+        </com.lingxiaosuse.picture.tudimension.widget.MyWebView>
         <ProgressBar
             android:id="@+id/pb_web"
             style="@style/Base.Widget.AppCompat.ProgressBar.Horizontal"

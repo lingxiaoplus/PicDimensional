@@ -1,4 +1,4 @@
-package com.lingxiaosuse.picture.tudimension.view;
+package com.lingxiaosuse.picture.tudimension.widget;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

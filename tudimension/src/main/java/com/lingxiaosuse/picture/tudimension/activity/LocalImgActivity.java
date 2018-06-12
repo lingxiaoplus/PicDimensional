@@ -27,7 +27,7 @@ import com.lingxiaosuse.picture.tudimension.rxbus.DeleteEvent;
 import com.lingxiaosuse.picture.tudimension.rxbus.RxBus;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-import com.lingxiaosuse.picture.tudimension.view.PhotoViewPager;
+import com.lingxiaosuse.picture.tudimension.widget.PhotoViewPager;
 
 import java.io.File;
 import java.io.FileInputStream;

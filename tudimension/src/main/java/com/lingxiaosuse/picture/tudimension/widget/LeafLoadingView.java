@@ -1,4 +1,4 @@
-package com.lingxiaosuse.picture.tudimension.view;
+package com.lingxiaosuse.picture.tudimension.widget;
 
 /**
  * Created by lingxiao on 2017/9/8.

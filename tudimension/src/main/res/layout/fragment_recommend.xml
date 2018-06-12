@@ -19,7 +19,7 @@
                 android:layout_height="match_parent">
             </android.support.v7.widget.RecyclerView>
         </android.support.v4.widget.SwipeRefreshLayout>
-        <com.lingxiaosuse.picture.tudimension.view.WaveLoading
+        <com.lingxiaosuse.picture.tudimension.widget.WaveLoading
             android:id="@+id/pb_main"
             android:visibility="gone"
             android:layout_centerInParent="true"

@@ -19,7 +19,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.GsonBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.SearchRecyAdapter;
@@ -31,7 +30,7 @@ import com.lingxiaosuse.picture.tudimension.retrofit.SearchKeyInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.SearchKeyResultInterface;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-import com.lingxiaosuse.picture.tudimension.view.WaveLoading;
+import com.lingxiaosuse.picture.tudimension.widget.WaveLoading;
 
 import java.util.ArrayList;
 import java.util.List;
