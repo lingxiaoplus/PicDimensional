@@ -35,7 +35,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public abstract class BaseActivity extends RxAppCompatActivity {
+public abstract class BaseActivity extends RxAppCompatActivity{
 
     private PackageManager mPmanager;
     private int versionCode;

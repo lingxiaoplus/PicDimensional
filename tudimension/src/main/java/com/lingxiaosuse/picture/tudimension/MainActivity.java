@@ -325,24 +325,6 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
-
-        RetrofitTest test = new RetrofitTest();
-        test.login(new HttpRxCallback() {
-            @Override
-            public void onSuccess(Object... object) {
-                LogUtils.i("success:  "+object[0].toString());
-            }
-
-            @Override
-            public void onError(int code, String desc) {
-                LogUtils.i("error:  "+desc);
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-        });
     }
 
     class MainPageAdapter extends FragmentPagerAdapter {

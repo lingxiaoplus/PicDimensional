@@ -18,9 +18,11 @@ import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.VersionModle;
 import com.lingxiaosuse.picture.tudimension.modle.VerticalModle;
+import com.lingxiaosuse.picture.tudimension.presenter.SplashPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.SplashView;
 
 import org.zackratos.ultimatebar.UltimateBar;
 
@@ -34,7 +36,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity implements SplashView{
 
     @BindView(R.id.tv_next)
     TextView tvNext;
@@ -44,6 +46,7 @@ public class SplashActivity extends BaseActivity {
     private boolean isFirst;
     private String url = "http://service.picasso.adesk.com/v1/vertical/vertical" +
             "?limit=30?adult=false&first=1&order=hot";
+    private SplashPresenter presenter = new SplashPresenter(this,this);
     @Override
     protected int getContentLayoutId() {
         //判断是否打开了日图
@@ -71,6 +74,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void initData() {
         super.initData();
+        presenter.getVersion();
         try {
             chcekVersion();
             HttpUtils.doGet(url, new Callback() {
@@ -202,5 +206,25 @@ public class SplashActivity extends BaseActivity {
         }else {
             StartActivity(MainActivity.class, true);
         }
+    }
+
+    @Override
+    public void showImgUrl() {
+
+    }
+
+    @Override
+    public void showDialog() {
+
+    }
+
+    @Override
+    public void diamissDialog() {
+
+    }
+
+    @Override
+    public void showToast(String text) {
+
     }
 }
