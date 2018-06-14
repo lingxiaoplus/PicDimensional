@@ -19,7 +19,7 @@ public class HttpResponse {
     /**
      * 状态码
      */
-    @SerializedName("retCode")
+    @SerializedName("code")
     private int code;
 
     /**

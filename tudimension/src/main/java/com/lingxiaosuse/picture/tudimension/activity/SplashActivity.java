@@ -183,9 +183,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
                 String result = response.body().string();
                 Gson gson = new Gson();
                 VersionModle modle = gson.fromJson(result, VersionModle.class);
-                SpUtils.putInt(UIUtils.getContext(), ContentValue.VERSION_CODE, modle.getVersionCode());
-                SpUtils.putString(UIUtils.getContext(), ContentValue.VERSION_DES, modle.getVersionDes());
-                SpUtils.putString(UIUtils.getContext(), ContentValue.DOWNLOAD_URL, modle.getDownloadUrl());
+
             }
         });
     }

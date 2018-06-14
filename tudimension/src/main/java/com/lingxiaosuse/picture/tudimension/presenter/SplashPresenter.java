@@ -9,70 +9,45 @@ import com.camera.lingxiao.common.utills.LogUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.lingxiaosuse.picture.tudimension.activity.SplashActivity;
+import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.transation.UpdateTransation;
+import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
+import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.SplashView;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 public class SplashPresenter extends BasePresenter<SplashView,SplashActivity>{
-    private final String API_UPDATE = "http://www.lingxiaosuse.cn/tudimension/update.json";
-    protected HttpRequest mHttpRequest;
+
     //private final String TAG = PhoneAddressPresenter.class.getSimpleName();
     public SplashPresenter(SplashView view, SplashActivity activity) {
         super(view, activity);
-        mHttpRequest = new HttpRequest();
-    }
-
-    protected HttpRequest getRequest() {
-        if (mHttpRequest == null) {
-            mHttpRequest = new HttpRequest();
-        }
-        return mHttpRequest;
     }
     /**
      * 检查更新
      */
     public void getVersion(){
-        /**
-         * 构建请求参数
-         */
-        TreeMap<String, Object> request = new TreeMap<>();
-        //request.put("username", userName);
-        //request.put("password", password);
-        request.put(HttpRequest.API_URL, API_UPDATE);
-
-
-        HttpRxCallback callback = new HttpRxCallback() {
+        new UpdateTransation().getUpdate(getActivity(), new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                LogUtils.i("success presenter:  "+object[0].toString());
+                VersionModle modle = (VersionModle) object[0];
+                SpUtils.putInt(UIUtils.getContext(), ContentValue.VERSION_CODE, modle.getVersionCode());
+                SpUtils.putString(UIUtils.getContext(), ContentValue.VERSION_DES, modle.getVersionDes());
+                SpUtils.putString(UIUtils.getContext(), ContentValue.DOWNLOAD_URL, modle.getDownloadUrl());
+                LogUtils.i("success presenter:  "+modle.toString());
             }
 
             @Override
             public void onError(int code, String desc) {
-                LogUtils.i("error presenter:  "+desc);
+                LogUtils.i("error presenter:  "+code);
             }
 
             @Override
             public void onCancel() {
 
             }
-        };
-        /**
-         * 解析数据
-         */
-        callback.setParseHelper(new ParseHelper() {
-            @Override
-            public Object[] parse(JsonElement jsonElement) {
-                VersionModle modle = new Gson().fromJson(jsonElement,VersionModle.class);
-                Object[] obj = new Object[1];
-                obj[0] = modle;
-                return obj;
-            }
         });
-
-        getRequest().request(HttpRequest.Method.GET,request,getActivity(),callback);
-
     }
 
     /**

@@ -1,45 +1,34 @@
 package com.camera.lingxiao.common;
 
+import java.util.List;
+
 /**
  * Created by lingxiao on 2017/9/7.
  */
 
 public class VersionModle {
 
+
     /**
-     * versionName : 1.1
-     * versionDes : 1.1重大更新，贴心的小bug修复，优化你的体验！
-     * downloadUrl :
-     * versionCode : 2
+     * versionCode : 3
+     * downloadUrl : [""]
+     * versionDes : ["3.0重大更新，贴心的小bug修复，优化你的体验！"]
+     * versionName : ["3.0"]
      */
 
-    private String versionName;
-    private String versionDes;
-    private String downloadUrl;
     private int versionCode;
+    private List<String> downloadUrl;
+    private List<String> versionDes;
+    private List<String> versionName;
 
-    public String getVersionName() {
-        return versionName;
-    }
-
-    public void setVersionName(String versionName) {
-        this.versionName = versionName;
-    }
-
-    public String getVersionDes() {
-        return versionDes;
-    }
-
-    public void setVersionDes(String versionDes) {
-        this.versionDes = versionDes;
-    }
-
-    public String getDownloadUrl() {
-        return downloadUrl;
-    }
-
-    public void setDownloadUrl(String downloadUrl) {
-        this.downloadUrl = downloadUrl;
+    @Override
+    public String toString() {
+        return "VersionModle{" +
+                "versionCode='" + versionCode + '\'' +
+                ", downloadUrl=" + downloadUrl +
+                ", versionDes=" + versionDes +
+                ", versionName=" + versionName +
+                '}';
     }
 
     public int getVersionCode() {
@@ -48,6 +37,30 @@ public class VersionModle {
 
     public void setVersionCode(int versionCode) {
         this.versionCode = versionCode;
+    }
+
+    public List<String> getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    public void setDownloadUrl(List<String> downloadUrl) {
+        this.downloadUrl = downloadUrl;
+    }
+
+    public List<String> getVersionDes() {
+        return versionDes;
+    }
+
+    public void setVersionDes(List<String> versionDes) {
+        this.versionDes = versionDes;
+    }
+
+    public List<String> getVersionName() {
+        return versionName;
+    }
+
+    public void setVersionName(List<String> versionName) {
+        this.versionName = versionName;
     }
 }
 
