@@ -1,35 +1,21 @@
 package com.camera.lingxiao.common;
 
-import java.util.List;
-
 /**
  * Created by lingxiao on 2017/9/7.
  */
 
 public class VersionModle {
-
-
     /**
      * versionCode : 3
-     * downloadUrl : [""]
-     * versionDes : ["3.0重大更新，贴心的小bug修复，优化你的体验！"]
-     * versionName : ["3.0"]
+     * downloadUrl :
+     * versionDes : 3.0重大更新，贴心的小bug修复，优化你的体验！
+     * versionName : 3.0
      */
 
     private int versionCode;
-    private List<String> downloadUrl;
-    private List<String> versionDes;
-    private List<String> versionName;
-
-    @Override
-    public String toString() {
-        return "VersionModle{" +
-                "versionCode='" + versionCode + '\'' +
-                ", downloadUrl=" + downloadUrl +
-                ", versionDes=" + versionDes +
-                ", versionName=" + versionName +
-                '}';
-    }
+    private String downloadUrl;
+    private String versionDes;
+    private String versionName;
 
     public int getVersionCode() {
         return versionCode;
@@ -39,28 +25,38 @@ public class VersionModle {
         this.versionCode = versionCode;
     }
 
-    public List<String> getDownloadUrl() {
+    public String getDownloadUrl() {
         return downloadUrl;
     }
 
-    public void setDownloadUrl(List<String> downloadUrl) {
+    public void setDownloadUrl(String downloadUrl) {
         this.downloadUrl = downloadUrl;
     }
 
-    public List<String> getVersionDes() {
+    public String getVersionDes() {
         return versionDes;
     }
 
-    public void setVersionDes(List<String> versionDes) {
+    public void setVersionDes(String versionDes) {
         this.versionDes = versionDes;
     }
 
-    public List<String> getVersionName() {
+    public String getVersionName() {
         return versionName;
     }
 
-    public void setVersionName(List<String> versionName) {
+    public void setVersionName(String versionName) {
         this.versionName = versionName;
+    }
+
+    @Override
+    public String toString() {
+        return "VersionModle{" +
+                "versionCode=" + versionCode +
+                ", downloadUrl='" + downloadUrl + '\'' +
+                ", versionDes='" + versionDes + '\'' +
+                ", versionName='" + versionName + '\'' +
+                '}';
     }
 }
 

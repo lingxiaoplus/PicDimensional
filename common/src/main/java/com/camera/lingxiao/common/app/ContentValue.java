@@ -30,6 +30,11 @@ public class ContentValue {
 
     //安卓壁纸的baseurl
     public static String BASE_URL = "http://service.picasso.adesk.com";
+    /**
+     * 竖屏 最热
+     */
+    public static String VERTICAL_URL = "/v1/vertical/vertical" +
+            "?limit=30?adult=false&first=1&order=hot";
     //安卓壁纸的搜索
     public static String SEARCH_URL = "http://so.picasso.adesk.com";
     //保存的图片路径

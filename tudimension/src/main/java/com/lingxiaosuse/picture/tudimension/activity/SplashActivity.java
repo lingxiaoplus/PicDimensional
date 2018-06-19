@@ -11,6 +11,7 @@ import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.utills.LogUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.MainActivity;
@@ -21,6 +22,7 @@ import com.lingxiaosuse.picture.tudimension.modle.VerticalModle;
 import com.lingxiaosuse.picture.tudimension.presenter.SplashPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.SplashView;
 
@@ -40,12 +42,11 @@ public class SplashActivity extends BaseActivity implements SplashView{
 
     @BindView(R.id.tv_next)
     TextView tvNext;
-    private List<VerticalModle.ResBean.VerticalBean> resultList;
+    private List<VerticalModle.VerticalBean> resultList;
     @BindView(R.id.splash_image)
     SimpleDraweeView draweeView;
     private boolean isFirst;
-    private String url = "http://service.picasso.adesk.com/v1/vertical/vertical" +
-            "?limit=30?adult=false&first=1&order=hot";
+
     private SplashPresenter presenter = new SplashPresenter(this,this);
     @Override
     protected int getContentLayoutId() {
@@ -75,68 +76,11 @@ public class SplashActivity extends BaseActivity implements SplashView{
     protected void initData() {
         super.initData();
         presenter.getVersion();
-        try {
-            chcekVersion();
-            HttpUtils.doGet(url, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (isFirst) {
-                                StartActivity(IndicatorActivity.class, true);
-                            } else {
-                                startActWithAnim();
-                            }
-
-                        }
-                    });
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (resultList == null) {
-                        resultList = new ArrayList<>();
-                    }
-                    String result = response.body().string();
-                    Gson gson = new Gson();
-                    VerticalModle verticalModle = gson.fromJson(result, VerticalModle.class);
-                    resultList = verticalModle.getRes().getVertical();
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Random random = new Random();
-                            int result = random.nextInt(resultList.size());
-                            Uri uri = Uri.parse(resultList.get(result).getImg());
-                            draweeView.setImageURI(uri);
-                            startAnim();
-                        }
-                    });
-                }
-            });
-        }catch (Exception e){
-            e.printStackTrace();
-            startActWithAnim();
-        }
-
+        presenter.getImgUrl();
     }
 
     private void startAnim() {
         AnimationSet animationSet = new AnimationSet(true);
-            /*
-                参数解释：
-                    第一个参数：X轴水平缩放起始位置的大小（fromX）。1代表正常大小
-                    第二个参数：X轴水平缩放完了之后（toX）的大小，0代表完全消失了
-                    第三个参数：Y轴垂直缩放起始时的大小（fromY）
-                    第四个参数：Y轴垂直缩放结束后的大小（toY）
-                    第五个参数：pivotXType为动画在X轴相对于物件位置类型
-                    第六个参数：pivotXValue为动画相对于物件的X坐标的开始位置
-                    第七个参数：pivotXType为动画在Y轴相对于物件位置类型
-                    第八个参数：pivotYValue为动画相对于物件的Y坐标的开始位置
-
-                   （第五个参数，第六个参数），（第七个参数,第八个参数）是用来指定缩放的中心点
-                    0.5f代表从中心缩放
-             */
         ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 1.05f, 1f, 1.05f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         //3秒完成动画
@@ -168,26 +112,6 @@ public class SplashActivity extends BaseActivity implements SplashView{
         });
     }
 
-    /**
-     * 从服务器获取版本信息并保存
-     */
-    private void chcekVersion() {
-
-        HttpUtils.doGet(ContentValue.UPDATEURL, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String result = response.body().string();
-                Gson gson = new Gson();
-                VersionModle modle = gson.fromJson(result, VersionModle.class);
-
-            }
-        });
-    }
-
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -201,14 +125,24 @@ public class SplashActivity extends BaseActivity implements SplashView{
             //转场动画
             startActivity(new Intent(getApplicationContext(), MainActivity.class),
                     ActivityOptions.makeSceneTransitionAnimation(SplashActivity.this).toBundle());
+            finish();
         }else {
             StartActivity(MainActivity.class, true);
         }
     }
 
     @Override
-    public void showImgUrl() {
-
+    public void showImgUrl(Uri uri,String error) {
+        if (null == error){
+            draweeView.setImageURI(uri);
+            startAnim();
+        }else {
+            if (isFirst) {
+                StartActivity(IndicatorActivity.class, true);
+            } else {
+                startActWithAnim();
+            }
+        }
     }
 
     @Override
@@ -223,6 +157,6 @@ public class SplashActivity extends BaseActivity implements SplashView{
 
     @Override
     public void showToast(String text) {
-
+        ToastUtils.show(text);
     }
 }

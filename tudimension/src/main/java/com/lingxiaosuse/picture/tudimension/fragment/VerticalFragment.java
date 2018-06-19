@@ -39,13 +39,13 @@ public class VerticalFragment extends Fragment{
     private VerticalAdapter mAdapter;
     private int position;
     private RecyclerView mRecyclerView;
-    private List<VerticalModle.ResBean.VerticalBean> mPicList = new ArrayList<>();
+    private List<VerticalModle.VerticalBean> mPicList = new ArrayList<>();
     private int skip = 0;
     private SwipeRefreshLayout refreshLayout;
     private FloatingActionButton faButton;
     private StaggeredGridLayoutManager manager;
     private VerticalActivity activity;
-    private List<VerticalModle.ResBean.VerticalBean> verticalBeanList;
+    private List<VerticalModle.VerticalBean> verticalBeanList;
     private ArrayList<String> picIdList = new ArrayList<>();
     private ArrayList<String> picUrlList = new ArrayList<>();
     private FloatingActionButton floatingActionButton;
@@ -104,7 +104,7 @@ public class VerticalFragment extends Fragment{
                     @Override
                     public void onResponse(Call<VerticalModle> call,
                                            Response<VerticalModle> response) {
-                        verticalBeanList = response.body().getRes().getVertical();
+                        verticalBeanList = response.body().getVertical();
                         mPicList.addAll(verticalBeanList);
                         mAdapter.notifyDataSetChanged();
                         if (refreshLayout.isRefreshing()){

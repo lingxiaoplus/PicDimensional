@@ -2,6 +2,7 @@ package com.lingxiaosuse.picture.tudimension.transation;
 
 import com.camera.lingxiao.common.VersionModle;
 import com.camera.lingxiao.common.app.BaseTransation;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.http.ParseHelper;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
 import com.camera.lingxiao.common.retrofit.HttpRequest;
@@ -11,18 +12,21 @@ import com.trello.rxlifecycle2.LifecycleProvider;
 
 import java.util.TreeMap;
 
-public class UpdateTransation extends BaseTransation{
-    /**
-     * 号码归属地查询API
-     */
-    private final String API_UPDATE = "http://www.lingxiaosuse.cn/tudimension/update.json";
+public class HomeTrans extends BaseTransation{
+    public HomeTrans(LifecycleProvider lifecycle) {
+        super(lifecycle);
+    }
 
-    public void getUpdate(LifecycleProvider lifecycle, HttpRxCallback callback) {
+    /**
+     * 获取服务器版本信息
+     * @param callback
+     */
+    public void getUpdate(HttpRxCallback callback) {
         /**
          * 构建请求参数
          */
         TreeMap<String, Object> request = new TreeMap<>();
-        request.put(HttpRequest.API_URL, API_UPDATE);
+        request.put(HttpRequest.API_URL, ContentValue.UPDATEURL);
 
         /**
          * 解析数据
@@ -40,8 +44,6 @@ public class UpdateTransation extends BaseTransation{
         /**
          * 发送请求
          */
-        getRequest().request(HttpRequest.Method.GET, request, lifecycle, callback);
-
+        getRequest().request(HttpRequest.Method.GET, request, mLifecycle, callback);
     }
-
 }

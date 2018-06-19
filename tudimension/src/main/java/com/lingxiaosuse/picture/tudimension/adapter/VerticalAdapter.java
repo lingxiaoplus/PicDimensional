@@ -15,7 +15,7 @@ import java.util.List;
 
 public class VerticalAdapter extends BaseRecycleAdapter{
 
-    private List<VerticalModle.ResBean.VerticalBean> mBenList;
+    private List<VerticalModle.VerticalBean> mBenList;
     private SimpleDraweeView draweeView;
     private List<CategoryDetailModle.ResBean.VerticalBean> cateBeanList;//分类
     private boolean isCategory = false;

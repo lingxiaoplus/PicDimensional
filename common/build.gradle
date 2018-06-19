@@ -28,7 +28,7 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
     compile "org.zackratos:ultimatebar:$rootProject.ext.ultimatebarVersion"
-
+    compile "com.android.support:design:$rootProject.ext.supportVersion"
     compile "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjavaVersion"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxandroidVersion"
     compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"

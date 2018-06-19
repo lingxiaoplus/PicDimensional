@@ -25,16 +25,19 @@ public class HttpResponse {
     /**
      * 数据对象[成功返回对象,失败返回错误说明]
      */
-    @SerializedName("result")
+    @SerializedName("res")
     private Object result;
 
     /**
-     * 是否成功(这里约定200)
+     * 是否成功(这里约定200或者0)
      *
      * @return
      */
     public boolean isSuccess() {
-        return code == 200 ? true : false;
+        if (code == 200 || code == 0){
+            return true;
+        }
+        return false;
     }
 
     @Override
