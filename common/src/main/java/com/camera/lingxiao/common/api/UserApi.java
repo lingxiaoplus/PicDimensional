@@ -6,17 +6,17 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import io.reactivex.Observable;
+import retrofit2.Call;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 import retrofit2.http.QueryMap;
 import retrofit2.http.Url;
 
 public interface UserApi {
-    @GET("user/login")
-    Observable<HttpResponse> login(@QueryMap Map<String,Object> request);
-
     /**
      * GET请求
      *
@@ -37,4 +37,19 @@ public interface UserApi {
     @FormUrlEncoded
     @POST
     Observable<HttpResponse> post(@Url String url, @FieldMap TreeMap<String, Object> request);
+
+    /**
+     *首页轮播图
+     * /v1/wallpaper/album/{id}/wallpaper/limit/skip/adult/order
+     */
+    @GET("/{version}/{wallpaper}/{category}/{id}/{wallpapertype}")
+    Observable<HttpResponse> desk(
+            @Url String url,
+            @Path("version") String version,
+            @Path("wallpaper") String wallpaper,
+            @Path("category") String category,
+            @Path("id") String id,
+            @Path("wallpapertype") String wallpapertype,
+            @QueryMap TreeMap<String, Object> request
+    );
 }

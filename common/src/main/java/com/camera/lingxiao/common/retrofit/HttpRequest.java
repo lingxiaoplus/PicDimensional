@@ -23,7 +23,7 @@ public class HttpRequest {
 
     private final String appKey = "1889b37351288";
     private final String k_key = "key";
-
+    //第三个是安卓壁纸
     public enum Method{
         GET,
         POST
@@ -88,8 +88,33 @@ public class HttpRequest {
 
         HttpRxObservable.getObservable(apiObservable, lifecycle, event, callback).subscribe(callback);
     }
-
-
+    /**
+     * 发送请求 安卓壁纸
+     * 备注:手动指定生命周期-Fragment
+     *
+     * @param lifecycle 实现RxFragment
+     * @param prams     参数集合
+     * @param callback  回调
+     * @param strings 5 个参数
+     */
+    public void request(TreeMap<String, Object> prams, LifecycleProvider lifecycle, HttpRxCallback callback, String... strings) {
+        Observable<HttpResponse> apiObservable;
+        TreeMap<String,Object> map = getBaseRequest();
+        //添加业务参数
+        map.putAll(prams);
+        String apiUrl = "";
+        if (map.containsKey(API_URL)){
+            apiUrl = String.valueOf(map.get(API_URL));
+            //移除apiurl参数  此参数不纳入业务参数
+            map.remove(API_URL);
+        }
+        apiObservable = RetrofitUtil
+                .get()
+                .retrofit()
+                .create(UserApi.class)
+                .desk(apiUrl,strings[0],strings[1],strings[2],strings[3],strings[4], map);
+        HttpRxObservable.getObservable(apiObservable, lifecycle, callback).subscribe(callback);
+    }
     /**
      * 预处理请求
      * @param method 请求方法

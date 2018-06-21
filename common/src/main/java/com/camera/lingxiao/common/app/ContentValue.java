@@ -35,6 +35,7 @@ public class ContentValue {
      */
     public static String VERTICAL_URL = "/v1/vertical/vertical" +
             "?limit=30?adult=false&first=1&order=hot";
+    public static String BANNER_URL = "/v1/wallpaper/";
     //安卓壁纸的搜索
     public static String SEARCH_URL = "http://so.picasso.adesk.com";
     //保存的图片路径

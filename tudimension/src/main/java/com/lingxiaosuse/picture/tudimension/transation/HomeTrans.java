@@ -18,15 +18,19 @@ public class HomeTrans extends BaseTransation{
     }
 
     /**
-     * 获取服务器版本信息
+     * 获取banner
      * @param callback
      */
-    public void getUpdate(HttpRxCallback callback) {
+    public void getBanner(String id,int limit,int skip,boolean adult,String order,HttpRxCallback callback) {
         /**
          * 构建请求参数
          */
         TreeMap<String, Object> request = new TreeMap<>();
-        request.put(HttpRequest.API_URL, ContentValue.UPDATEURL);
+        request.put(HttpRequest.API_URL, ContentValue.BASE_URL);
+        request.put("limit",limit);
+        request.put("skip",skip);
+        request.put("adult",adult);
+        request.put("order",order);
 
         /**
          * 解析数据
@@ -44,6 +48,6 @@ public class HomeTrans extends BaseTransation{
         /**
          * 发送请求
          */
-        getRequest().request(HttpRequest.Method.GET, request, mLifecycle, callback);
+        getRequest().request(request, mLifecycle, callback,"v1","wallpaper","album",id,"wallpaper");
     }
 }
