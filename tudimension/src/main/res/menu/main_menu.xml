@@ -7,11 +7,6 @@
         android:icon="@drawable/ic_img_search"
         app:showAsAction="always"/>
     <item
-        android:id="@+id/menu_support"
-        android:title="@string/action_money"
-        app:showAsAction="never"
-        />
-    <item
         android:id="@+id/menu_download"
         android:title="@string/action_see_download_img"
         app:showAsAction="never"

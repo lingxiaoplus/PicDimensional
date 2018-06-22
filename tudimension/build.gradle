@@ -43,11 +43,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-    //捐赠
-
-    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
-
     //photoview
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
     compile "com.android.support:cardview-v7:$rootProject.ext.supportVersion"
@@ -73,8 +68,8 @@ dependencies {
 
     //compile "io.reactivex:rxandroid:$rootProject.ext.rxandroidVersion"
     compile "com.github.chrisbanes:PhotoView:$rootProject.ext.photoViewVersion"
+    implementation "pub.devrel:easypermissions:$rootProject.ext.easypermissionsVersion"
     compile 'com.liuguangqiang.cookie:library:0.2'
-    compile 'com.github.didikee:AndroidDonate:0.1.0'
     compile 'agency.tango.android:material-intro-screen:0.0.5'
     compile 'com.tencent.bugly:crashreport:latest.release'
     compile 'me.relex:photodraweeview:1.1.3'

@@ -11,6 +11,7 @@ public class ContentValue {
     public static final String bigImgRule ="?imageView2/3/h/1080";
     //升级接口
     public static final String UPDATEURL = "http://www.lingxiaosuse.cn/tudimension/update.json";
+    public static final int PERMESSION_REQUEST_CODE = 200;
     //是否是第一次进入
     public static String ISFIRST_KEY = "isfirst_key";
     //服务器版本号
@@ -45,6 +46,11 @@ public class ContentValue {
 
     //百度识图
     public static String BAIDU_URL = "http://image.baidu.com/wiseshitu?guss=1&queryImageUrl=";
+    //搜狗识图
+    public static String SOUGOU_URL = "http://pic.sogou.com/";
+    //google识图
+    public static String GOOGLE_URL = "https://images.google.com/imghp?hl=zh-CN&gws_rd=ssl";
+
     //一言
     public static String HITOKOTO_URL = "http://api.hitokoto.cn/";
     //mzitu网址

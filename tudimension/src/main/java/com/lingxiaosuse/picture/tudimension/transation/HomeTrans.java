@@ -21,7 +21,7 @@ public class HomeTrans extends BaseTransation{
      * 获取banner
      * @param callback
      */
-    public void getBanner(String id,int limit,int skip,boolean adult,String order,HttpRxCallback callback) {
+    public void getBanner(String id,int limit,int skip,boolean adult,String type,String order,HttpRxCallback callback) {
         /**
          * 构建请求参数
          */
@@ -48,6 +48,6 @@ public class HomeTrans extends BaseTransation{
         /**
          * 发送请求
          */
-        getRequest().request(request, mLifecycle, callback,"v1","wallpaper","album",id,"wallpaper");
+        getRequest().request(request, mLifecycle, callback,"v1","wallpaper",type,id,"wallpaper");
     }
 }

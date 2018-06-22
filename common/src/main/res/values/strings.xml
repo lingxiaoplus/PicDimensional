@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Common</string>
+    <string name="permession_title">为了更好地使用本应用，需要授予权限</string>
 </resources>

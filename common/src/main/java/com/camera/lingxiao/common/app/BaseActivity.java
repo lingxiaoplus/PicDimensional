@@ -1,5 +1,6 @@
 package com.camera.lingxiao.common.app;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -12,11 +13,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -34,8 +37,10 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import pub.devrel.easypermissions.AppSettingsDialog;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public abstract class BaseActivity extends RxAppCompatActivity{
+public abstract class BaseActivity extends RxAppCompatActivity implements EasyPermissions.PermissionCallbacks{
 
     private PackageManager mPmanager;
     private int versionCode;
@@ -48,7 +53,7 @@ public abstract class BaseActivity extends RxAppCompatActivity{
     public UltimateBar ultimateBar;
     public LifeCycleListener mListener;
     protected Unbinder unBinder;
-
+    private String[] mPermessions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +63,6 @@ public abstract class BaseActivity extends RxAppCompatActivity{
         if (mListener != null) {
             mListener.onCreate(savedInstanceState);
         }
-
         if (initArgs(getIntent().getExtras())) {
             // 得到界面Id并设置到Activity界面中
             int layId = getContentLayoutId();
@@ -80,6 +84,12 @@ public abstract class BaseActivity extends RxAppCompatActivity{
         ultimateBar.setColorBar(ContextCompat.getColor(this, R.color.colorPrimary),
                 100);
         ActivityController.addActivity(this);
+        //权限检测
+        if (!EasyPermissions.hasPermissions(this,mPermessions)){
+            //没有权限就申请
+            EasyPermissions.requestPermissions(this, getString(R.string.permession_title),
+                    ContentValue.PERMESSION_REQUEST_CODE, mPermessions);
+        }
     }
 
     /**
@@ -205,6 +215,34 @@ public abstract class BaseActivity extends RxAppCompatActivity{
         Uri uri = Uri.parse(marketUrl);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         context.startActivity(intent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, @NonNull List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, @NonNull List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            new AppSettingsDialog.Builder(this).build().show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == AppSettingsDialog.DEFAULT_SETTINGS_REQ_CODE) {
+            //拒绝授权后，从系统设置了授权后，返回APP进行相应的操作
+
+        }
+
     }
 
     @Override

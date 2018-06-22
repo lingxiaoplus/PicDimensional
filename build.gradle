@@ -20,7 +20,6 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        //捐赠
         maven { url 'https://jitpack.io' }
         maven {
             url 'https://maven.google.com/'
@@ -58,4 +57,5 @@ ext{
     photoViewVersion = "1.2.6"
     //拦截器
     interceptorVersion = "3.10.0"
+    easypermissionsVersion = "1.2.0"
 }

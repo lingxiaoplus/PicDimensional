@@ -26,4 +26,17 @@
     <string name="data_rsp_error_account_register">抱歉，注册失败!  ^_^|||</string>
     <string name="data_rsp_error_account_no_permission">您越权啦!!!</string>
 
+    <string-array name="detect_array">
+        <item>百度识图</item>
+        <item>搜狗识图</item>
+        <item>谷歌识图</item>
+    </string-array>
+    <string name="detect_title">请选择搜图接口</string>
+    <!--tablayout文字-->
+    <string-array name="tab_string_array">
+        <item>推荐</item>
+        <item>分类</item>
+        <item>最新</item>
+        <item>专辑</item>
+    </string-array>
 </resources>

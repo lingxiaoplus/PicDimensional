@@ -59,19 +59,6 @@ public class BaseActivity extends AppCompatActivity{
         }
     };
     public UltimateBar ultimateBar;
-    /*private DownloadService.DownloadBinder downloadBinder;
-    private ServiceConnection connection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            downloadBinder = (DownloadService.DownloadBinder) iBinder;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-
-        }
-    };*/
-    //private Intent mDownloadIntent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

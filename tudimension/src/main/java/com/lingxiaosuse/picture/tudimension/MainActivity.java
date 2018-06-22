@@ -3,6 +3,7 @@ package com.lingxiaosuse.picture.tudimension;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -11,8 +12,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.didikee.donate.AlipayDonate;
-import android.didikee.donate.WeiXinDonate;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
@@ -41,13 +40,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.RetrofitTest;
+import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
 import com.camera.lingxiao.common.utills.LogUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.ActivityController;
-import com.lingxiaosuse.picture.tudimension.activity.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.activity.MzituActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SearchActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SeeDownLoadImgActivity;
@@ -57,7 +57,6 @@ import com.lingxiaosuse.picture.tudimension.activity.WebActivity;
 import com.lingxiaosuse.picture.tudimension.activity.sousiba.SousibaActivity;
 import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.FileUploadModle;
 import com.lingxiaosuse.picture.tudimension.modle.HitokotoModle;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
@@ -75,6 +74,7 @@ import com.lingxiaosuse.picture.tudimension.widget.WaveLoading;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Random;
 
@@ -84,6 +84,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -105,7 +106,7 @@ public class MainActivity extends BaseActivity {
     NavigationView navigationView;
     @BindView(R.id.pb_menu)
     WaveLoading pbMenu;
-    private String[] tabStr = new String[]{"推荐", "分类", "最新", "专辑"};
+    private String[] mTabStr;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -121,50 +122,24 @@ public class MainActivity extends BaseActivity {
         }
     };
     private NetworkReceiver mNetworkChangeListener;
-    private View dialogView;
     private ActionBarDrawerToggle mDrawerToggle;
     private FileUploadInterface fileUploadInterface;
     //调用系统相册-选择图片
     private static final int IMAGE = 1;
     private ProgressDialog uploadDialog;
     private TextView hitokoto;
-    private RelativeLayout reHeadLayout;
     private SimpleDraweeView simpleDraweeView;
+    @Override
+    protected int getContentLayoutId() {
+        return R.layout.activity_main;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //转场动画
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Slide slide = new Slide();
-            slide.setDuration(1000);
-            //Explode explode = new Explode();
-            //explode.setDuration(500);
-            getWindow().setEnterTransition(slide);
-            getWindow().setExitTransition(slide);
-        }
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        //tabLayout = (TabLayout) findViewById(R.id.tab_main);
+    protected void initData() {
+        super.initData();
         initView();
         //初始化headlayout
         initHeadLayout();
-        PremessionUtils.getPremession(this, getString(R.string.permession_title),
-                getString(R.string.permession_message),
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                }
-                , new PremessionUtils.onPermissinoListener() {
-                    @Override
-                    public void onPermissionGet() {
-                        ToastUtils.show("已获取权限");
-                    }
-
-                    @Override
-                    public void onPermissionDenied() {
-                        ToastUtils.show("获取权限失败");
-                    }
-                });
-
         mNetworkChangeListener = new NetworkReceiver(mHandler);
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
@@ -231,8 +206,9 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initView() {
-        for (int i = 0; i < tabStr.length; i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(tabStr[i]));
+        mTabStr = getResources().getStringArray(R.array.tab_string_array);
+        for (int i = 0; i < mTabStr.length; i++) {
+            tabLayout.addTab(tabLayout.newTab().setText(mTabStr[i]));
         }
         MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -255,12 +231,11 @@ public class MainActivity extends BaseActivity {
             }
         });
 
-
         setSupportActionBar(toolbar);
         //设置返回键可用
         getSupportActionBar().setHomeButtonEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        //创建返回键，并实现打开关/闭监听
+        //创建返回键，并实现打开关/闭监听  侧滑菜单
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 toolbar, R.string.open, R.string.close) {
             @Override
@@ -270,7 +245,6 @@ public class MainActivity extends BaseActivity {
                         (ContextCompat.getColor(UIUtils.getContext(), R.color.colorPrimary),
                                 100);
                 startPropertyAnim(simpleDraweeView,1f,3f,1f,10000);
-
             }
 
             @Override
@@ -327,14 +301,14 @@ public class MainActivity extends BaseActivity {
         });
     }
 
-    class MainPageAdapter extends FragmentPagerAdapter {
+    private class MainPageAdapter extends FragmentPagerAdapter {
         public MainPageAdapter(FragmentManager fm) {
             super(fm);
         }
 
         @Override
         public int getCount() {
-            return tabStr.length;
+            return mTabStr.length;
         }
 
         @Override
@@ -345,14 +319,8 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            return tabStr[position];
+            return mTabStr[position];
         }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        PremessionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
@@ -364,9 +332,6 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_support:
-                showDialog();
-                break;
             case R.id.menu_setting:
                 StartActivity(SettingsActivity.class, false);
                 break;
@@ -383,62 +348,7 @@ public class MainActivity extends BaseActivity {
         return true;
     }
 
-    private void showDialog() {
-        String[] items = {"支付宝", "微信"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("感谢各位大佬的捐赠~");
-        builder.setIcon(R.mipmap.ic_launcher);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (i == 0) {
-                    ToastUtils.show("支付宝");
-                    donateAlipay("FKX014647ZUX0IO5DJW109");
-                } else {
-                    ToastUtils.show("请从相册中选择第一张二维码");
-                    donateWeixin();
-                }
-            }
-        });
-        builder.show();
-    }
-
-    /**
-     * 支付宝支付
-     *
-     * @param payCode 收款码后面的字符串；例如：收款二维码里面的字符串为 https://qr.alipay.com/stx00187oxldjvyo3ofaw60 ，则
-     *                payCode = stx00187oxldjvyo3ofaw60
-     *                注：不区分大小写
-     *                FKX014647ZUX0IO5DJW109
-     */
-    private void donateAlipay(String payCode) {
-        boolean hasInstalledAlipayClient = AlipayDonate.hasInstalledAlipayClient(this);
-        if (hasInstalledAlipayClient) {
-            AlipayDonate.startAlipayClient(this, payCode);
-        }
-    }
-
-    /**
-     * 需要提前准备好 微信收款码 照片，可通过微信客户端生成
-     */
-    private void donateWeixin() {
-        InputStream weixinQrIs = getResources().openRawResource(R.raw.ic_wechat_pay);
-        String qrPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "AndroidDonateSample" + File.separator +
-                "lingxiao_weixin.png";
-        WeiXinDonate.saveDonateQrImage2SDCard(qrPath, BitmapFactory.decodeStream(weixinQrIs));
-        WeiXinDonate.donateViaWeiXin(this, qrPath);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (mNetworkChangeListener != null) {
-            unregisterReceiver(mNetworkChangeListener);
-        }
-    }
-
-    long preTime = 0;
-
+    private long preTime = 0;
     @Override
     public void onBackPressed() {
         long nowTime = System.currentTimeMillis();
@@ -450,13 +360,22 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //移除网络监听广播
+        if (mNetworkChangeListener != null) {
+            unregisterReceiver(mNetworkChangeListener);
+        }
+        mHandler.removeMessages(2);
+    }
     /**
      * 对话框选择搜图接口
      */
     private void showSelectDia() {
-        String[] items = {"百度识图", "搜狗识图", "谷歌识图"};
+        final String[] items = getResources().getStringArray(R.array.detect_array);
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("请选择搜图接口");
+        builder.setTitle(getString(R.string.detect_title));
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -466,19 +385,18 @@ public class MainActivity extends BaseActivity {
                     //调用相册
                     intent = new Intent(Intent.ACTION_PICK,
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    intent.putExtra("title","百度识图");
+                    intent.putExtra("title",items[i]);
                     startActivityForResult(intent, IMAGE);
                 } else if (i == 1) {
-                    intent.putExtra("url", "http://pic.sogou.com/");
-                    intent.putExtra("title","搜狗识图");
+                    intent.putExtra("url", ContentValue.SOUGOU_URL);
+                    intent.putExtra("title",items[i]);
                     startActivity(intent);
                 } else {
-                    intent.putExtra("url", "https://images.google.com/imghp?hl=zh-CN&gws_rd=ssl");
-                    intent.putExtra("title","谷歌识图");
+                    intent.putExtra("url", ContentValue.GOOGLE_URL);
+                    intent.putExtra("title",items[i]);
                     ToastUtils.show("请自备梯子");
                     startActivity(intent);
                 }
-
             }
         });
         builder.show();
@@ -575,18 +493,6 @@ public class MainActivity extends BaseActivity {
         ObjectAnimator animX = ObjectAnimator.ofFloat(view, "scaleX", oldValue1, nowValue,oldValue2);
         set.play(animX).with(animY);
         set.setDuration(time);
-        // 回调监听，可以有也可以无。
-        // 根据情况，如果需要监听动画执行到何种“进度”，那么就监听之。
-        /*anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (Float) animation.getAnimatedValue();
-                Log.d("zhangphil", value + "");
-            }
-        });*/
-
-        // 正式开始启动执行动画
         set.start();
     }
 }
