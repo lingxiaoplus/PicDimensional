@@ -31,10 +31,16 @@ public class BasePresenter<V,T> implements LifeCycleListener{
         setListener(activity);
     }
 
+    /**
+     * 设置生命周期监听
+     * @param activity
+     */
     private void setListener(T activity) {
         if (getActivity() != null){
             if (activity instanceof BaseActivity){
                 ((BaseActivity) getActivity()).setOnLifeCycleListener(this);
+            }else if (activity instanceof BaseFragment){
+                ((BaseFragment) getActivity()).setOnLifeCycleListener(this);
             }
         }
     }

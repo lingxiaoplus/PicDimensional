@@ -13,7 +13,7 @@ public class FragmentFactory {
         if (fragment == null){
             switch (pos){
                 case 0:
-                    fragment = new RecommendFragment();
+                    fragment = new HomeFragment();
                     break;
                 case 1:
                     fragment = new CategoryFragment();
@@ -25,7 +25,7 @@ public class FragmentFactory {
                     fragment = new SpecialFragment();
                     break;
                 /*case 4:
-                    fragment = new RecommendFragment();
+                    fragment = new HomeFragment();
                     break;
                 case 5:
                     fragment = new CategoryFragment();
