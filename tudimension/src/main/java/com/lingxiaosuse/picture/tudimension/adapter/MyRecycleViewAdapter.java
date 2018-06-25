@@ -36,9 +36,9 @@ import java.util.List;
  */
 
 public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private ArrayList<HomePageModle.Picture> list = new ArrayList<>();
-    private ArrayList<HomePageModle.slidePic> slideList = new ArrayList<>();
-    private ArrayList<Integer> mHeights;
+    private List<HomePageModle.Picture> list = new ArrayList<>();
+    private List<HomePageModle.slidePic> slideList = new ArrayList<>();
+    private List<Integer> mHeights;
     private int headCount = 1; //头布局个数
     private int footCount = 1; //尾布局个数
     private static final int HEAD_TYPE=1;
@@ -49,8 +49,8 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     private String imgRule = "?imageView2/3/h/230"; //图片规则，从服务器取230大小的图片
     private int mLastPosition = -1;
-    public MyRecycleViewAdapter(ArrayList<HomePageModle.Picture> list,
-                                ArrayList<HomePageModle.slidePic> slideList,
+    public MyRecycleViewAdapter(List<HomePageModle.Picture> list,
+                                List<HomePageModle.slidePic> slideList,
                                 Context context){
         this.list = list;
         this.slideList = slideList;

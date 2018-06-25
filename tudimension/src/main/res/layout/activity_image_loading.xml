@@ -21,10 +21,8 @@
             android:id="@+id/rl_loading"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:layout_marginTop="22dp"
-            android:background="@drawable/ic_trans_background"
+            android:background="@color/colorTrans300"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="30dp"
             >
             <ImageView
                 android:id="@+id/iv_image_back"
@@ -41,7 +39,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/whiteNor"
                 android:layout_centerInParent="true"
                 android:text="123"/>
             <ImageView
@@ -73,7 +71,7 @@
                 android:layout_centerInParent="true"
                 android:padding="10dp"
                 android:visibility="invisible"
-
+                tools:visibility="visible"
                 android:layout_marginRight="5dp"/>
         </RelativeLayout>
 

@@ -7,9 +7,7 @@ import java.util.ArrayList;
  */
 
 public class HomePageModle {
-    public String msg;  //success or failed
-    public Resources res;
-    public class Resources{
+
         public ArrayList<Picture> wallpaper;  //热门图片
         public ArrayList<HomeImg> homepage;  //首页轮播图
 
@@ -28,7 +26,6 @@ public class HomePageModle {
         public void setHomepage(ArrayList<HomeImg> homepage) {
             this.homepage = homepage;
         }
-    }
     public class Picture{
         public String img;  //原始图片地址
         public ArrayList<String> tag;  //标签类别

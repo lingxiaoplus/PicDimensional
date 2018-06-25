@@ -14,6 +14,7 @@ import com.trello.rxlifecycle2.LifecycleProvider;
 import java.util.TreeMap;
 
 public class UpdateTrans extends BaseTransation{
+
     public UpdateTrans(LifecycleProvider lifecycle){
         super(lifecycle);
     }
@@ -25,7 +26,7 @@ public class UpdateTrans extends BaseTransation{
         /**
          * 构建请求参数
          */
-        TreeMap<String, Object> request = new TreeMap<>();
+        request.clear();
         request.put(HttpRequest.API_URL, ContentValue.UPDATEURL);
 
         /**
@@ -52,7 +53,7 @@ public class UpdateTrans extends BaseTransation{
         /**
          * 构建请求参数
          */
-        TreeMap<String, Object> request = new TreeMap<>();
+        request.clear();
         request.put(HttpRequest.API_URL, ContentValue.VERTICAL_URL);
 
         /**

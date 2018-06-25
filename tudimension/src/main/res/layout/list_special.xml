@@ -27,6 +27,7 @@
                     android:id="@+id/iv_special_pic"
                     android:layout_width="120dp"
                     android:layout_height="80dp"
+                    fresco:progressBarImage="@drawable/ic_img_default"
                     />
                 <TextView
                     android:id="@+id/tv_special_title"

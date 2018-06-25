@@ -23,8 +23,7 @@
             android:layout_height="100dp"
             fresco:viewAspectRatio="1.7"
             fresco:progressBarImageScaleType="centerInside"
-            fresco:progressBarAutoRotateInterval="2000"
-            fresco:progressBarImage="@drawable/ic_loading_default"
+            fresco:progressBarImage="@drawable/ic_img_default"
             />
     </LinearLayout>
 </android.support.v7.widget.CardView>

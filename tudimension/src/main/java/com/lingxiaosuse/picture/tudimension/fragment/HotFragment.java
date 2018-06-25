@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.BaseFragment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
@@ -33,6 +34,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by lingxiao on 2017/8/28.
@@ -43,6 +45,9 @@ public class HotFragment extends BaseFragment{
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.rv_hot)
     RecyclerView recyclerView;
+    @BindView(R.id.fab_fragment)
+    FloatingActionButton fab;
+
     private List<HotModle.ResultsBean> resultList = new ArrayList<>();
     private List<HotModle.ResultsBean> previsList = new ArrayList<>();
     private HotRecycleAdapter mAdapter;
@@ -61,21 +66,16 @@ public class HotFragment extends BaseFragment{
             mAdapter.notifyDataSetChanged();
         }
     };
+
     @Override
-    protected void initData() {
-        getData(current,index);
+    protected int getContentLayoutId() {
+        return R.layout.fragment_hot;
     }
 
     @Override
-    public View initView() {
-        View view = UIUtils.inflate(R.layout.fragment_hot);
-        ButterKnife.bind(this,view);
-        refreshLayout.setColorSchemeResources(
-                R.color.colorPrimary,
-                android.R.color.holo_blue_light,
-                android.R.color.holo_red_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light);
+    protected void initWidget(View root) {
+        super.initWidget(root);
+        setSwipeColor(refreshLayout);
         refreshLayout.setRefreshing(true);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -122,8 +122,14 @@ public class HotFragment extends BaseFragment{
                 startActivity(intent);
             }
         });
-        return view;
+        floatingBtnToogle(recyclerView,fab);
     }
+
+    @Override
+    protected void initData() {
+        getData(current,index);
+    }
+
     private void getData(int current,int page){
         HttpUtils.doGet(ContentValue.GANKURL+current+"/"+page,
                 new okhttp3.Callback() {
@@ -143,10 +149,5 @@ public class HotFragment extends BaseFragment{
                 mHandler.sendEmptyMessage(0);
             }
         });
-    }
-
-    @Override
-    public RecyclerView getRecycle() {
-        return recyclerView;
     }
 }

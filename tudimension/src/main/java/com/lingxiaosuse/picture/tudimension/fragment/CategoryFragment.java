@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.camera.lingxiao.common.app.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
@@ -35,14 +36,15 @@ public class CategoryFragment extends BaseFragment{
     private SwipeRefreshLayout refreshLayout;
 
     @Override
-    protected void initData() {
-        getCategory();
+    protected int getContentLayoutId() {
+        return R.layout.fragment_category;
     }
+
     @Override
-    public View initView() {
-        View view = UIUtils.inflate(R.layout.fragment_category);
-        recyclerView = view.findViewById(R.id.rv_category);
-        refreshLayout = view.findViewById(R.id.swip_category);
+    protected void initWidget(View root) {
+        super.initWidget(root);
+        recyclerView = root.findViewById(R.id.rv_category);
+        refreshLayout = root.findViewById(R.id.swip_category);
         refreshLayout.setRefreshing(true);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -50,14 +52,12 @@ public class CategoryFragment extends BaseFragment{
                 getCategory();
             }
         });
-        return view;
     }
 
     @Override
-    public RecyclerView getRecycle() {
-        return null;
+    protected void initData() {
+        getCategory();
     }
-
     /**
      *从服务器上获取分类信息
      */

@@ -40,14 +40,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.RetrofitTest;
+import com.camera.lingxiao.common.app.ActivityController;
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
 import com.camera.lingxiao.common.utills.LogUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
-import com.lingxiaosuse.picture.tudimension.activity.ActivityController;
 import com.lingxiaosuse.picture.tudimension.activity.MzituActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SearchActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SeeDownLoadImgActivity;
@@ -55,11 +56,12 @@ import com.lingxiaosuse.picture.tudimension.activity.SettingsActivity;
 import com.lingxiaosuse.picture.tudimension.activity.VerticalActivity;
 import com.lingxiaosuse.picture.tudimension.activity.WebActivity;
 import com.lingxiaosuse.picture.tudimension.activity.sousiba.SousibaActivity;
-import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
+import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 import com.lingxiaosuse.picture.tudimension.modle.FileUploadModle;
 import com.lingxiaosuse.picture.tudimension.modle.HitokotoModle;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
+import com.lingxiaosuse.picture.tudimension.presenter.MainPresenter;
 import com.lingxiaosuse.picture.tudimension.receiver.NetworkReceiver;
 import com.lingxiaosuse.picture.tudimension.retrofit.FileUploadInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.HomePageInterface;
@@ -69,6 +71,8 @@ import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.HomeView;
+import com.lingxiaosuse.picture.tudimension.view.MainView;
 import com.lingxiaosuse.picture.tudimension.widget.WaveLoading;
 
 import java.io.File;
@@ -91,15 +95,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements MainView{
     @BindView(R.id.tab_main)
     TabLayout tabLayout;
     @BindView(R.id.vp_main)
     ViewPager viewPager;
     @BindView(R.id.toolbar_main)
     Toolbar toolbar;
-    @BindView(R.id.fab_main)
-    FloatingActionButton faButton;
     @BindView(R.id.dl_menu)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_main)
@@ -129,6 +131,7 @@ public class MainActivity extends BaseActivity {
     private ProgressDialog uploadDialog;
     private TextView hitokoto;
     private SimpleDraweeView simpleDraweeView;
+    private MainPresenter mPresenter = new MainPresenter(this,this);
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_main;
@@ -155,54 +158,8 @@ public class MainActivity extends BaseActivity {
         simpleDraweeView = headerLayout.findViewById(R.id.image_head_background);
         SimpleDraweeView headImage = headerLayout.findViewById(R.id.image_head);
         headImage.setVisibility(View.GONE);
-        getHeadText();
-        getHeadBackground();
-    }
-
-    private void getHeadBackground() {
-        RetrofitHelper.getInstance(UIUtils.getContext())
-                .getInterface(HomePageInterface.class)
-                .homePageModle(30,0,false)
-                .enqueue(new Callback<HomePageModle>() {
-                    @Override
-                    public void onResponse(Call<HomePageModle> call, Response<HomePageModle> response) {
-                        List<HomePageModle.Picture> picList =
-                                response.body().res.getWallpaper();
-                        Random random = new Random();
-                        int result = random.nextInt(picList.size());
-                        Uri uri = Uri.parse(picList.get(result).getPreview()+ContentValue.imgRule);
-                        simpleDraweeView.setImageURI(uri);
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<HomePageModle> call, Throwable t) {
-
-                    }
-                });
-    }
-
-    private void getHeadText() {
-        HttpUtils.doGet(ContentValue.HITOKOTO_URL, new okhttp3.Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                String result = response.body().string();
-                Gson gson = new Gson();
-                final HitokotoModle hotModle =
-                        gson.fromJson(result,HitokotoModle.class);
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        hitokoto.setText(hotModle.getHitokoto());
-                    }
-                });
-            }
-        });
+        mPresenter.getHeadImg();
+        mPresenter.getHeadText();
     }
 
     private void initView() {
@@ -215,22 +172,6 @@ public class MainActivity extends BaseActivity {
         //设置viewpager缓存页面个数
         viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
-
         setSupportActionBar(toolbar);
         //设置返回键可用
         getSupportActionBar().setHomeButtonEnabled(true);
@@ -299,6 +240,16 @@ public class MainActivity extends BaseActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onGetHeadBackGround(Uri uri) {
+        simpleDraweeView.setImageURI(uri);
+    }
+
+    @Override
+    public void onGetHeadText(String result) {
+        hitokoto.setText(result);
     }
 
     private class MainPageAdapter extends FragmentPagerAdapter {

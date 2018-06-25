@@ -44,7 +44,6 @@ public interface UserApi {
      */
     @GET("/{version}/{wallpaper}/{category}/{id}/{wallpapertype}")
     Observable<HttpResponse> desk(
-            @Url String url,
             @Path("version") String version,
             @Path("wallpaper") String wallpaper,
             @Path("category") String category,

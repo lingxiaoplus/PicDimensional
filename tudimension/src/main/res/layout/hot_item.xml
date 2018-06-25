@@ -15,8 +15,7 @@
             android:layout_height="wrap_content"
             fresco:viewAspectRatio="0.85"
             fresco:progressBarImageScaleType="centerInside"
-            fresco:progressBarAutoRotateInterval="2000"
-            fresco:progressBarImage="@drawable/ic_loading_default"
+            fresco:progressBarImage="@drawable/ic_img_default"
             />
         <TextView
             android:id="@+id/tv_meizi_des"

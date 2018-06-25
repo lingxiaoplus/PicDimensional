@@ -52,7 +52,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
     protected int getContentLayoutId() {
         //判断是否打开了日图
         if (!SpUtils.getBoolean(this, ContentValue.IS_OPEN_DAILY, true)) {
-            startActWithAnim();
+            StartActivity(MainActivity.class, true);
         }
         return R.layout.activity_splash;
     }
@@ -67,7 +67,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
         tvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActWithAnim();
+                StartActivity(MainActivity.class, true);
             }
         });
     }
@@ -101,7 +101,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
                 if (isFirst) {
                     StartActivity(IndicatorActivity.class, true);
                 } else {
-                    startActWithAnim();
+                    StartActivity(MainActivity.class, true);
                 }
             }
 
@@ -120,17 +120,6 @@ public class SplashActivity extends BaseActivity implements SplashView{
         }
     }
 
-    private void startActWithAnim(){
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //转场动画
-            startActivity(new Intent(getApplicationContext(), MainActivity.class),
-                    ActivityOptions.makeSceneTransitionAnimation(SplashActivity.this).toBundle());
-            finish();
-        }else {
-            StartActivity(MainActivity.class, true);
-        }
-    }
-
     @Override
     public void showImgUrl(Uri uri,String error) {
         if (null == error){
@@ -140,7 +129,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
             if (isFirst) {
                 StartActivity(IndicatorActivity.class, true);
             } else {
-                startActWithAnim();
+                StartActivity(MainActivity.class, true);
             }
         }
     }

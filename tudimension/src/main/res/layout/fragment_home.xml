@@ -1,20 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:wave="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swip_special"
+        android:id="@+id/sl_main"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_special"
+            android:id="@+id/rv_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <com.lingxiaosuse.picture.tudimension.widget.WaveLoading
+        android:id="@+id/pb_main"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        wave:mainColor="@color/colorPrimary"
+        wave:text="图" />
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,6 +43,8 @@
             app:fabSize="normal"
             app:layout_behavior="@string/scroll_behavior"
             app:rippleColor="#33728dff"
-            app:srcCompat="@drawable/ic_return_top" />
+            app:srcCompat="@drawable/ic_return_top"
+            />
     </LinearLayout>
+
 </android.support.design.widget.CoordinatorLayout>

@@ -39,4 +39,6 @@
         <item>最新</item>
         <item>专辑</item>
     </string-array>
+    <string name="tab_new">最新</string>
+    <string name="tab_hot">最热</string>
 </resources>

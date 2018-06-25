@@ -62,17 +62,6 @@
                             wave:text="图"
                             />
                 </RelativeLayout>
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/fab_main"
-                    app:fabSize="normal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end|bottom"
-                    floating:srcCompat="@drawable/ic_return_top"
-                    android:layout_margin="@dimen/fab_margin"
-                    app:backgroundTint="@color/colorPrimary"
-                    app:rippleColor="#33728dff"
-                    app:layout_behavior="com.lingxiaosuse.picture.tudimension.transformer.ScrollAwareFABBehaviorDefault"/>
         </android.support.design.widget.CoordinatorLayout>
         <!--侧滑菜单-->
         <android.support.design.widget.NavigationView

@@ -31,11 +31,6 @@ public abstract class BaseFragment extends Fragment{
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (getRecycle() != null){
-            //暂时解决fab点击的问题
-            faButton = getActivity()
-                    .findViewById(R.id.fab_main);
-        }
         initData();
     }
 

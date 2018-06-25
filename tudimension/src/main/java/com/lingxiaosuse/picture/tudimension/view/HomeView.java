@@ -7,11 +7,11 @@ import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import java.util.List;
 
 public interface HomeView extends BaseView{
-    /**
-     * 获取到顶部轮播图数据
-     * @param banners
-     */
-    void onGetBannerResult(HomePageModle banners);
 
-    void onGetHomeResult();
+    void onGetBannerResult(BannerModle bannerModle);
+    /**
+     * 获取到homepage数据
+     * @param homeModle
+     */
+    void onGetHomeResult(HomePageModle homeModle);
 }

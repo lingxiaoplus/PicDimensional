@@ -16,7 +16,7 @@ public class ServerResultFunction implements Function<HttpResponse,Object> {
     @Override
     public Object apply(HttpResponse httpResponse) {
         //打印服务器回传结果
-        LogUtils.e(httpResponse.toString());
+        //LogUtils.e(httpResponse.toString());
         if (!httpResponse.isSuccess()){
             throw new ServerException(httpResponse.getCode(),httpResponse.getMsg());
         }

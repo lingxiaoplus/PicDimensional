@@ -112,7 +112,8 @@ public class HttpRequest {
                 .get()
                 .retrofit()
                 .create(UserApi.class)
-                .desk(apiUrl,strings[0],strings[1],strings[2],strings[3],strings[4], map);
+                .desk(strings[0],strings[1],strings[2],strings[3],strings[4], map);
+
         HttpRxObservable.getObservable(apiObservable, lifecycle, callback).subscribe(callback);
     }
     /**

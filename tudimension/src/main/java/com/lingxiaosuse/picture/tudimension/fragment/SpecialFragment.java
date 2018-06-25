@@ -1,11 +1,13 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.camera.lingxiao.common.app.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
@@ -20,6 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,27 +36,24 @@ public class SpecialFragment extends BaseFragment{
     SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.rv_special)
     RecyclerView recyclerView;
+    @BindView(R.id.fab_fragment)
+    FloatingActionButton fab;
+
     private List<SpecialModle.ResBean.AlbumBean> albumBeanList = new ArrayList<>();
     private List<SpecialModle.ResBean.AlbumBean> moreList = new ArrayList<>();;
     private SpecialRecycleAdapter mAdapter;
     private LinearLayoutManager manager;
     private int skip = 0;
+
     @Override
-    protected void initData() {
-        getData(30);
+    protected int getContentLayoutId() {
+        return R.layout.fragment_special;
     }
 
     @Override
-    public View initView() {
-        View view = UIUtils.inflate(R.layout.fragment_special);
-        ButterKnife.bind(this,view);
-        swipeRefreshLayout.setColorSchemeResources(
-                R.color.colorPrimary,
-                android.R.color.holo_blue_light,
-                android.R.color.holo_red_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light
-        );
+    protected void initWidget(View root) {
+        super.initWidget(root);
+        setSwipeColor(swipeRefreshLayout);
         swipeRefreshLayout.setRefreshing(true);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -61,7 +61,12 @@ public class SpecialFragment extends BaseFragment{
                 getData(30);
             }
         });
-        return view;
+        floatingBtnToogle(recyclerView,fab);
+    }
+
+    @Override
+    protected void initData() {
+        getData(30);
     }
 
     private void getData(final int limit){
@@ -132,8 +137,8 @@ public class SpecialFragment extends BaseFragment{
                 });
     }
 
-    @Override
-    public RecyclerView getRecycle() {
-        return recyclerView;
+    @OnClick(R.id.fab_fragment)
+    public void setTopView(){
+        recyclerView.smoothScrollToPosition(0);
     }
 }

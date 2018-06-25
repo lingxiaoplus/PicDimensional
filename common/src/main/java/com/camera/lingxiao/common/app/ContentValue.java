@@ -36,7 +36,27 @@ public class ContentValue {
      */
     public static String VERTICAL_URL = "/v1/vertical/vertical" +
             "?limit=30?adult=false&first=1&order=hot";
+    /**
+     * banner
+     */
     public static String BANNER_URL = "/v1/wallpaper/";
+    /**
+     * 主页面
+     */
+    public static String HOMEPAGE_URL = "/v3/homepage";
+
+    /**
+     * 每次请求多少个数据
+     */
+    public static int limit = 30;
+    /**
+     * 轮播图
+     */
+    public static String TYPE_ALBUM = "album";
+    /**
+     * 分类
+     */
+    public static String TYPE_CATEGORY = "category";
     //安卓壁纸的搜索
     public static String SEARCH_URL = "http://so.picasso.adesk.com";
     //保存的图片路径
@@ -63,4 +83,6 @@ public class ContentValue {
 
     //搜丝吧
     public static String SOUSIBA_URL = "http://www.sousi88.cc";
+
+
 }

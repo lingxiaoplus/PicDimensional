@@ -11,13 +11,13 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 
 import java.util.List;
@@ -27,12 +27,12 @@ import java.util.List;
  */
 
 public class BannerRecycleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private List<BannerModle.ResBean.WallpaperBean> picList;
+    private List<BannerModle.WallpaperBean> picList;
     private int footCount = 1; //尾布局个数
     private static final int BODY_TYPE=1;
     private static final int FOOT_TYPE=2;
     private boolean isFinish;
-    public BannerRecycleAdapter(List<BannerModle.ResBean.WallpaperBean> picList,Context context){
+    public BannerRecycleAdapter(List<BannerModle.WallpaperBean> picList,Context context){
         this.picList = picList;
     }
     //返回条目总数
@@ -97,16 +97,16 @@ public class BannerRecycleAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             });
         }else if (holder instanceof FootHolder){
-            if (listener != null){
-                //上拉加载更多
-                listener.onLoadMore(position);
-            }
             if (isFinish){
                 ((FootHolder) holder).loadingLayout.setVisibility(View.GONE);
                 ((FootHolder) holder).finishLayout.setVisibility(View.VISIBLE);
             }else {
                 ((FootHolder) holder).loadingLayout.setVisibility(View.VISIBLE);
                 ((FootHolder) holder).finishLayout.setVisibility(View.GONE);
+                if (listener != null){
+                    //上拉加载更多
+                    listener.onLoadMore(position);
+                }
             }
         }
     }

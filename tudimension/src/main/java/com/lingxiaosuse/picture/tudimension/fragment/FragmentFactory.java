@@ -7,9 +7,9 @@ import java.util.HashMap;
  */
 
 public class FragmentFactory {
-    private static HashMap<Integer,BaseFragment> mFragmentMap = new HashMap<Integer, BaseFragment>();
-    public static BaseFragment createFragment(int pos){
-        BaseFragment fragment = mFragmentMap.get(pos);
+    private static HashMap<Integer, com.camera.lingxiao.common.app.BaseFragment> mFragmentMap = new HashMap<>();
+    public static com.camera.lingxiao.common.app.BaseFragment createFragment(int pos){
+        com.camera.lingxiao.common.app.BaseFragment fragment = mFragmentMap.get(pos);
         if (fragment == null){
             switch (pos){
                 case 0:
