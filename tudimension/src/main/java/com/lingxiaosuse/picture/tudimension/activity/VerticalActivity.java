@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.fragment.CategoryVerticalFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.VerticalFragment;
@@ -31,17 +32,14 @@ public class VerticalActivity extends BaseActivity {
     FloatingActionButton fabVertical;
     private String[] strs = new String[]{"最新", "最热", "分类"};
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vertical);
-        ButterKnife.bind(this);
-        initView();
+    protected int getContentLayoutId() {
+        return R.layout.activity_vertical;
     }
 
-
-    private void initView() {
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         toolbar.setTitle("手机壁纸");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

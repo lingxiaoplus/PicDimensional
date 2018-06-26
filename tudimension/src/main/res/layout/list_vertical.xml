@@ -11,8 +11,7 @@
         android:layout_height="wrap_content"
         frecso:viewAspectRatio="0.65"
         frecso:progressBarImageScaleType="centerInside"
-        frecso:progressBarAutoRotateInterval="2000"
-        frecso:progressBarImage="@drawable/ic_loading_default"
+        frecso:progressBarImage="@drawable/ic_img_default"
         />
     <TextView
         android:id="@+id/tv_mzitu"

@@ -34,7 +34,7 @@ public class ContentValue {
     /**
      * 竖屏 最热
      */
-    public static String VERTICAL_URL = "/v1/vertical/vertical" +
+    public static String VERTICAL_URLS = "/v1/vertical/vertical" +
             "?limit=30?adult=false&first=1&order=hot";
     /**
      * banner
@@ -45,6 +45,7 @@ public class ContentValue {
      */
     public static String HOMEPAGE_URL = "/v3/homepage";
 
+    public static String VERTICAL_URL = "/v1/vertical/vertical";
     /**
      * 每次请求多少个数据
      */

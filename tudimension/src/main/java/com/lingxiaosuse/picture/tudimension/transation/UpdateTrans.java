@@ -54,7 +54,7 @@ public class UpdateTrans extends BaseTransation{
          * 构建请求参数
          */
         request.clear();
-        request.put(HttpRequest.API_URL, ContentValue.VERTICAL_URL);
+        request.put(HttpRequest.API_URL, ContentValue.VERTICAL_URLS);
 
         /**
          * 解析数据
