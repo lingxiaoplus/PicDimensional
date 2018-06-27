@@ -62,7 +62,7 @@ public class BannerFragment extends BaseFragment implements HomeView{
         super.initWidget(root);
         setSwipeColor(swipView);
         floatingBtnToogle(recycleView,fabView);
-        mLayoutManager = new StaggeredGridLayoutManager(3,
+        mLayoutManager = new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL);
         recycleView.setLayoutManager(mLayoutManager);
         swipView.setRefreshing(true);

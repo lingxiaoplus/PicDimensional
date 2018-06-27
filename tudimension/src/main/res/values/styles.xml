@@ -14,6 +14,8 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <!-- 设置activity切换动画 -->
+        <item name="android:windowAnimationStyle">@style/activityAnimation</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -36,12 +38,16 @@
     <!--end透明activity-->
 
     <!--card_view的属性抽取-->
+    <!--card style-->
     <style name="cardStyle">
-        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
         <item name="android:layout_margin">10dp</item>
         <item name="android:foreground">?android:attr/selectableItemBackground</item>
     </style>
+    <!--end card style-->
     <!--字体样式-->
     <style name="textTitle">
         <item name="android:layout_width">wrap_content</item>
@@ -63,4 +69,18 @@
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="android:padding">10dp</item>
     </style>
+
+    <!--android:activityOpenEnterAnimation:要启动的Activity的入场动画-->
+    <!--android:activityCloseExitAnimation：要结束的Activity的出场动画-->
+    <!--android:activityOpenExitAnimation：当前Activity结束的动画-->
+    <!--android:activityCloseEnterAnimation：栈顶Activity的入场动画。-->
+    <!-- animation 样式 -->
+    <style name="activityAnimation" parent="@android:style/Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/right_in</item>
+        <item name="android:activityOpenExitAnimation">@anim/left_out</item>
+        <item name="android:activityCloseEnterAnimation">@anim/left_in</item>
+        <item name="android:activityCloseExitAnimation">@anim/right_out</item>
+    </style>
+
+
 </resources>
