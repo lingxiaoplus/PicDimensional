@@ -3,6 +3,7 @@ package com.lingxiaosuse.picture.tudimension.presenter;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.BasePresenter;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
+import com.camera.lingxiao.common.utills.LogUtils;
 import com.lingxiaosuse.picture.tudimension.fragment.HomeFragment;
 import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
@@ -20,13 +21,9 @@ public class HomePresenter extends BasePresenter<HomeView,BaseFragment>{
         mTrans.getHomePage(limit, skip,new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                try {
-                    HomePageModle modle = (HomePageModle) object[0];
-                    getView().onGetHomeResult(modle);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
+                HomePageModle modle = (HomePageModle) object[0];
+                LogUtils.i("Homepresnter:   "+getView());
+                getView().onGetHomeResult(modle);
             }
 
             @Override

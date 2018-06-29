@@ -130,6 +130,14 @@ public class BannerFragment extends BaseFragment implements HomeView{
     }
 
     @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+
+        }
+    }
+
+    @Override
     public void onGetHomeResult(HomePageModle modle) {
 
     }

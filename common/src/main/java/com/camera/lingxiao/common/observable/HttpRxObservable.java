@@ -1,6 +1,7 @@
 package com.camera.lingxiao.common.observable;
 
 import com.camera.lingxiao.common.http.HttpResultFunction;
+import com.camera.lingxiao.common.http.OtherServerFunction;
 import com.camera.lingxiao.common.http.ServerResultFunction;
 import com.camera.lingxiao.common.http.response.HttpResponse;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
@@ -65,6 +66,24 @@ public class HttpRxObservable {
     }
 
 
+    public static Observable getOtherObservable(Observable apiObservable, final HttpRxCallback callback) {
+        // showLog(request);
+        Observable observable = apiObservable
+                .map(new OtherServerFunction())
+                .onErrorResumeNext(new HttpResultFunction<>())
+                .doOnDispose(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        if (callback != null){
+                            callback.onCanceled();
+                        }
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread());
+        return observable;
+    }
+
     /**
      * 获取被监听者
      * 备注:网络请求Observable构建
@@ -97,6 +116,40 @@ public class HttpRxObservable {
             ;
         } else {
             observable = getObservable(apiObservable, callback);
+        }
+        return observable;
+    }
+
+    /**
+     * 供其他未规范化的api调用
+     * @param apiObservable
+     * @param lifecycle
+     * @param callback
+     * @return
+     */
+    public static Observable getOtherObservable(Observable<Object> apiObservable, LifecycleProvider lifecycle, final HttpRxCallback callback) {
+        //showLog(request);
+        Observable observable;
+
+        if (lifecycle != null) {
+            //随生命周期自动管理.eg:onCreate(start)->onStop(end)
+            observable = apiObservable
+                    .map(new OtherServerFunction())
+                    .compose(lifecycle.bindToLifecycle())//需要在这个位置添加
+                    .onErrorResumeNext(new HttpResultFunction<>())
+                    .doOnDispose(new Action() {
+                        @Override
+                        public void run() throws Exception {
+                            if (callback != null){
+                                callback.onCanceled();
+                            }
+                        }
+                    })
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+            ;
+        } else {
+            observable = getOtherObservable(apiObservable, callback);
         }
         return observable;
     }

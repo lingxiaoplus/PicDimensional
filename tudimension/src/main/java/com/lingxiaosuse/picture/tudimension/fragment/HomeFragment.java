@@ -12,6 +12,7 @@ import android.view.View;
 
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.LogUtils;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.SpaceItemDecoration;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
@@ -37,7 +38,6 @@ import butterknife.OnClick;
 
 public class HomeFragment extends BaseFragment implements HomeView{
 
-    private WaveLoading waveLoading;
     private MyRecycleViewAdapter adapter;
     private List<HomePageModle.slidePic> slideList = new ArrayList<>();
     private List<HomePageModle.Picture> picList = new ArrayList<>();
@@ -51,10 +51,10 @@ public class HomeFragment extends BaseFragment implements HomeView{
     SwipeRefreshLayout swipeLayout;
     @BindView(R.id.fab_fragment)
     FloatingActionButton fab;
-    private HomePresenter mPresenter = new HomePresenter(this,this);
+    private HomePresenter mPresenter;
     @Override
     protected void initData() {
-        waveLoading = getActivity().findViewById(R.id.pb_menu);
+        mPresenter = new HomePresenter(this,this);
         mPresenter.getHomePageData(ContentValue.limit,0);
     }
 
@@ -163,7 +163,13 @@ public class HomeFragment extends BaseFragment implements HomeView{
         Log.i("code", "setRefreshing执行了 picList:"+picList.size());
         swipeLayout.setRefreshing(false);
         adapter.notifyDataSetChanged();
-        waveLoading.setVisibility(View.INVISIBLE);
+        //waveLoading.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtils.i("HomeFragment销毁");
     }
 
     @Override

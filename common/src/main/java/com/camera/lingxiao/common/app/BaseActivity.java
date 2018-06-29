@@ -66,7 +66,9 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         if (initArgs(getIntent().getExtras())) {
             // 得到界面Id并设置到Activity界面中
             int layId = getContentLayoutId();
-            setContentView(layId);
+            if (layId != 0){
+                setContentView(layId);
+            }
             initBefore();
             initWidget();
             initData();

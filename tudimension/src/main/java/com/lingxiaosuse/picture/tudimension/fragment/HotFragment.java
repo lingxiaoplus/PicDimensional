@@ -13,20 +13,22 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.BaseFragment;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.HotRecycleAdapter;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.modle.HotModle;
+import com.lingxiaosuse.picture.tudimension.presenter.HotPresenter;
 import com.lingxiaosuse.picture.tudimension.retrofit.HomePageInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.HotInterface;
 import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.HotView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ import butterknife.OnClick;
  * Created by lingxiao on 2017/8/28.
  */
 
-public class HotFragment extends BaseFragment{
+public class HotFragment extends BaseFragment implements HotView{
     @BindView(R.id.swip_hot)
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.rv_hot)
@@ -48,24 +50,12 @@ public class HotFragment extends BaseFragment{
     @BindView(R.id.fab_fragment)
     FloatingActionButton fab;
 
-    private List<HotModle.ResultsBean> resultList = new ArrayList<>();
     private List<HotModle.ResultsBean> previsList = new ArrayList<>();
     private HotRecycleAdapter mAdapter;
     private GridLayoutManager mLayoutManager;
     private int index = 1;
-    private int current = 20;
     private ArrayList<String> picUrlList = new ArrayList<>();//取出图片地址传递给下一个activity
-    private Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            mAdapter.setResultList(previsList);
-            if (refreshLayout.isRefreshing()){
-                refreshLayout.setRefreshing(false);
-            }
-            mAdapter.notifyDataSetChanged();
-        }
-    };
+    private HotPresenter mPresenter = new HotPresenter(this,this);
 
     @Override
     protected int getContentLayoutId() {
@@ -80,7 +70,7 @@ public class HotFragment extends BaseFragment{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getData(current,index);
+                mPresenter.getHotResult(ContentValue.limit,1);
             }
         });
         mLayoutManager = new GridLayoutManager(getContext(),2,
@@ -92,12 +82,7 @@ public class HotFragment extends BaseFragment{
             @Override
             public void onLoadMore() {
                 index++;
-                if (index<55){
-                    getData(current,index);
-                }else {
-                    ToastUtils.show("没有数据了");
-                    mAdapter.isFinish(true);
-                }
+                mPresenter.getHotResult(ContentValue.limit,index);
             }
         });
         mAdapter.setOnItemClickListener(new HotRecycleAdapter.OnItemClickListener() {
@@ -127,27 +112,35 @@ public class HotFragment extends BaseFragment{
 
     @Override
     protected void initData() {
-        getData(current,index);
+        super.initData();
+        mPresenter.getHotResult(ContentValue.limit,index);
     }
 
-    private void getData(int current,int page){
-        HttpUtils.doGet(ContentValue.GANKURL+current+"/"+page,
-                new okhttp3.Callback() {
-            @Override
-            public void onFailure(okhttp3.Call call, IOException e) {
 
-            }
+    @Override
+    public void onGetHotResult(HotModle modle) {
+        List<HotModle.ResultsBean> resultList = modle.getResults();
+        if (resultList.size() < ContentValue.limit){
+            mAdapter.isFinish(true);
+        }
+        previsList.addAll(resultList);
+        mAdapter.notifyDataSetChanged();
+        refreshLayout.setRefreshing(false);
+    }
 
-            @Override
-            public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                String result = response.body().string();
-                Gson gson = new Gson();
-                HotModle hotModle = gson.fromJson(result,HotModle.class);
-                resultList = hotModle.getResults();
-                Log.i("最新模块返回的数据", "onResponse: "+result);
-                previsList.addAll(resultList);
-                mHandler.sendEmptyMessage(0);
-            }
-        });
+    @Override
+    public void showDialog() {
+
+    }
+
+    @Override
+    public void diamissDialog() {
+
+    }
+
+    @Override
+    public void showToast(String text) {
+        ToastUtils.show(text);
+        refreshLayout.setRefreshing(false);
     }
 }

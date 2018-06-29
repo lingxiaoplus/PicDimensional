@@ -60,8 +60,10 @@ public abstract class HttpRxCallback<T> implements Observer<T>,HttpRequestListen
         }
         try {
             JsonElement jsonElement = new JsonParser().parse((String) t);
+            LogUtils.i("正式：  "+jsonElement.toString());
             if (parseHelper != null) {
                 Object[] res = parseHelper.parse(jsonElement);
+                LogUtils.i("转换：  "+res[0].toString());
                 onSuccess(res);
             } else {
                 onSuccess(jsonElement);

@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import pub.devrel.easypermissions.EasyPermissions;
+
+import static android.content.ContentValues.TAG;
 
 
 public abstract class BaseFragment extends RxFragment implements EasyPermissions.PermissionCallbacks{
@@ -51,7 +54,7 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        if (mRoot == null){
+        /*if (mRoot == null){
             int layId = getContentLayoutId();
             //初始化当前的跟布局，但是不在创建时就添加到container中
             View root = inflater.inflate(layId,container,false);
@@ -62,7 +65,12 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
                 //把当前root从父控件中移除
                 ((ViewGroup) mRoot.getParent()).removeView(mRoot);
             }
-        }
+        }*/
+        // TODO: 18-6-29 上面的方式会报空指针 
+        int layId = getContentLayoutId();
+        View root = inflater.inflate(layId,container,false);
+        initWidget(root);
+        mRoot = root;
         return mRoot;
     }
 
@@ -120,6 +128,7 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
         super.onDestroy();
         if (mListener != null) {
             mListener.onDestroy();
+            Log.e(TAG, "onDestroy: fragment销毁了");
         }
         //移除view绑定
         if (mRootUnbinder != null) {

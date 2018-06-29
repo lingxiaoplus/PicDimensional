@@ -56,6 +56,21 @@ public class HttpRequest {
         HttpRxObservable.getObservable(apiObservable, lifecycle, callback).subscribe(callback);
     }
 
+    /**
+     * 发送其他api请求
+     * 备注:自动管理生命周期
+     * @param lifecycle 实现RxActivity/RxFragment 参数为空不管理生命周期
+     * @param callback  回调
+     */
+    public void requestOther(String url,LifecycleProvider lifecycle, HttpRxCallback callback) {
+        Observable apiObservable;
+        apiObservable = RetrofitUtil
+                .get()
+                .retrofit()
+                .create(UserApi.class)
+                .other(url);
+        HttpRxObservable.getOtherObservable(apiObservable, lifecycle, callback).subscribe(callback);
+    }
 
     /**
      * 发送请求

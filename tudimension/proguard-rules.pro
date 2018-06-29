@@ -165,6 +165,14 @@ public static ** valueOf(java.lang.String);
 # Gson
 -keep class com.lingxiaosuse.picture.tudimension.modle.**{*;} # 自定义数据模型的bean目录
 
+# Gson uses generic type information stored in a class file when working with fields. Proguard
+# removes such information by default, so configure it to keep all of it.
+-keepattributes Signature
+-keepattributes *Annotation*
+# Gson specific classes
+-keep class sun.misc.Unsafe { *; }
+
+
 #rxjava
 -dontwarn sun.misc.**
 -keepclassmembers class rx.internal.util.unsafe.*ArrayQueue*Field* {

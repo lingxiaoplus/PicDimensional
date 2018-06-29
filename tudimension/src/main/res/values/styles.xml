@@ -82,5 +82,10 @@
         <item name="android:activityCloseExitAnimation">@anim/right_out</item>
     </style>
 
-
+    <!--加速app启动-->
+    <style name="LogoTheme" parent="AppTheme">
+        <item name="android:windowBackground">@drawable/logo</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

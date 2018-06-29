@@ -106,8 +106,7 @@ public class MainActivity extends BaseActivity implements MainView{
     DrawerLayout mDrawerLayout;
     @BindView(R.id.nav_main)
     NavigationView navigationView;
-    @BindView(R.id.pb_menu)
-    WaveLoading pbMenu;
+
     private String[] mTabStr;
     private Handler mHandler = new Handler() {
         @Override
@@ -170,7 +169,7 @@ public class MainActivity extends BaseActivity implements MainView{
         MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         //设置viewpager缓存页面个数
-        viewPager.setOffscreenPageLimit(4);
+        viewPager.setOffscreenPageLimit(1);
         tabLayout.setupWithViewPager(viewPager);
         setSupportActionBar(toolbar);
         //设置返回键可用

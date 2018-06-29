@@ -30,7 +30,7 @@ public class MyApplication extends Application{
         mHandler = new Handler();
         mainThreadId = android.os.Process.myPid();
         //bugly初始化 建议在测试阶段建议设置成true，发布时设置为false。
-        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", true);
+        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", false);
 
     }
     public static Context getContext(){

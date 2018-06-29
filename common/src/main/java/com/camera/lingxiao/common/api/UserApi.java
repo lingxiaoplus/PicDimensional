@@ -51,4 +51,12 @@ public interface UserApi {
             @Path("wallpapertype") String wallpapertype,
             @QueryMap TreeMap<String, Object> request
     );
+
+    /**
+     * 其他api调用
+     * @param url 全路径
+     * @return
+     */
+    @GET
+    Observable<Object> other(@Url String url);
 }

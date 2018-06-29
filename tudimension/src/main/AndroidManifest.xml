@@ -34,12 +34,15 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".activity.SplashActivity">
+        <activity android:name=".activity.LogoActivity"
+            android:theme="@style/LogoTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".activity.SplashActivity">
         </activity>
         <activity android:name=".activity.BaseActivity" />
         <activity android:name=".activity.ImageLoadingActivity" />
@@ -95,7 +98,8 @@
         <activity android:name=".activity.MzituActivity" />
         <activity android:name=".activity.MzituDetailActivity" />
         <activity android:name=".activity.sousiba.SousibaActivity" />
-        <activity android:name=".activity.sousiba.SousibaDetailActivity"></activity>
+        <activity android:name=".activity.sousiba.SousibaDetailActivity" />
+
     </application>
 
 </manifest>

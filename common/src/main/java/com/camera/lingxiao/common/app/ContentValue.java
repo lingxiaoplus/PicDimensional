@@ -27,63 +27,63 @@ public class ContentValue {
     public static String IS_OPEN_DAILY ="is_open_daily";
     //
     //干货集中营api
-    public static String GANKURL = "http://gank.io/api/data/%E7%A6%8F%E5%88%A9/";
+    public static final String GANKURL = "http://gank.io/api/data/%E7%A6%8F%E5%88%A9/";
 
     //安卓壁纸的baseurl
-    public static String BASE_URL = "http://service.picasso.adesk.com";
+    public static final String BASE_URL = "http://service.picasso.adesk.com";
     /**
      * 竖屏 最热
      */
-    public static String VERTICAL_URLS = "/v1/vertical/vertical" +
+    public static final String VERTICAL_URLS = "/v1/vertical/vertical" +
             "?limit=30?adult=false&first=1&order=hot";
     /**
      * banner
      */
-    public static String BANNER_URL = "/v1/wallpaper/";
+    public static final String BANNER_URL = "/v1/wallpaper/";
     /**
      * 主页面
      */
-    public static String HOMEPAGE_URL = "/v3/homepage";
+    public static final String HOMEPAGE_URL = "/v3/homepage";
 
-    public static String VERTICAL_URL = "/v1/vertical/vertical";
+    public static final String VERTICAL_URL = "/v1/vertical/vertical";
     /**
      * 每次请求多少个数据
      */
-    public static int limit = 30;
+    public static final int limit = 30;
     /**
      * 轮播图
      */
-    public static String TYPE_ALBUM = "album";
+    public static final String TYPE_ALBUM = "album";
     /**
      * 分类
      */
-    public static String TYPE_CATEGORY = "category";
+    public static final String TYPE_CATEGORY = "category";
     //安卓壁纸的搜索
-    public static String SEARCH_URL = "http://so.picasso.adesk.com";
+    public static final String SEARCH_URL = "http://so.picasso.adesk.com";
     //保存的图片路径
-    public static String PATH = Environment
+    public static final String PATH = Environment
             .getExternalStorageDirectory()
             .getAbsolutePath() + "/tudimension";
 
     //百度识图
-    public static String BAIDU_URL = "http://image.baidu.com/wiseshitu?guss=1&queryImageUrl=";
+    public static final String BAIDU_URL = "http://image.baidu.com/wiseshitu?guss=1&queryImageUrl=";
     //搜狗识图
-    public static String SOUGOU_URL = "http://pic.sogou.com/";
+    public static final String SOUGOU_URL = "http://pic.sogou.com/";
     //google识图
-    public static String GOOGLE_URL = "https://images.google.com/imghp?hl=zh-CN&gws_rd=ssl";
+    public static final String GOOGLE_URL = "https://images.google.com/imghp?hl=zh-CN&gws_rd=ssl";
 
     //一言
-    public static String HITOKOTO_URL = "http://api.hitokoto.cn/";
+    public static final String HITOKOTO_URL = "http://api.hitokoto.cn/";
     //mzitu网址
-    public static String MZITU_URL = "http://www.mzitu.com/";
+    public static final String MZITU_URL = "http://www.mzitu.com/";
     //浏览器标志
-    public static String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0";
+    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0";
 
     //收藏的网址
-    public static String COLLECT_URL = "collect_url";
+    public static final String COLLECT_URL = "collect_url";
 
     //搜丝吧
-    public static String SOUSIBA_URL = "http://www.sousi88.cc";
+    public static final String SOUSIBA_URL = "http://www.sousi88.cc";
 
 
 }
