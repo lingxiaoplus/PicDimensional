@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/PicDimensional.iml" filepath="$PROJECT_DIR$/PicDimensional.iml" />
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/lang/lang.iml" filepath="$PROJECT_DIR$/lang/lang.iml" />
+      <module fileurl="file://$PROJECT_DIR$/skinlibrary/skinlibrary.iml" filepath="$PROJECT_DIR$/skinlibrary/skinlibrary.iml" />
       <module fileurl="file://$PROJECT_DIR$/tudimension/tudimension.iml" filepath="$PROJECT_DIR$/tudimension/tudimension.iml" />
     </modules>
   </component>

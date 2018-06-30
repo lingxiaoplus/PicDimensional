@@ -92,34 +92,6 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
                 mPresenter.getVerticalData(ContentValue.limit,0,order);
             }
         });
-    }
-
-    @Override
-    protected void initData() {
-        super.initData();
-        Bundle bundle = getArguments();
-        order = bundle.getString("order");
-        mPresenter.getVerticalData(30,skip,order);
-    }
-
-    @Override
-    public void onGetVerticalResult(VerticalModle modle) {
-        if (modle.getVertical().size() < 30){
-            mAdapter.isFinish(true);
-        }
-        verticalBeanList = modle.getVertical();
-        mPicList.addAll(verticalBeanList);
-        mAdapter.notifyDataSetChanged();
-        if (refreshLayout.isRefreshing()){
-            refreshLayout.setRefreshing(false);
-        }
-        picUrlList.clear();
-        picIdList.clear();
-        for (int i = 0; i < mPicList.size(); i++) {
-            picIdList.add(mPicList.get(i).getId());
-            //获取url，getimg无法获取文件名，所以用getwp
-            picUrlList.add(mPicList.get(i).getWp());
-        }
 
         mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
             @Override
@@ -139,6 +111,34 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
     }
 
     @Override
+    protected void initData() {
+        super.initData();
+        Bundle bundle = getArguments();
+        order = bundle.getString("order");
+        mPresenter.getVerticalData(30,skip,order);
+    }
+
+    @Override
+    public void onGetVerticalResult(VerticalModle modle) {
+        if (modle.getVertical().size() < 30){
+            mAdapter.isFinish(true);
+        }
+        verticalBeanList = modle.getVertical();
+        mPicList.addAll(verticalBeanList);
+        mAdapter.notifyDataSetChanged();
+
+        picUrlList.clear();
+        picIdList.clear();
+        for (int i = 0; i < mPicList.size(); i++) {
+            picIdList.add(mPicList.get(i).getId());
+            //获取url，getimg无法获取文件名，所以用getwp
+            picUrlList.add(mPicList.get(i).getWp());
+        }
+
+        refreshLayout.setRefreshing(false);
+    }
+
+    @Override
     public void showDialog() {
 
     }
@@ -151,5 +151,6 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
     @Override
     public void showToast(String text) {
         ToastUtils.show(text);
+        refreshLayout.setRefreshing(false);
     }
 }

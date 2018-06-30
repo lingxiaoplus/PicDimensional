@@ -58,4 +58,5 @@ ext{
     //拦截器
     interceptorVersion = "3.10.0"
     easypermissionsVersion = "1.2.0"
+    skinSupportVersion = "3.1.0-beta1"
 }

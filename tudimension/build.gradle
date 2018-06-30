@@ -43,6 +43,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
     //photoview
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
     compile "com.android.support:cardview-v7:$rootProject.ext.supportVersion"
@@ -80,4 +81,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':lang')
     implementation project(':common')
+    implementation project(':skinlibrary')
 }

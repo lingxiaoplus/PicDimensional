@@ -7,19 +7,19 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
-import com.lingxiaosuse.picture.tudimension.global.MyApplication;
+import com.lingxiaosuse.picture.tudimension.global.App;
 /**
  * Created by lingxiao on 2017/6/13.
  */
 public class UIUtils {
     public static Context getContext(){
-        return MyApplication.getContext();
+        return App.getContext();
     }
     public static Handler getHandler(){
-        return MyApplication.getHandler();
+        return App.getHandler();
     }
     public static int getMainThreadId(){
-        return MyApplication.getMainThreadId();
+        return App.getMainThreadId();
     }
     ///////////////////////////加载资源文件///////////////////////
     //获取字符串

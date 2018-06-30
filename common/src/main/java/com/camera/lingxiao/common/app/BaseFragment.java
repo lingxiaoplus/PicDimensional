@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 
 import com.camera.lingxiao.common.R;
 import com.camera.lingxiao.common.listener.LifeCycleListener;
+import com.camera.lingxiao.common.utills.LogUtils;
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
 import java.util.List;
@@ -60,13 +61,16 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
             View root = inflater.inflate(layId,container,false);
             initWidget(root);
             mRoot = root;
+            LogUtils.i("BaseFragment是空：");
         }else {
             if (mRoot.getParent() != null){
                 //把当前root从父控件中移除
                 ((ViewGroup) mRoot.getParent()).removeView(mRoot);
+                LogUtils.i("BaseFragment不是空,并且执行了移除");
             }
+            LogUtils.i("BaseFragment不是空：");
         }*/
-        // TODO: 18-6-29 上面的方式会报空指针 
+        // TODO: 18-6-29 上面的方式会报空指针 ,因为我使用的弱引用
         int layId = getContentLayoutId();
         View root = inflater.inflate(layId,container,false);
         initWidget(root);
