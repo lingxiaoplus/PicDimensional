@@ -27,5 +27,5 @@
     <color name="purple400">#AB47BC</color>
     <color name="deepPurple400">#7E57C2</color>
     <color name="indigo400">#5C6BC0</color>
-
+    <color name="result_view">#B0000000</color>
 </resources>

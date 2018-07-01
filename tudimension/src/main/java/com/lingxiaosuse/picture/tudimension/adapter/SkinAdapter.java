@@ -11,66 +11,66 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.widget.BaseHolder;
 import com.camera.lingxiao.common.widget.BaseRecyclerViewAdapter;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.R;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.hdodenhof.circleimageview.CircleImageView;
-
 public class SkinAdapter extends BaseRecyclerViewAdapter{
 
-    private CircleImageView imageView;
+    private SimpleDraweeView imageView;
     private TextView textView;
     private Button button;
     private List<Integer> list;
-    private List<Boolean> isClicks = new ArrayList<>();
     private String[] strings = {"默认绿","激情红","知乎蓝","颐缇蓝","基佬紫"};
     private Context mContext;
     private String[] colors = {"#4CAF50","#E57373","#64B5F6","#7986CB","#9575CD"};
-    public SkinAdapter(List<Integer> colorList, Context context) {
-        super(colorList);
-        mContext = context;
-        for (int i = 0; i < colorList.size(); i++) {
-            isClicks.add(false);
-        }
+    public SkinAdapter(List<Integer> colorList, AdapterListener listener) {
+        super(colorList,listener);
+
     }
 
     @Override
-    public void bindData(final BaseHolder holder, final int position, List mList) {
+    protected int getItemViewType(int position, Object o) {
+        return R.layout.skip_card_view;
+    }
+
+    @Override
+    protected BaseHolder onCreateViewHolder(View root, int viewType) {
+        return new SkinHolder(root);
+    }
+
+    /*@Override
+    public void bindData(BaseHolder holder, int position, List mList) {
         list = mList;
-        imageView = (CircleImageView) holder.getView(R.id.img_skin);
+        imageView = holder.getView(R.id.img_skin);
         textView = (TextView) holder.getView(R.id.tv_skin);
         button = (Button) holder.getView(R.id.bt_skin_use);
         //imageView.setBackgroundResource(list.get(position));
         imageView.setImageDrawable(new ColorDrawable(Color.parseColor(colors[position])));
         textView.setTextColor(Color.parseColor(colors[position]));
         textView.setText(strings[position]);
+    }*/
+
+    private class SkinHolder extends BaseHolder<Integer>{
+
+        public SkinHolder(View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        protected void onBind(Integer color,int position) {
+            imageView = getView(R.id.img_skin);
+            textView = getView(R.id.tv_skin);
+            button = getView(R.id.bt_skin_use);
+            //imageView.setBackgroundResource(list.get(position));
+            imageView.setImageDrawable(new ColorDrawable(Color.parseColor(colors[position])));
+            textView.setTextColor(Color.parseColor(colors[position]));
+            textView.setText(strings[position]);
+        }
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.skip_card_view;
-    }
-
-    @Override
-    public int getHeadLayoutId() {
-        return 0;
-    }
-
-    @Override
-    protected int getItemViewType(int position, Object o) {
-        return 0;
-    }
-
-    @Override
-    protected ViewHolder onCreateViewHolder(View root, int viewType) {
-        return null;
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
-    }
 }

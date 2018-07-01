@@ -181,8 +181,9 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                int color = com.camera.lingxiao.common.utills.SpUtils.getInt(UIUtils.getContext(),ContentValue.SKIN_ID,R.color.colorPrimary);
                 ultimateBar.setColorBarForDrawer
-                        (ContextCompat.getColor(UIUtils.getContext(), R.color.colorPrimary),
+                        (ContextCompat.getColor(UIUtils.getContext(), color),
                                 100);
                 startPropertyAnim(simpleDraweeView,1f,3f,1f,10000);
             }

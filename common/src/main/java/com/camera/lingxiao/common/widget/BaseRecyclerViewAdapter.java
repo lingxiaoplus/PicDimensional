@@ -18,7 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 public abstract class BaseRecyclerViewAdapter<Data> extends
-        RecyclerView.Adapter<BaseRecyclerViewAdapter.ViewHolder<Data>>
+        RecyclerView.Adapter<BaseHolder<Data>>
         implements View.OnClickListener,View.OnLongClickListener,AdapterCallback<Data>{
     private final List<Data> mDataList;
     private AdapterListener<Data> mListener;
@@ -68,13 +68,13 @@ public abstract class BaseRecyclerViewAdapter<Data> extends
      * @return ViewHolder
      */
     @Override
-    public ViewHolder<Data> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseHolder<Data> onCreateViewHolder(ViewGroup parent, int viewType) {
         // 得到LayoutInflater用于把XML初始化为View
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         // 把XML id为viewType的文件初始化为一个root View
         View root = inflater.inflate(viewType, parent, false);
         // 通过子类必须实现的方法，得到一个ViewHolder
-        ViewHolder<Data> holder = onCreateViewHolder(root, viewType);
+        BaseHolder<Data> holder = onCreateViewHolder(root, viewType);
 
 
         // 设置View的Tag为ViewHolder，进行双向绑定
@@ -98,7 +98,7 @@ public abstract class BaseRecyclerViewAdapter<Data> extends
      * @param viewType 布局类型，其实就是XML的ID
      * @return ViewHolder
      */
-    protected abstract ViewHolder<Data> onCreateViewHolder(View root, int viewType);
+    protected abstract BaseHolder<Data> onCreateViewHolder(View root, int viewType);
 
     /**
      * 绑定数据到一个Holder上
@@ -107,11 +107,11 @@ public abstract class BaseRecyclerViewAdapter<Data> extends
      * @param position 坐标
      */
     @Override
-    public void onBindViewHolder(ViewHolder<Data> holder, int position) {
+    public void onBindViewHolder(BaseHolder<Data> holder, int position) {
         // 得到需要绑定的数据
         Data data = mDataList.get(position);
         // 触发Holder的绑定方法
-        holder.bind(data);
+        holder.bind(data,position);
     }
 
     /**
@@ -189,7 +189,7 @@ public abstract class BaseRecyclerViewAdapter<Data> extends
     }
 
     @Override
-    public void update(Data data, ViewHolder<Data> holder) {
+    public void update(Data data, BaseHolder<Data> holder) {
         // 得到当前ViewHolder的坐标
         int pos = holder.getAdapterPosition();
         if (pos >= 0) {
@@ -203,24 +203,24 @@ public abstract class BaseRecyclerViewAdapter<Data> extends
 
     @Override
     public void onClick(View v) {
-        ViewHolder viewHolder = (ViewHolder) v.getTag(R.id.tag_recycler_holder);
+        BaseHolder viewHolder = (BaseHolder) v.getTag(R.id.tag_recycler_holder);
         if (this.mListener != null) {
             // 得到ViewHolder当前对应的适配器中的坐标
             int pos = viewHolder.getAdapterPosition();
             // 回掉方法
-            this.mListener.onItemClick(viewHolder, mDataList.get(pos));
+            this.mListener.onItemClick(viewHolder, mDataList.get(pos),pos);
         }
 
     }
 
     @Override
     public boolean onLongClick(View v) {
-        ViewHolder viewHolder = (ViewHolder) v.getTag(R.id.tag_recycler_holder);
+        BaseHolder viewHolder = (BaseHolder) v.getTag(R.id.tag_recycler_holder);
         if (this.mListener != null) {
             // 得到ViewHolder当前对应的适配器中的坐标
             int pos = viewHolder.getAdapterPosition();
             // 回掉方法
-            this.mListener.onItemLongClick(viewHolder, mDataList.get(pos));
+            this.mListener.onItemLongClick(viewHolder, mDataList.get(pos),pos);
             return true;
         }
         return false;
@@ -242,54 +242,12 @@ public abstract class BaseRecyclerViewAdapter<Data> extends
      */
     public interface AdapterListener<Data> {
         // 当Cell点击的时候触发
-        void onItemClick(BaseRecyclerViewAdapter.ViewHolder holder, Data data);
+        void onItemClick(BaseHolder holder, Data data,int position);
 
         // 当Cell长按时触发
-        void onItemLongClick(BaseRecyclerViewAdapter.ViewHolder holder, Data data);
+        void onItemLongClick(BaseHolder holder, Data data,int position);
     }
 
-    /**
-     * 自定义的ViewHolder
-     *
-     * @param <Data> 范型类型
-     */
-    public static abstract class ViewHolder<Data> extends RecyclerView.ViewHolder {
-        private Unbinder unbinder;
-        private AdapterCallback<Data> callback;
-        protected Data mData;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-        }
-
-        /**
-         * 用于绑定数据的触发
-         *
-         * @param data 绑定的数据
-         */
-        void bind(Data data) {
-            this.mData = data;
-            onBind(data);
-        }
-
-        /**
-         * 当触发绑定数据的时候，的回掉；必须复写
-         *
-         * @param data 绑定的数据
-         */
-        protected abstract void onBind(Data data);
-
-        /**
-         * Holder自己对自己对应的Data进行更新操作
-         *
-         * @param data Data数据
-         */
-        public void updateData(Data data) {
-            if (this.callback != null) {
-                this.callback.update(data, this);
-            }
-        }
-    }
 
     /**
      * 对回调接口做一次实现AdapterListener
@@ -299,12 +257,12 @@ public abstract class BaseRecyclerViewAdapter<Data> extends
     public static abstract class AdapterListenerImpl<Data> implements AdapterListener<Data> {
 
         @Override
-        public void onItemClick(ViewHolder holder, Data data) {
+        public void onItemClick(BaseHolder holder, Data data,int position) {
 
         }
 
         @Override
-        public void onItemLongClick(ViewHolder holder, Data data) {
+        public void onItemLongClick(BaseHolder holder, Data data,int position) {
 
         }
     }

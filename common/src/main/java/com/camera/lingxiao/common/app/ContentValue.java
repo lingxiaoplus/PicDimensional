@@ -85,5 +85,9 @@ public class ContentValue {
     //搜丝吧
     public static final String SOUSIBA_URL = "http://www.sousi88.cc";
 
+    /**
+     * 当前皮肤的id
+     */
+    public static final String SKIN_ID = "skin_id";
 
 }

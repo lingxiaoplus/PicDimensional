@@ -83,7 +83,8 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
     protected void initBefore() {
         //半透明
         ultimateBar = new UltimateBar(this);
-        ultimateBar.setColorBar(ContextCompat.getColor(this, R.color.colorPrimary),
+        int color = SpUtils.getInt(this,ContentValue.SKIN_ID,R.color.colorPrimary);
+        ultimateBar.setColorBar(ContextCompat.getColor(this, color),
                 100);
         ActivityController.addActivity(this);
         //权限检测

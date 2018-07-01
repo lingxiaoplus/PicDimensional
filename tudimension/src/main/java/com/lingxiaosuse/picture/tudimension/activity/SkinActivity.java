@@ -14,9 +14,14 @@ import android.view.MenuItem;
 
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.SpUtils;
+import com.camera.lingxiao.common.widget.BaseHolder;
+import com.camera.lingxiao.common.widget.BaseRecyclerViewAdapter;
+import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.SkinAdapter;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.RippleAnimation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +29,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SkinActivity extends BaseActivity {
+public class SkinActivity extends BaseActivity{
 
     @BindView(R.id.toolbarSkin)
     Toolbar toolbarSkin;
@@ -64,27 +69,30 @@ public class SkinActivity extends BaseActivity {
         colorName.add("indigo300");
         colorName.add("deepPurple300");
         //final int pos = SpUtils.getInt(this, ContentValue.SKIN_POSITION,0);
-        final SkinAdapter adapter = new SkinAdapter(colorList,this);
+        SkinAdapter adapter = new SkinAdapter(colorList, new BaseRecyclerViewAdapter.AdapterListener() {
+            @Override
+            public void onItemClick(BaseHolder holder, Object o,int position) {
+                RippleAnimation.create(holder.getView(R.id.bt_skin_use)).setDuration(2000).start();
+                //SpUtils.putInt(UIUtils.getContext(), ContentValue.SKIN_POSITION,position);
+                if (holder.getAdapterPosition() == 0){
+                    SkinLib.resetSkin();
+                }else {
+                    SkinLib.loadSkin(colorName.get(position));
+                    //UIUtils.changeSkinDef(colorName.get(position));
+                }
+                ToastUtils.show(colorName.get(position));
+                SpUtils.putInt(UIUtils.getContext(),ContentValue.SKIN_ID,colorList.get(position));
+                //EventBus.getDefault().post(new SkinChangeEvent(colorList.get(position)));
+            }
+
+            @Override
+            public void onItemLongClick(BaseHolder holder, Object o,int position) {
+
+            }
+        });
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recySkin.setLayoutManager(manager);
         recySkin.setAdapter(adapter);
-
-
-        adapter.setOnItemClickListener(new BaseRecyAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseHolder holder, int position) {
-                RippleAnimation.create(holder.getView(R.id.bt_skin_use)).setDuration(2000).start();
-                //SpUtils.putInt(UIUtils.getContext(), ContentValue.SKIN_POSITION,position);
-                if (position == 0){
-                    UIUtils.restoreDefaultTheme();
-                }else {
-                    UIUtils.changeSkinDef(colorName.get(position));
-                }
-
-                //EventBus.getDefault().post(new SkinChangeEvent(colorList.get(position)));
-            }
-        });
-
     }
 
     @Override

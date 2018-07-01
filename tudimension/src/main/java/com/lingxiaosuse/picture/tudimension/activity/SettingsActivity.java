@@ -113,7 +113,7 @@ public class SettingsActivity extends BaseActivity {
                 break;
             case R.id.card_skin:
                 //换肤
-                ToastUtils.show("更换皮肤");
+                StartActivity(SkinActivity.class,false);
                 break;
             case R.id.card_daly:
                 cardDaly.setChecked(!cardDaly.getChecked());
@@ -163,12 +163,5 @@ public class SettingsActivity extends BaseActivity {
         textIntent.setType("text/plain");
         textIntent.putExtra(Intent.EXTRA_TEXT, "我发现了一个不得了的应用：http://tudimension-1252348761.coscd.myqcloud.com/version/tudimension-armeabi-v7a-release.apk");
         startActivity(Intent.createChooser(textIntent, "分享"));
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }
