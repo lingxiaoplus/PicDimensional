@@ -11,12 +11,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.AllFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.DailyFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.MzituFragment;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -35,7 +37,7 @@ public class MzituActivity extends BaseActivity {
     @BindView(R.id.toolbar_title)
     Toolbar toolbarTitle;
     @BindView(R.id.tab_mzitu)
-    TabLayout tabMzitu;
+    SkinTabLayout tabMzitu;
     @BindView(R.id.pager_mzitu)
     ViewPager pagerMzitu;
 
@@ -43,15 +45,22 @@ public class MzituActivity extends BaseActivity {
     private MzituPagerAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mzitu);
-        ButterKnife.bind(this);
+    protected int getContentLayoutId() {
+        return R.layout.activity_mzitu;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         setToolbarBack(toolbarTitle);
         toolbarTitle.setTitle("mzitu");
-
         initTab();
         initPager();
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
     }
 
     private void initPager() {

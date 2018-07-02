@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.CommentRecycleAdapter;
@@ -44,12 +45,20 @@ public class CommentActivity extends BaseActivity {
     private CommentRecycleAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_comment);
-        ButterKnife.bind(this);
+    protected int getContentLayoutId() {
+        return R.layout.activity_comment;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         id = getIntent().getStringExtra("id");
         initView();
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
         getDataFromeServer(skip);
     }
 

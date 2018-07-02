@@ -19,6 +19,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.SearchRecyAdapter;
@@ -85,14 +86,21 @@ public class SearchActivity extends BaseActivity {
     private SearchRecyAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        ButterKnife.bind(this);
+    protected int getContentLayoutId() {
+        return R.layout.activity_search;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         initView();
         //从服务器上获取关键字
         getKeyFromServer();
+    }
 
+    @Override
+    protected void initData() {
+        super.initData();
         for (int i = 0; i < textViewList.size(); i++) {
             final int finalI = i;
             textViewList.get(i).setOnClickListener(new View.OnClickListener() {
@@ -150,6 +158,7 @@ public class SearchActivity extends BaseActivity {
             }
         });
     }
+
     /**
      *根据关键字从服务器上获取信息
      * @param keyword 关键字

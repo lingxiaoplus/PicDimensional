@@ -27,11 +27,9 @@ import android.widget.ImageView;
 import com.camera.lingxiao.common.R;
 import com.camera.lingxiao.common.listener.LifeCycleListener;
 import com.camera.lingxiao.common.utills.SpUtils;
+import com.github.zackratos.ultimatebar.UltimateBar;
 import com.trello.rxlifecycle2.components.RxActivity;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
-
-import org.zackratos.ultimatebar.UltimateBar;
-
 import java.io.File;
 import java.util.List;
 
@@ -54,6 +52,8 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
     public LifeCycleListener mListener;
     protected Unbinder unBinder;
     private String[] mPermessions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private int mBarcolor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,11 +81,14 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
      * 初始化控件调用之前
      */
     protected void initBefore() {
+        mBarcolor = SpUtils.getInt(this,ContentValue.SKIN_ID,R.color.colorPrimary);
         //半透明
-        ultimateBar = new UltimateBar(this);
-        int color = SpUtils.getInt(this,ContentValue.SKIN_ID,R.color.colorPrimary);
-        ultimateBar.setColorBar(ContextCompat.getColor(this, color),
-                100);
+        UltimateBar.newColorBuilder()
+                .statusColor(ContextCompat.getColor(this, mBarcolor))   // 状态栏颜色
+                .applyNav(true)             // 是否应用到导航栏
+                .navColor(100)         // 导航栏颜色
+                .build(this)
+                .apply();
         ActivityController.addActivity(this);
         //权限检测
         if (!EasyPermissions.hasPermissions(this,mPermessions)){
@@ -283,6 +286,12 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         if (mListener != null) {
             mListener.onRestart();
         }
+        UltimateBar.newColorBuilder()
+                .statusColor(ContextCompat.getColor(this, mBarcolor))   // 状态栏颜色
+                .applyNav(true)             // 是否应用到导航栏
+                .navColor(100)         // 导航栏颜色
+                .build(this)
+                .apply();
     }
 
     @Override

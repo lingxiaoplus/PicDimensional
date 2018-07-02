@@ -6,6 +6,7 @@
     xmlns:wave="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="false"
     android:id="@+id/dl_menu"
     >
         <!--主布局-->
@@ -28,18 +29,18 @@
                             app:layout_scrollFlags="scroll|enterAlways|snap"
                             >
                         </android.support.v7.widget.Toolbar>
-                        <android.support.design.widget.TabLayout
+                        <com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout
                             android:id="@+id/tab_main"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:tabBackground="@color/colorPrimary"
                             android:foreground="?android:attr/selectableItemBackground"
-                            app:tabIndicatorColor="@color/colorAccent"
-                            app:tabTextColor="#fff"
-                            app:tabSelectedTextColor="@color/colorAccent"
+                            app:tabTextColor="@color/whiteNor"
                             app:tabGravity="fill"
+                            android:background="@color/colorPrimary"
+                            app:tabIndicatorColor="@color/colorPrimary"
+                            app:tabMaxWidth="0dp"
                             >
-                        </android.support.design.widget.TabLayout>
+                        </com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout>
 
                 </android.support.design.widget.AppBarLayout>
 
@@ -63,5 +64,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             app:menu="@menu/nav_menu"
+            android:fitsSystemWindows="false"
             />
 </android.support.v4.widget.DrawerLayout>

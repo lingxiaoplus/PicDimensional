@@ -19,6 +19,7 @@ import com.lingxiaosuse.picture.tudimension.fragment.BannerFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.CategoryVerticalFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.VerticalFragment;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,7 +29,7 @@ BannerDetailActivity extends BaseActivity {
     @BindView(R.id.toolbar_title)
     Toolbar mTbToolbar;
     @BindView(R.id.tab_vertical)
-    TabLayout tabView;
+    SkinTabLayout tabView;
     @BindView(R.id.pager_vertical)
     ViewPager viewPager;
 

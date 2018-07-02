@@ -18,13 +18,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.liuguangqiang.cookie.CookieBar;
 import com.liuguangqiang.cookie.OnActionClickListener;
-
-import org.zackratos.ultimatebar.UltimateBar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,10 +47,13 @@ public class AboutActivity extends BaseActivity {
     private View dialogView;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_about);
-        ButterKnife.bind(this);
+    protected int getContentLayoutId() {
+        return R.layout.activity_about;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

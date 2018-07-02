@@ -2,7 +2,6 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -21,13 +20,14 @@ android {
         }
     }
 
+    buildToolsVersion '27.0.3'
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
-    compile "org.zackratos:ultimatebar:$rootProject.ext.ultimatebarVersion"
+    compile "com.github.zackratos.ultimatebar:ultimatebar2:$rootProject.ext.ultimatebarVersion"
     compile "com.android.support:design:$rootProject.ext.supportVersion"
     compile "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjavaVersion"
     compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxandroidVersion"

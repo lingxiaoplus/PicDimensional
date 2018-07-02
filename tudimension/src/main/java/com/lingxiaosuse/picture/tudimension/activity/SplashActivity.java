@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.utills.LogUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.zackratos.ultimatebar.UltimateBar;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
@@ -26,7 +27,6 @@ import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.SplashView;
 
-import org.zackratos.ultimatebar.UltimateBar;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -54,14 +54,13 @@ public class SplashActivity extends BaseActivity implements SplashView{
         if (!SpUtils.getBoolean(this, ContentValue.IS_OPEN_DAILY, true)) {
             StartActivity(MainActivity.class, true);
         }
+
         return R.layout.activity_splash;
     }
 
     @Override
     protected void initWidget() {
         super.initWidget();
-        UltimateBar ultimateBar = new UltimateBar(this);
-        ultimateBar.setImmersionBar(true);
         isFirst = SpUtils.getBoolean(this, ContentValue.ISFIRST_KEY, true);
 
         tvNext.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +76,10 @@ public class SplashActivity extends BaseActivity implements SplashView{
         super.initData();
         presenter.getVersion();
         presenter.getImgUrl();
+        UltimateBar.newImmersionBuilder()
+                .applyNav(true)         // 是否应用到导航栏
+                .build(this)
+                .apply();
     }
 
     private void startAnim() {
@@ -110,14 +113,6 @@ public class SplashActivity extends BaseActivity implements SplashView{
 
             }
         });
-    }
-
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            ultimateBar.setHideBar(true);
-        }
     }
 
     @Override

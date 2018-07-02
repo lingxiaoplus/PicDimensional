@@ -1,9 +1,7 @@
 package com.lingxiaosuse.picture.tudimension;
 
-import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
@@ -12,18 +10,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -32,22 +24,17 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.transition.Slide;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.camera.lingxiao.common.RetrofitTest;
 import com.camera.lingxiao.common.app.ActivityController;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
-import com.camera.lingxiao.common.observer.HttpRxCallback;
-import com.camera.lingxiao.common.utills.LogUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.google.gson.Gson;
+import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.MzituActivity;
 import com.lingxiaosuse.picture.tudimension.activity.SearchActivity;
@@ -57,38 +44,22 @@ import com.lingxiaosuse.picture.tudimension.activity.VerticalActivity;
 import com.lingxiaosuse.picture.tudimension.activity.WebActivity;
 import com.lingxiaosuse.picture.tudimension.activity.sousiba.SousibaActivity;
 import com.lingxiaosuse.picture.tudimension.fragment.FragmentFactory;
-import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 import com.lingxiaosuse.picture.tudimension.modle.FileUploadModle;
-import com.lingxiaosuse.picture.tudimension.modle.HitokotoModle;
-import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.presenter.MainPresenter;
 import com.lingxiaosuse.picture.tudimension.receiver.NetworkReceiver;
 import com.lingxiaosuse.picture.tudimension.retrofit.FileUploadInterface;
-import com.lingxiaosuse.picture.tudimension.retrofit.HomePageInterface;
-import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
-import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
-import com.lingxiaosuse.picture.tudimension.utils.PremessionUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-import com.lingxiaosuse.picture.tudimension.view.HomeView;
 import com.lingxiaosuse.picture.tudimension.view.MainView;
-import com.lingxiaosuse.picture.tudimension.widget.WaveLoading;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.ref.WeakReference;
-import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,7 +68,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends BaseActivity implements MainView{
     @BindView(R.id.tab_main)
-    TabLayout tabLayout;
+    SkinTabLayout tabLayout;
     @BindView(R.id.vp_main)
     ViewPager viewPager;
     @BindView(R.id.toolbar_main)
@@ -181,19 +152,13 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                int color = com.camera.lingxiao.common.utills.SpUtils.getInt(UIUtils.getContext(),ContentValue.SKIN_ID,R.color.colorPrimary);
-                ultimateBar.setColorBarForDrawer
-                        (ContextCompat.getColor(UIUtils.getContext(), color),
-                                100);
+
                 startPropertyAnim(simpleDraweeView,1f,3f,1f,10000);
             }
 
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                ultimateBar.setColorBar(ContextCompat.getColor(UIUtils.getContext(),
-                        R.color.colorPrimary),
-                        100);
             }
         };
         mDrawerToggle.syncState();

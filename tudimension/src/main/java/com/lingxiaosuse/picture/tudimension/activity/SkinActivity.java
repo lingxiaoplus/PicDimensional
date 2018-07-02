@@ -12,10 +12,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.SpUtils;
 import com.camera.lingxiao.common.widget.BaseHolder;
 import com.camera.lingxiao.common.widget.BaseRecyclerViewAdapter;
+import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.SkinAdapter;
@@ -27,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class SkinActivity extends BaseActivity{
 
@@ -40,23 +41,24 @@ public class SkinActivity extends BaseActivity{
     private List<String> colorName = new ArrayList<>();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_skin);
-        ButterKnife.bind(this);
+    protected int getContentLayoutId() {
+        return R.layout.activity_skin;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         toolbarSkin.setTitle("主题风格");
         setSupportActionBar(toolbarSkin);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null){
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
-
-
-        initData();
-
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
+        super.initData();
         colorList.add(R.color.colorPrimary);
         colorList.add(R.color.red_300);
         colorList.add(R.color.blue300);
@@ -72,7 +74,7 @@ public class SkinActivity extends BaseActivity{
         SkinAdapter adapter = new SkinAdapter(colorList, new BaseRecyclerViewAdapter.AdapterListener() {
             @Override
             public void onItemClick(BaseHolder holder, Object o,int position) {
-                RippleAnimation.create(holder.getView(R.id.bt_skin_use)).setDuration(2000).start();
+                RippleAnimation.create(holder.getView(R.id.bt_skin_use)).setDuration(1000).start();
                 //SpUtils.putInt(UIUtils.getContext(), ContentValue.SKIN_POSITION,position);
                 if (holder.getAdapterPosition() == 0){
                     SkinLib.resetSkin();
@@ -80,6 +82,12 @@ public class SkinActivity extends BaseActivity{
                     SkinLib.loadSkin(colorName.get(position));
                     //UIUtils.changeSkinDef(colorName.get(position));
                 }
+                UltimateBar.newColorBuilder()
+                        .statusColor(ContextCompat.getColor(getApplicationContext(), colorList.get(position)))   // 状态栏颜色
+                        .applyNav(true)             // 是否应用到导航栏
+                        .navColor(100)         // 导航栏颜色
+                        .build(SkinActivity.this)
+                        .apply();
                 ToastUtils.show(colorName.get(position));
                 SpUtils.putInt(UIUtils.getContext(),ContentValue.SKIN_ID,colorList.get(position));
                 //EventBus.getDefault().post(new SkinChangeEvent(colorList.get(position)));

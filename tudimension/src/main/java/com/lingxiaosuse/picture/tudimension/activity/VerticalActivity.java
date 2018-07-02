@@ -16,6 +16,7 @@ import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.fragment.CategoryVerticalFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.VerticalFragment;
+import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +26,7 @@ public class VerticalActivity extends BaseActivity {
     @BindView(R.id.toolbar_title)
     Toolbar toolbar;
     @BindView(R.id.tab_vertical)
-    TabLayout tabVertical;
+    SkinTabLayout tabVertical;
     @BindView(R.id.pager_vertical)
     ViewPager pagerVertical;
     @BindView(R.id.fab_vertical)

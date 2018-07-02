@@ -51,7 +51,7 @@ dependencies {
     compile "com.android.support:support-v4:$rootProject.ext.supportVersion"
     compile "com.android.support:support-vector-drawable:$rootProject.ext.supportVersion"
     compile "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintVersion"
-    compile "org.zackratos:ultimatebar:$rootProject.ext.ultimatebarVersion"
+    compile "com.github.zackratos.ultimatebar:ultimatebar2:$rootProject.ext.ultimatebarVersion"
     compile 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
     compile "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
@@ -78,6 +78,11 @@ dependencies {
 
     // your project's other dependencies
     compile 'com.facebook.fresco:imagepipeline-okhttp3:0.12.0+'
+
+    implementation "skin.support:skin-support:$rootProject.ext.skinSupportVersion"                  // skin-support 基础控件支持
+    implementation "skin.support:skin-support-design:$rootProject.ext.skinSupportVersion"           // skin-support-design material design 控件支持[可选]
+    implementation "skin.support:skin-support-cardview:$rootProject.ext.skinSupportVersion"          // skin-support-cardview CardView 控件支持[可选]
+    implementation "skin.support:skin-support-constraint-layout:$rootProject.ext.skinSupportVersion" // skin-support-constraint-layout ConstraintLayout 控件支持[可选]
     testCompile 'junit:junit:4.12'
     compile project(':lang')
     implementation project(':common')

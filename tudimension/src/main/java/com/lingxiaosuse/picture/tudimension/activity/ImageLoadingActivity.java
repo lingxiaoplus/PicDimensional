@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.ImageLoadAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
@@ -32,8 +33,6 @@ import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 import com.liuguangqiang.cookie.CookieBar;
 import com.liuguangqiang.cookie.OnActionClickListener;
-
-import org.zackratos.ultimatebar.UltimateBar;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -73,8 +72,10 @@ public class ImageLoadingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_loading);
-        UltimateBar ultimateBar = new UltimateBar(this);
-        ultimateBar.setImmersionBar(true);
+        UltimateBar.newImmersionBuilder()
+                .applyNav(true)         // 是否应用到导航栏
+                .build(this)
+                .apply();
         ButterKnife.bind(this);
         intent = getIntent();
         initData();

@@ -24,6 +24,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.utils.AnimationUtils;
@@ -33,7 +34,6 @@ import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.LeafLoadingView;
 
-import org.zackratos.ultimatebar.UltimateBar;
 
 import java.io.File;
 
