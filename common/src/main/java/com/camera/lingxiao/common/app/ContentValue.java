@@ -45,7 +45,15 @@ public class ContentValue {
      */
     public static final String HOMEPAGE_URL = "/v3/homepage";
 
+    /**
+     * 竖屏
+     */
     public static final String VERTICAL_URL = "/v1/vertical/vertical";
+
+    /**
+     * 专辑
+     */
+    public static final String SPECIAL_URL = "/v1/wallpaper/album";
     /**
      * 每次请求多少个数据
      */

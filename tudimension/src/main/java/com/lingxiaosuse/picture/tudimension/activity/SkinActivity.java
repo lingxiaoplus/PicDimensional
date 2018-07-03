@@ -12,6 +12,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.camera.lingxiao.common.RxBus;
+import com.camera.lingxiao.common.SkinChangedEvent;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.SpUtils;
@@ -82,12 +84,7 @@ public class SkinActivity extends BaseActivity{
                     SkinLib.loadSkin(colorName.get(position));
                     //UIUtils.changeSkinDef(colorName.get(position));
                 }
-                UltimateBar.newColorBuilder()
-                        .statusColor(ContextCompat.getColor(getApplicationContext(), colorList.get(position)))   // 状态栏颜色
-                        .applyNav(true)             // 是否应用到导航栏
-                        .navColor(100)         // 导航栏颜色
-                        .build(SkinActivity.this)
-                        .apply();
+                RxBus.getInstance().post(new SkinChangedEvent(colorList.get(position)));
                 ToastUtils.show(colorName.get(position));
                 SpUtils.putInt(UIUtils.getContext(),ContentValue.SKIN_ID,colorList.get(position));
                 //EventBus.getDefault().post(new SkinChangeEvent(colorList.get(position)));

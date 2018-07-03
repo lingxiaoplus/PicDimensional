@@ -25,16 +25,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.camera.lingxiao.common.R;
+import com.camera.lingxiao.common.RxBus;
+import com.camera.lingxiao.common.SkinChangedEvent;
 import com.camera.lingxiao.common.listener.LifeCycleListener;
 import com.camera.lingxiao.common.utills.SpUtils;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.trello.rxlifecycle2.components.RxActivity;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
+
+import org.reactivestreams.Subscription;
+
 import java.io.File;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import pub.devrel.easypermissions.AppSettingsDialog;
 import pub.devrel.easypermissions.EasyPermissions;
 
@@ -53,6 +60,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
     protected Unbinder unBinder;
     private String[] mPermessions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private int mBarcolor;
+    private Subscription mRxBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +130,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
      */
     protected void initWidget(){
         unBinder = ButterKnife.bind(this);
+        initSubscription();
     }
 
     /**
@@ -135,6 +144,24 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         if (isFinish){
             finish();
         }
+    }
+
+    /**
+     * 订阅消息
+     */
+    private void initSubscription() {
+        Disposable regist = RxBus.getInstance().register(SkinChangedEvent.class, new Consumer<SkinChangedEvent>() {
+            @Override
+            public void accept(SkinChangedEvent skinChangedEvent) throws Exception {
+                UltimateBar.newColorBuilder()
+                        .statusColor(ContextCompat.getColor(getApplicationContext(), skinChangedEvent.getColor()))   // 状态栏颜色
+                        .applyNav(true)             // 是否应用到导航栏
+                        .navColor(100)         // 导航栏颜色
+                        .build(BaseActivity.this)
+                        .apply();
+            }
+        });
+        RxBus.getInstance().addSubscription(this,regist);
     }
 
     /**
@@ -286,12 +313,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         if (mListener != null) {
             mListener.onRestart();
         }
-        UltimateBar.newColorBuilder()
-                .statusColor(ContextCompat.getColor(this, mBarcolor))   // 状态栏颜色
-                .applyNav(true)             // 是否应用到导航栏
-                .navColor(100)         // 导航栏颜色
-                .build(this)
-                .apply();
+
     }
 
     @Override
@@ -338,6 +360,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         if (unBinder != null) {
             unBinder.unbind();
         }
+        RxBus.getInstance().unSubscribe(this);
         ActivityController.removeActivity(this);
     }
 

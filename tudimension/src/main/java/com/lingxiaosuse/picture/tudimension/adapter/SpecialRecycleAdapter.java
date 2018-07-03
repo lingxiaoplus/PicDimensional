@@ -27,7 +27,7 @@ import javax.crypto.spec.PSource;
  */
 
 public class SpecialRecycleAdapter extends BaseRecycleAdapter{
-    private List<SpecialModle.ResBean.AlbumBean> mAlbumList;
+    private List<SpecialModle.AlbumBean> mAlbumList;
     private int footCount = 1;
     private static final int BODY_TYPE=1;
     private static final int FOOT_TYPE=2;
@@ -42,7 +42,6 @@ public class SpecialRecycleAdapter extends BaseRecycleAdapter{
     @Override
     public void bindData(BaseViewHolder holder, int position, List mList) {
         mAlbumList = mList;
-
         bodyImage = (SimpleDraweeView) holder.getView(R.id.iv_special_pic);
         title = (TextView) holder.getView(R.id.tv_special_title);
         message = (TextView) holder.getView(R.id.tv_special_message);
@@ -65,8 +64,6 @@ public class SpecialRecycleAdapter extends BaseRecycleAdapter{
         name.setText(mAlbumList.get(position).getUser().getName());
         String data = StringUtils.strToDate(String.valueOf(mAlbumList.get(position).getAtime()));
         time.setText(data);
-
-
     }
 
     @Override

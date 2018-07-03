@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.LocalImgAdapter;
@@ -41,7 +42,7 @@ public class SeeDownLoadImgActivity extends BaseActivity {
     //存储每个目录下的图片路径,key是文件名
     private List<File> mFileList = new ArrayList<>();
     private List<String> mPicList = new ArrayList<>();
-    @BindView(R.id.toolbar_download)
+    @BindView(R.id.toolbar_title)
     Toolbar toolbar;
     @BindView(R.id.tv_download_null)
     TextView textNull;
@@ -53,16 +54,14 @@ public class SeeDownLoadImgActivity extends BaseActivity {
     private List<File> fileList;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_see_down_load_img);
-        ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setDisplayShowTitleEnabled(false);
-        }
+    protected int getContentLayoutId() {
+        return R.layout.activity_see_down_load_img;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
+        setToolbarBack(toolbar);
         toolbar.setTitle("下载的图片");
         File file = new File(ContentValue.PATH);
         List<File> fileList = getFiles(file);
@@ -92,6 +91,7 @@ public class SeeDownLoadImgActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
         swipDownload.setColorSchemeResources(
                 R.color.colorPrimary,
                 android.R.color.holo_blue_light,

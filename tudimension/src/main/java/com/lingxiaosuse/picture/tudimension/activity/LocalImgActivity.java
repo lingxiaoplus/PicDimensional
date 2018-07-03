@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.rxbus.DeleteEvent;
 import com.lingxiaosuse.picture.tudimension.rxbus.RxBus;
@@ -55,10 +56,13 @@ public class LocalImgActivity extends BaseActivity {
     private AlertDialog.Builder builder = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_local_img);
-        ButterKnife.bind(this);
+    protected int getContentLayoutId() {
+        return R.layout.activity_local_img;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         Intent intent = getIntent();
         list = intent.getStringArrayListExtra("list");
         mPosition = intent.getIntExtra("position", 0);
@@ -66,13 +70,10 @@ public class LocalImgActivity extends BaseActivity {
         mAdapter = new ViewPagerAdapter();
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mPosition);
-
         setToolbarBack(toolbar);
-
         String localUrl = list.get(mPosition).substring(6);
         File file = new File(localUrl);
         toolbar.setTitle(file.getName());
-
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -80,20 +81,16 @@ public class LocalImgActivity extends BaseActivity {
                 String localUrl = list.get(mPosition).substring(6);
                 File file = new File(localUrl);
                 toolbar.setTitle(file.getName());
-                file = null;
             }
-
             @Override
             public void onPageSelected(int position) {
 
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
 
             }
         });
-
     }
 
     @Override
