@@ -3,6 +3,8 @@ package com.lingxiaosuse.picture.tudimension.adapter;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -225,4 +227,5 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         animatorSet.setDuration(800);
         animatorSet.start();
     }
+
 }

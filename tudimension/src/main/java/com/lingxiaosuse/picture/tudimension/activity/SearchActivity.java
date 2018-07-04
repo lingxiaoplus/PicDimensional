@@ -26,6 +26,7 @@ import com.lingxiaosuse.picture.tudimension.adapter.SearchRecyAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.SearchKeyword;
 import com.lingxiaosuse.picture.tudimension.modle.SearchResultModle;
+import com.lingxiaosuse.picture.tudimension.presenter.SearchPresenter;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.retrofit.SearchKeyInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.SearchKeyResultInterface;
@@ -43,7 +44,7 @@ import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-public class SearchActivity extends BaseActivity {
+public class SearchActivity extends BaseActivity implements com.lingxiaosuse.picture.tudimension.view.SearchView{
     @BindView(R.id.searchview)
     SearchView searchView;
     @BindView(R.id.toolbar_search)
@@ -69,22 +70,14 @@ public class SearchActivity extends BaseActivity {
     //记录页数
     private int page = 0;
     //保存返回结果
-    private List<SearchResultModle.ResBean.WallPaper> wallPaperList = new ArrayList<>();
-    private List<SearchResultModle.ResBean.WallPaper> oldList;
-    private List<SearchResultModle.ResBean.SearchBean> SearchList = new ArrayList<>();
+    private List<SearchResultModle.WallPaper> wallPaperList = new ArrayList<>();
+    private List<SearchResultModle.SearchBean> SearchList = new ArrayList<>();
     private GridLayoutManager mLayoutManager;
 
     private ArrayList<String> picUrlList = new ArrayList<>();
     private ArrayList<String> IdList = new ArrayList<>();
-    private Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            waveLoading.setVisibility(View.GONE);
-        }
-    };
     private SearchRecyAdapter mAdapter;
-
+    private SearchPresenter mPresenter = new SearchPresenter(this,this);
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_search;
@@ -95,7 +88,7 @@ public class SearchActivity extends BaseActivity {
         super.initWidget();
         initView();
         //从服务器上获取关键字
-        getKeyFromServer();
+        mPresenter.getSearchKey();
     }
 
     @Override
@@ -107,7 +100,7 @@ public class SearchActivity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     keyword = textViewList.get(finalI).getText().toString();
-                    getKeyData(keyword,0);
+                    mPresenter.getSearchWallResult(keyword,0);
                     cardView.setVisibility(View.GONE);
                     //隐藏软键盘
                     InputMethodManager input = (InputMethodManager)
@@ -148,138 +141,42 @@ public class SearchActivity extends BaseActivity {
                 //如果两个条件都满足则说明是真正的滑动到了底部
                 if(lastChildBottom == recyclerBottom &&
                         lastPosition == recyclerView.getLayoutManager().getItemCount()-1 ){
-                    page++;
-                    if (page<55){
-                        getKeyData(keyword,page);
-                    }else {
-                        ToastUtils.show("没有数据了");
-                    }
+                    page+=30;
+                    mPresenter.getSearchWallResult(keyword,page);
                 }
             }
         });
-    }
 
-    /**
-     *根据关键字从服务器上获取信息
-     * @param keyword 关键字
-     * @param page 页数
-     */
-    private void getKeyData(String keyword, final int page) {
-        waveLoading.setVisibility(View.VISIBLE);
-        final long preTime = System.currentTimeMillis();
-        RetrofitHelper
-                .getInstance(this)
-                .getInterface(SearchKeyResultInterface.class)
-                .searchResult(ContentValue.SEARCH_URL+"/v1/search/all/resource/"+keyword+"?version=181&channel=huawei&skip="+page+"&adult=false")
-                .enqueue(new Callback<SearchResultModle>() {
-                    @Override
-                    public void onResponse(Call<SearchResultModle> call, Response<SearchResultModle> response) {
-                        SearchList = response.body().getRes().getSearch();
-                        try {
-                            //if (index>0){
-                                //oldList.clear();
-                            //}
-                            for (int i = 0; i < SearchList.size(); i++) {
-                                oldList = SearchList.get(i).getItems();
-                                wallPaperList.addAll(SearchList.get(i).getItems());
-
-                            }
-                            for (int i = 0; i < wallPaperList.size(); i++) {
-                                Log.i("SearchActivity", "图片地址: "
-                                        +wallPaperList.get(i).getImg());
-                            }
-                            mAdapter.notifyDataSetChanged();
-                            recyclerView.setVisibility(View.VISIBLE);
-                            Log.i("SearchActivity", "wallPaperList: "+wallPaperList.size()
-                                    +"oldList"+oldList.size()
-                                    +"SearchList"+SearchList.size()
-                                    +"页数："+page);
-                            mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(View View, int position) {
-                                    if (null == picUrlList){
-                                        return;
-                                    }
-                                    picUrlList.clear();
-                                    IdList.clear();
-                                    for (int i = 0; i < wallPaperList.size(); i++) {
-                                        if (picUrlList != null){
-                                            picUrlList.add(wallPaperList.get(i).getImg());
-                                        }
-                                        IdList.add(wallPaperList.get(i).getId());
-                                    }
-                                    Intent intent = new Intent(UIUtils.getContext(),
-                                            ImageLoadingActivity.class);
-                                    intent.putExtra("position",position);
-                                    intent.putExtra("itemCount",mAdapter.getItemCount());
-                                    intent.putExtra("id",wallPaperList.get(position).getId());
-                                    intent.putStringArrayListExtra("picList",picUrlList);
-                                    intent.putStringArrayListExtra("picIdList",IdList);
-                                    intent.putExtra("isHot",false); // 判断是否为最新界面传递过来的
-                                    startActivity(intent);
-                                }
-                            });
-                            index++;
-                            final long nowTime = System.currentTimeMillis();
-                            if ((nowTime - preTime) < 2000){
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        try {
-                                            Thread.sleep(2000-(nowTime - preTime));
-                                            mHandler.sendEmptyMessage(0);
-                                        } catch (InterruptedException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }).start();
-                            }else {
-                                waveLoading.setVisibility(View.GONE);
-                            }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
+        mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View View, int position) {
+                if (null == picUrlList){
+                    return;
+                }
+                picUrlList.clear();
+                IdList.clear();
+                for (int i = 0; i < wallPaperList.size(); i++) {
+                    if (picUrlList != null){
+                        picUrlList.add(wallPaperList.get(i).getImg());
                     }
-
-                    @Override
-                    public void onFailure(Call<SearchResultModle> call, Throwable t) {
-
-                    }
-                });
-    }
-
-    private void getKeyFromServer() {
-        RetrofitHelper.getInstance(this)
-                .getInterface(SearchKeyInterface.class)
-                .searchModle()
-                .enqueue(new Callback<SearchKeyword>() {
-                    @Override
-                    public void onResponse(Call<SearchKeyword> call, Response<SearchKeyword> response) {
-                        try{
-                            keyWords = response.body()
-                                    .getRes()
-                                    .getKeyword()
-                                    .get(0)
-                                    .getItems();
-                            for (int i = 0; i < textViewList.size(); i++) {
-                                textViewList.get(i).setText(keyWords.get(i));
-                            }
-                        }catch (IndexOutOfBoundsException e){
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<SearchKeyword> call, Throwable t) {
-
-                    }
-                });
+                    IdList.add(wallPaperList.get(i).getId());
+                }
+                Intent intent = new Intent(UIUtils.getContext(),
+                        ImageLoadingActivity.class);
+                intent.putExtra("position",position);
+                intent.putExtra("itemCount",mAdapter.getItemCount());
+                intent.putExtra("id",wallPaperList.get(position).getId());
+                intent.putStringArrayListExtra("picList",picUrlList);
+                intent.putStringArrayListExtra("picIdList",IdList);
+                intent.putExtra("isHot",false); // 判断是否为最新界面传递过来的
+                startActivity(intent);
+            }
+        });
     }
 
     private void initView() {
         searchView.setIconifiedByDefault(false);
         setToolbarBack(toolbar);
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -324,7 +221,51 @@ public class SearchActivity extends BaseActivity {
                 getSystemService(INPUT_METHOD_SERVICE);
         input.hideSoftInputFromWindow(SearchActivity.this
                 .getCurrentFocus().getWindowToken(),0);
-        getKeyData(keyword,0);
+        mPresenter.getSearchWallResult(keyword,0);
         cardView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onGetSearchResult(SearchResultModle modle) {
+        waveLoading.setVisibility(View.GONE);
+        if (modle.getSearch().size() <30){
+            mAdapter.isFinish(true);
+        }
+        //SearchList.addAll(modle.getSearch());
+        for (int i = 0; i < modle.getSearch().size(); i++) {
+            wallPaperList.addAll(modle.getSearch().get(i).getItems());
+        }
+        mAdapter.notifyDataSetChanged();
+        recyclerView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onGetSearchKeyWord(SearchKeyword keyword) {
+        try{
+            keyWords = keyword
+                    .getKeyword()
+                    .get(0)
+                    .getItems();
+            for (int i = 0; i < textViewList.size(); i++) {
+                textViewList.get(i).setText(keyWords.get(i));
+            }
+        }catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void showDialog() {
+
+    }
+
+    @Override
+    public void diamissDialog() {
+
+    }
+
+    @Override
+    public void showToast(String text) {
+        ToastUtils.show(text);
     }
 }

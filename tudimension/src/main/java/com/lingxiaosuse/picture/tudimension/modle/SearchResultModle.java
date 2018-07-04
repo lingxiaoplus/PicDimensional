@@ -7,48 +7,6 @@ import java.util.List;
  */
 
 public class SearchResultModle {
-
-    /**
-     * msg :
-     * res : {"status":{"live":0,"lock":0,"ring":0,"wallpaper":0,"subject":0},"search":[{"items":[],"total":0,"type":8,"title":"专题"},{"items":[],"total":0,"type":1,"title":"壁纸"},{"items":[],"total":0,"type":4,"title":"铃声"},{"items":[],"total":0,"type":5,"title":"APK锁屏"},{"items":[],"total":0,"type":3,"title":"锁屏"}],"type":1}
-     * code : 0
-     */
-
-    private String msg;
-    private ResBean res;
-    private int code;
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public ResBean getRes() {
-        return res;
-    }
-
-    public void setRes(ResBean res) {
-        this.res = res;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public static class ResBean {
-        /**
-         * status : {"live":0,"lock":0,"ring":0,"wallpaper":0,"subject":0}
-         * search : [{"items":[],"total":0,"type":8,"title":"专题"},{"items":[],"total":0,"type":1,"title":"壁纸"},{"items":[],"total":0,"type":4,"title":"铃声"},{"items":[],"total":0,"type":5,"title":"APK锁屏"},{"items":[],"total":0,"type":3,"title":"锁屏"}]
-         * type : 1
-         */
-
         private StatusBean status;
         private int type;
         private List<SearchBean> search;
@@ -215,5 +173,5 @@ public class SearchResultModle {
                 this.cover = cover;
             }
         }
-    }
+
 }

@@ -51,7 +51,6 @@ public class SeeDownLoadImgActivity extends BaseActivity {
     private LinearLayoutManager mLayoutManager;
     private LocalImgAdapter mAdapter;
     private Subscription rxSubscription;
-    private List<File> fileList;
 
     @Override
     protected int getContentLayoutId() {
@@ -92,12 +91,7 @@ public class SeeDownLoadImgActivity extends BaseActivity {
             }
         });
 
-        swipDownload.setColorSchemeResources(
-                R.color.colorPrimary,
-                android.R.color.holo_blue_light,
-                android.R.color.holo_red_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light);
+        setSwipeColor(swipDownload);
         swipDownload.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

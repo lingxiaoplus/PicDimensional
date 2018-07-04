@@ -68,6 +68,8 @@ public class ContentValue {
     public static final String TYPE_CATEGORY = "category";
     //安卓壁纸的搜索
     public static final String SEARCH_URL = "http://so.picasso.adesk.com";
+    //关键词
+    public static final String SEARCH_KEY_URL = "/v1/push/keyword?versionCode=181&channel=huawei&first=0&adult=false";
     //保存的图片路径
     public static final String PATH = Environment
             .getExternalStorageDirectory()

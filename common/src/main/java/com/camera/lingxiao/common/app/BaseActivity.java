@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -363,7 +364,14 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         RxBus.getInstance().unSubscribe(this);
         ActivityController.removeActivity(this);
     }
-
+    protected void setSwipeColor(SwipeRefreshLayout swipeLayout){
+        swipeLayout.setColorSchemeResources(
+                R.color.colorPrimary,
+                android.R.color.holo_blue_light,
+                android.R.color.holo_red_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_green_light);
+    }
     /**
      * 设置生命周期回调函数
      *

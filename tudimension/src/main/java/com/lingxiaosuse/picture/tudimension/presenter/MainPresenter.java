@@ -34,7 +34,7 @@ public class MainPresenter extends BasePresenter<MainView,MainActivity>{
                     List<HomePageModle.Picture> picList =modle.getWallpaper();
                     Random random = new Random();
                     int result = random.nextInt(picList.size());
-                    Uri uri = Uri.parse(picList.get(result).getPreview()+ ContentValue.imgRule);
+                    Uri uri = Uri.parse(picList.get(result).getPreview()+ ContentValue.bigImgRule);
                     getView().onGetHeadBackGround(uri);
                 }catch (Exception e){
                     e.printStackTrace();

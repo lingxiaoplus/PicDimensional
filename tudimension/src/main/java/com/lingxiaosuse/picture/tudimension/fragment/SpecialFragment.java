@@ -100,50 +100,6 @@ public class SpecialFragment extends BaseFragment implements SpecialView{
         //getData(30);
     }
 
-    private void getData(final int limit){
-        RetrofitHelper
-                .getInstance(UIUtils.getContext())
-                .getInterface(SpecialInterface.class)
-                .specialModle(limit,skip,false)
-                .enqueue(new Callback<SpecialModle>() {
-            @Override
-            public void onResponse(Call<SpecialModle> call, Response<SpecialModle> response) {
-
-
-            }
-            @Override
-            public void onFailure(Call<SpecialModle> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void getMoreData(final int limit){
-        skip+=10;
-        RetrofitHelper
-                .getInstance(UIUtils.getContext())
-                .getInterface(SpecialInterface.class)
-                .specialModle(limit,skip,false)
-                .enqueue(new Callback<SpecialModle>() {
-                    @Override
-                    public void onResponse(Call<SpecialModle> call, Response<SpecialModle> response) {
-                        moreList = response.body().getAlbum();
-                        if (skip<300){
-                            albumBeanList.addAll(moreList);
-                        }else {
-                            skip = 0;
-                            mAdapter.isFinish(true);
-                        }
-                        mAdapter.notifyDataSetChanged();
-                    }
-
-                    @Override
-                    public void onFailure(Call<SpecialModle> call, Throwable t) {
-
-                    }
-                });
-    }
-
     @OnClick(R.id.fab_fragment)
     public void setTopView(){
         recyclerView.smoothScrollToPosition(0);
