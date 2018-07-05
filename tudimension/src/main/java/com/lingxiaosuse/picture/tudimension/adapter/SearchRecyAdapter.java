@@ -3,6 +3,7 @@ package com.lingxiaosuse.picture.tudimension.adapter;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ public class SearchRecyAdapter extends BaseRecycleAdapter{
     @Override
     public void bindData(BaseViewHolder holder, int position, List mList) {
         try{
-            List<SearchResultModle.ResBean.WallPaper> wallPapers = mList;
+            List<SearchResultModle.WallPaper> wallPapers = mList;
             SimpleDraweeView simpleDraweeView = (SimpleDraweeView) holder.getView(R.id.iv_meizi_img);
             TextView textView = (TextView) holder.getView(R.id.tv_meizi_des);
             String url = wallPapers.get(position).getImg();
@@ -34,7 +35,12 @@ public class SearchRecyAdapter extends BaseRecycleAdapter{
             }
             Uri uri = Uri.parse(url+ ContentValue.imgRule);
             simpleDraweeView.setImageURI(uri);
-            textView.setText(wallPapers.get(position).getDesc());
+            if (wallPapers.get(position).getDesc().isEmpty()){
+                textView.setVisibility(View.GONE);
+            }else {
+                textView.setVisibility(View.VISIBLE);
+                textView.setText(wallPapers.get(position).getDesc());
+            }
         }catch (NullPointerException e){
             e.printStackTrace();
         }

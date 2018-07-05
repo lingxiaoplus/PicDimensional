@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    style="@style/cardStyle"
     android:background="@drawable/background_card">
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -23,11 +24,11 @@
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="这是图片信息"
+            android:textColor="@color/colorPrimary"
             android:textSize="16sp"
             android:maxLines="2"
             android:ellipsize="end"
             />
     </RelativeLayout>
 
-</LinearLayout>
+</android.support.v7.widget.CardView>

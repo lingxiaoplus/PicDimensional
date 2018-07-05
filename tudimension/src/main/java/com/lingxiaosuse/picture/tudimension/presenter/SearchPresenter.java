@@ -16,6 +16,7 @@ public class SearchPresenter extends BasePresenter<SearchView,SearchActivity>{
         mSearchTrans = new SearchTrans(getActivity());
     }
     public void getSearchKey(){
+
         mSearchTrans.getSearchKey(ContentValue.SEARCH_KEY_URL, new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {

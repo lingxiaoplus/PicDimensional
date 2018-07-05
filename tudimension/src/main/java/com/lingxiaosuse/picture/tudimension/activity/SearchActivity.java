@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,6 +14,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -45,12 +48,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 public class SearchActivity extends BaseActivity implements com.lingxiaosuse.picture.tudimension.view.SearchView{
-    @BindView(R.id.searchview)
-    SearchView searchView;
-    @BindView(R.id.toolbar_search)
+    /*@BindView(R.id.searchview)
+    SearchView searchView;*/
+    @BindView(R.id.toolbar_title)
     Toolbar toolbar;
-    @BindView(R.id.image_search)
-    ImageView imageSearch;
     @BindViews({R.id.tv_search1,R.id.tv_search2,
             R.id.tv_search3,R.id.tv_search4,
             R.id.tv_search5,R.id.tv_search6,
@@ -60,8 +61,8 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
     RecyclerView recyclerView;
     @BindView(R.id.cardView)
     CardView cardView;
-    @BindView(R.id.wave_search)
-    WaveLoading waveLoading;
+    @BindView(R.id.swip_comment)
+    SwipeRefreshLayout refreshLayout;
     private List<String> keyWords = new ArrayList<>();
     private String keyword;
 
@@ -86,9 +87,55 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
     @Override
     protected void initWidget() {
         super.initWidget();
-        initView();
+        refreshLayout.setRefreshing(true);
+        setSwipeColor(refreshLayout);
+        setToolbarBack(toolbar);
+
+        // show keyboard
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+                | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         //从服务器上获取关键字
         mPresenter.getSearchKey();
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (cardView.getVisibility() == View.VISIBLE){
+                    mPresenter.getSearchKey();
+                }else {
+                    wallPaperList.clear();
+                    mPresenter.getSearchWallResult(keyword,0);
+                }
+            }
+        });
+    }
+
+    /**
+     * 初始化searchview
+     */
+    private void initSearchView(SearchView searchView) {
+        searchView.clearFocus();
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //隐藏软键盘
+                toggleSoftInput(toolbar,0,false);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if (!TextUtils.isEmpty(newText)){
+                    ToastUtils.show(newText);
+                    keyword = newText;
+
+                }else {
+
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -103,10 +150,7 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
                     mPresenter.getSearchWallResult(keyword,0);
                     cardView.setVisibility(View.GONE);
                     //隐藏软键盘
-                    InputMethodManager input = (InputMethodManager)
-                            getSystemService(INPUT_METHOD_SERVICE);
-                    input.hideSoftInputFromWindow(SearchActivity.this
-                            .getCurrentFocus().getWindowToken(),0);
+                    toggleSoftInput(toolbar,0,false);
                 }
             });
         }
@@ -174,35 +218,31 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
         });
     }
 
-    private void initView() {
-        searchView.setIconifiedByDefault(false);
-        setToolbarBack(toolbar);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                //隐藏软键盘
-                InputMethodManager input = (InputMethodManager)
-                        getSystemService(INPUT_METHOD_SERVICE);
-                input.hideSoftInputFromWindow(SearchActivity.this
-                        .getCurrentFocus().getWindowToken(),0);
-                return true;
+    /**
+     * @param windowToken View，一般为edittext  getWindowToken()
+     * @param flag 软键盘隐藏时的控制参数  一般为0即可
+     * @param isShow 显示还是隐藏
+     */
+    public void toggleSoftInput(View windowToken, int flag, boolean isShow){
+        //隐藏软键盘
+        InputMethodManager input = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        if (null != input){
+            if (isShow){
+                windowToken.requestFocus();
+                input.showSoftInput(windowToken,0);
+            }else {
+                input.hideSoftInputFromWindow(windowToken.getWindowToken(),flag);
             }
+        }
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (!TextUtils.isEmpty(newText)){
-                    ToastUtils.show(newText);
-                    keyword = newText;
-                    imageSearch.setVisibility(View.VISIBLE);
-                }else {
-                    imageSearch.setVisibility(View.INVISIBLE);
-                }
-                return true;
-            }
-        });
-        // show keyboard
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
-                | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_search, menu);
+        MenuItem item = menu.findItem(R.id.search_view);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
+        initSearchView(searchView);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -214,22 +254,12 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
         }
         return true;
     }
-    @OnClick(R.id.image_search)
-    public void onSearchClick(){
-        //隐藏软键盘
-        InputMethodManager input = (InputMethodManager)
-                getSystemService(INPUT_METHOD_SERVICE);
-        input.hideSoftInputFromWindow(SearchActivity.this
-                .getCurrentFocus().getWindowToken(),0);
-        mPresenter.getSearchWallResult(keyword,0);
-        cardView.setVisibility(View.GONE);
-    }
 
     @Override
     public void onGetSearchResult(SearchResultModle modle) {
-        waveLoading.setVisibility(View.GONE);
-        if (modle.getSearch().size() <30){
+        if (modle.getSearch().size() < 5){
             mAdapter.isFinish(true);
+            ToastUtils.show("共有"+modle.getSearch().size());
         }
         //SearchList.addAll(modle.getSearch());
         for (int i = 0; i < modle.getSearch().size(); i++) {
@@ -237,6 +267,7 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
         }
         mAdapter.notifyDataSetChanged();
         recyclerView.setVisibility(View.VISIBLE);
+        refreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -249,7 +280,8 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
             for (int i = 0; i < textViewList.size(); i++) {
                 textViewList.get(i).setText(keyWords.get(i));
             }
-        }catch (IndexOutOfBoundsException e){
+            refreshLayout.setRefreshing(false);
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

@@ -20,6 +20,8 @@ public class SearchTrans extends BaseTransation{
     public void getSearchResult(String keyWord,int skip,HttpRxCallback callback){
         String url = ContentValue.SEARCH_URL+"/v1/search/all/resource/"+keyWord
                 +"?version=181&channel=huawei&skip="+skip;
+        request.clear();
+        request.put(HttpRequest.API_URL,url);
         callback.setParseHelper(new ParseHelper() {
             @Override
             public Object[] parse(JsonElement jsonElement) {
@@ -29,10 +31,12 @@ public class SearchTrans extends BaseTransation{
                 return obj;
             }
         });
-        getRequest().requestOther(url,mLifecycle,callback);
+        getRequest().request(HttpRequest.Method.GET,request,mLifecycle,callback);
     }
 
     public void getSearchKey(String url,HttpRxCallback callback){
+        request.clear();
+        request.put(HttpRequest.API_URL,url);
         callback.setParseHelper(new ParseHelper() {
             @Override
             public Object[] parse(JsonElement jsonElement) {
@@ -42,6 +46,6 @@ public class SearchTrans extends BaseTransation{
                 return obj;
             }
         });
-        getRequest().requestOther(url,mLifecycle,callback);
+        getRequest().request(HttpRequest.Method.GET,request,mLifecycle,callback);
     }
 }

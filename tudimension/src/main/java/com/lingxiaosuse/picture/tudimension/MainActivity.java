@@ -153,7 +153,7 @@ public class MainActivity extends BaseActivity implements MainView{
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
 
-                startPropertyAnim(simpleDraweeView,1f,3f,1f,10000);
+                startPropertyAnim(simpleDraweeView,1f,2f,1f,10000);
             }
 
             @Override
