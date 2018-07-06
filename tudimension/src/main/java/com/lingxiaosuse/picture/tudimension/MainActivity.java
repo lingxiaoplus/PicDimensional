@@ -34,6 +34,7 @@ import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.MzituActivity;

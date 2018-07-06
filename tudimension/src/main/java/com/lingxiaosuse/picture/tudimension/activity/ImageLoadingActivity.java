@@ -21,10 +21,12 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.SpUtils;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.ImageLoadAdapter;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.transformer.DepthPageTransformer;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadImgUtils;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
@@ -45,7 +47,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ImageLoadingActivity extends AppCompatActivity {
+public class ImageLoadingActivity extends BaseActivity {
 
     @BindView(R.id.tv_image_loading)
     TextView textCurrent;
@@ -69,19 +71,23 @@ public class ImageLoadingActivity extends AppCompatActivity {
     private File file;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_image_loading);
+    protected int getContentLayoutId() {
+        return R.layout.activity_image_loading;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         UltimateBar.newImmersionBuilder()
                 .applyNav(true)         // 是否应用到导航栏
                 .build(this)
                 .apply();
-        ButterKnife.bind(this);
         intent = getIntent();
-        initData();
     }
 
-    private void initData() {
+    @Override
+    protected void initData() {
+        super.initData();
         mPosition = intent.getIntExtra("position", 0);
         itemCount = intent.getIntExtra("itemCount", 0);
         id = intent.getStringExtra("id");
@@ -259,10 +265,11 @@ public class ImageLoadingActivity extends AppCompatActivity {
                 UIUtils.runOnUIThread(new Runnable() {
                     @Override
                     public void run() {
+                        int mBarcolor = SpUtils.getInt(getApplicationContext(), ContentValue.SKIN_ID, com.camera.lingxiao.common.R.color.colorPrimary);
                         new CookieBar.Builder(ImageLoadingActivity.this)
                                 .setTitle("提示")
                                 .setMessage("下载成功")
-                                .setBackgroundColor(R.color.colorPrimary)
+                                .setBackgroundColor(mBarcolor)
                                 .setAction("查看", new OnActionClickListener() {
                                     @Override
                                     public void onClick() {

@@ -14,6 +14,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.utils.DialogUtil;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
@@ -40,6 +41,9 @@ public class SettingsActivity extends BaseActivity {
     SettingCardView cardShare;
     @BindView(R.id.card_skin)
     SettingCardView cardSkin;
+    @BindView(R.id.card_model)
+    SettingCardView cardModel;
+    private String[] mDrawerStr;
 
     @Override
     protected int getContentLayoutId() {
@@ -57,6 +61,12 @@ public class SettingsActivity extends BaseActivity {
         cardUpdate.setChecked(isCheck);
         boolean isCheck1 = SpUtils.getBoolean(this, ContentValue.IS_OPEN_DAILY, true);
         cardDaly.setChecked(isCheck1);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        mDrawerStr = getResources().getStringArray(R.array.drawer_string);
     }
 
     private void getCacheSize() {
@@ -97,7 +107,7 @@ public class SettingsActivity extends BaseActivity {
         return true;
     }
 
-    @OnClick({R.id.card_update, R.id.card_cache, R.id.card_share, R.id.card_skin, R.id.card_daly})
+    @OnClick({R.id.card_update, R.id.card_cache, R.id.card_share, R.id.card_skin, R.id.card_daly,R.id.card_model})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.card_update:
@@ -119,6 +129,11 @@ public class SettingsActivity extends BaseActivity {
                 cardDaly.setChecked(!cardDaly.getChecked());
                 SpUtils.putBoolean(UIUtils.getContext(),
                         ContentValue.IS_OPEN_DAILY, cardDaly.getChecked());
+                break;
+            case R.id.card_model:
+
+                DialogUtil.showMultiChoiceDia("请选择模块"
+                        ,mDrawerStr,SettingsActivity.this);
                 break;
         }
     }

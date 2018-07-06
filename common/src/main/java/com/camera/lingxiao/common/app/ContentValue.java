@@ -2,6 +2,8 @@ package com.camera.lingxiao.common.app;
 
 import android.os.Environment;
 
+import com.camera.lingxiao.common.R;
+
 /**
  * Created by lingxiao on 2017/9/1.
  */
@@ -55,6 +57,15 @@ public class ContentValue {
      */
     public static final String SPECIAL_URL = "/v1/wallpaper/album";
     /**
+     * 分类
+     */
+    public static final String CATEGORY_URL = "/v1/wallpaper/category";
+    /**
+     * 竖屏分类
+     */
+    public static final String CATEGORY_VERTICAL_URL = "/v1/vertical/category";
+
+    /**
      * 每次请求多少个数据
      */
     public static final int limit = 30;
@@ -66,10 +77,12 @@ public class ContentValue {
      * 分类
      */
     public static final String TYPE_CATEGORY = "category";
+
     //安卓壁纸的搜索
     public static final String SEARCH_URL = "http://so.picasso.adesk.com";
     //关键词
     public static final String SEARCH_KEY_URL = "/v1/push/keyword?versionCode=181&channel=huawei&first=0&adult=false";
+
     //保存的图片路径
     public static final String PATH = Environment
             .getExternalStorageDirectory()
@@ -99,5 +112,9 @@ public class ContentValue {
      * 当前皮肤的id
      */
     public static final String SKIN_ID = "skin_id";
+    /**
+     * 记录侧滑模块
+     */
+    public static final String DRAWER_MODEL = "drawer_model";
 
 }

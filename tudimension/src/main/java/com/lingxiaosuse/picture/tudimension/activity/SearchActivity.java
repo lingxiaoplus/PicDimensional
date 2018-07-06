@@ -79,6 +79,8 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
     private ArrayList<String> IdList = new ArrayList<>();
     private SearchRecyAdapter mAdapter;
     private SearchPresenter mPresenter = new SearchPresenter(this,this);
+    private SearchView mSearchView;
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_search;
@@ -114,7 +116,6 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
      * 初始化searchview
      */
     private void initSearchView(SearchView searchView) {
-        searchView.clearFocus();
         searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -136,6 +137,17 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (null != recyclerView){
+            recyclerView.setFocusable(true);
+            recyclerView.setFocusableInTouchMode(true);
+            recyclerView.requestFocus();
+
+        }
     }
 
     @Override
@@ -240,9 +252,9 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_search, menu);
         MenuItem item = menu.findItem(R.id.search_view);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
-        initSearchView(searchView);
-        return super.onCreateOptionsMenu(menu);
+        mSearchView = (SearchView) MenuItemCompat.getActionView(item);
+        initSearchView(mSearchView);
+        return true;
     }
 
     @Override

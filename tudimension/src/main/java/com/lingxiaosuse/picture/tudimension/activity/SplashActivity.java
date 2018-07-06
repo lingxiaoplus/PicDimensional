@@ -4,6 +4,8 @@ import android.app.ActivityOptions;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
+import android.support.annotation.Nullable;
+import android.view.ActionMode;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -80,6 +82,17 @@ public class SplashActivity extends BaseActivity implements SplashView{
                 .applyNav(true)         // 是否应用到导航栏
                 .build(this)
                 .apply();
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            UltimateBar.newHideBuilder()
+                    .applyNav(true)     // 是否应用到导航栏
+                    .build(this)
+                    .apply();
+        }
     }
 
     private void startAnim() {

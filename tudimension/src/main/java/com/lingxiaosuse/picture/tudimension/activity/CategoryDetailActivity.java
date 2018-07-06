@@ -11,8 +11,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.fragment.CategoryDetailFragment;
+import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,49 +24,36 @@ public class CategoryDetailActivity extends BaseActivity {
     @BindView(R.id.toolbar_title)
     Toolbar toolbar;
     @BindView(R.id.tab_category)
-    TabLayout tabCategory;
+    SkinTabLayout tabCategory;
     @BindView(R.id.pager_category)
     ViewPager pagerCategory;
     @BindView(R.id.fab_category)
     FloatingActionButton fabCategory;
-    private String[] strs = new String[]{"最新", "最热"};
+    private String[] strs;
     private String title = "";
     private String id;
     private CategoryAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_category_detail);
-        ButterKnife.bind(this);
-        Intent intent = getIntent();
-        title = intent.getStringExtra("title");
-        id = intent.getStringExtra("id");
-        initView();
-    }
-
-    private void initView() {
-        toolbar.setTitle(title);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        for (int i = 0; i < strs.length; i++) {
-            tabCategory.addTab(tabCategory.newTab().setText(strs[i]));
-        }
-
-        tabCategory.setupWithViewPager(pagerCategory);
-        mAdapter = new CategoryAdapter(getSupportFragmentManager());
-        pagerCategory.setAdapter(mAdapter);
+    protected int getContentLayoutId() {
+        return R.layout.activity_category_detail;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                break;
+    protected void initWidget() {
+        super.initWidget();
+        Intent intent = getIntent();
+        title = intent.getStringExtra("title");
+        id = intent.getStringExtra("id");
+        setToolbarBack(toolbar);
+        toolbar.setTitle(title);
+        strs = new String[]{getResources().getString(R.string.tab_new), getResources().getString(R.string.tab_hot)};
+        for (int i = 0; i < strs.length; i++) {
+            tabCategory.addTab(tabCategory.newTab().setText(strs[i]));
         }
-        return true;
+        tabCategory.setupWithViewPager(pagerCategory);
+        mAdapter = new CategoryAdapter(getSupportFragmentManager());
+        pagerCategory.setAdapter(mAdapter);
     }
 
     private class CategoryAdapter extends FragmentPagerAdapter{

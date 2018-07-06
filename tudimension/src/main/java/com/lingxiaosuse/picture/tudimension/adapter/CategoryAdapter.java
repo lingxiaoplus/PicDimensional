@@ -19,8 +19,8 @@ public class CategoryAdapter extends BaseRecycleAdapter{
 
     private SimpleDraweeView pic;
     private TextView textView;
-    private List<CategoryModle.ResBean.CategoryBean> mCateList;
-    private List<CategoryVerticalModle.ResBean.CategoryBean> mVerticalList;
+    private List<CategoryModle.CategoryBean> mCateList;
+    private List<CategoryVerticalModle.CategoryBean> mVerticalList;
     private boolean isVertical = false; //判断是否为手机壁纸
 
     public CategoryAdapter(List list,int headCont,int footCount,boolean isVertical){

@@ -51,10 +51,12 @@ public class HomeFragment extends BaseFragment implements HomeView{
     SwipeRefreshLayout swipeLayout;
     @BindView(R.id.fab_fragment)
     FloatingActionButton fab;
-    private HomePresenter mPresenter;
+    private HomePresenter mPresenter = new HomePresenter(this,this);
     @Override
     protected void initData() {
-        mPresenter = new HomePresenter(this,this);
+        picList.clear();
+        homeDesList.clear();
+        slideList.clear();
         mPresenter.getHomePageData(ContentValue.limit,0);
     }
 

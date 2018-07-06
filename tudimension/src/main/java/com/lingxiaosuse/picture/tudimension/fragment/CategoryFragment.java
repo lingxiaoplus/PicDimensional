@@ -8,18 +8,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.camera.lingxiao.common.app.BaseFragment;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.CategoryAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
+import com.lingxiaosuse.picture.tudimension.modle.CategoryVerticalModle;
+import com.lingxiaosuse.picture.tudimension.presenter.CategoryPresenter;
 import com.lingxiaosuse.picture.tudimension.retrofit.CategoryInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.CategoryView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,12 +34,16 @@ import retrofit2.Response;
  * Created by lingxiao on 2017/8/28.
  */
 
-public class CategoryFragment extends BaseFragment{
-    private RecyclerView recyclerView;
-    private List<CategoryModle.ResBean.CategoryBean> categoryList = new ArrayList<>();
+public class CategoryFragment extends BaseFragment implements CategoryView{
+    @BindView(R.id.rv_category)
+    RecyclerView recyclerView;
+    @BindView(R.id.swip_category)
+    SwipeRefreshLayout refreshLayout;
+
     private CategoryAdapter mCateAdapter;
     private GridLayoutManager mLayoutManager;
-    private SwipeRefreshLayout refreshLayout;
+    private CategoryPresenter mCategoryPresenter = new CategoryPresenter(this,this);
+    private List<CategoryModle.CategoryBean> categoryList = new ArrayList<>();
 
     @Override
     protected int getContentLayoutId() {
@@ -43,64 +53,64 @@ public class CategoryFragment extends BaseFragment{
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        recyclerView = root.findViewById(R.id.rv_category);
-        refreshLayout = root.findViewById(R.id.swip_category);
+        setSwipeColor(refreshLayout);
         refreshLayout.setRefreshing(true);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getCategory();
+                categoryList.clear();
+                mCategoryPresenter.getCategor();
+            }
+        });
+        mCateAdapter = new CategoryAdapter(categoryList,0,0,false);
+        recyclerView.setAdapter(mCateAdapter);
+        mLayoutManager = new GridLayoutManager(getActivity(),2,
+                LinearLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(mLayoutManager);
+        mCateAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View View, int position) {
+                Intent intent = new Intent(UIUtils.getContext(),
+                        BannerDetailActivity.class);
+                intent.putExtra("url",categoryList.get(position).getCover());
+                intent.putExtra("desc",categoryList.get(position).getName());
+                intent.putExtra("id",categoryList.get(position).getId());
+                intent.putExtra("title",categoryList.get(position).getName());
+                intent.putExtra("type", ContentValue.TYPE_CATEGORY);  //说明类型是轮播图
+                startActivity(intent);
             }
         });
     }
 
     @Override
     protected void initData() {
-        getCategory();
+        mCategoryPresenter.getCategor();
     }
-    /**
-     *从服务器上获取分类信息
-     */
-    private void getCategory(){
-        RetrofitHelper.getInstance(UIUtils.getContext())
-                .getInterface(CategoryInterface.class)
-                .categoryModle()
-                .enqueue(new Callback<CategoryModle>() {
-                    @Override
-                    public void onResponse(Call<CategoryModle> call, Response<CategoryModle> response) {
-                        categoryList = response.body().getRes().getCategory();
-                        mCateAdapter = new CategoryAdapter(categoryList,0,0,false);
-                        recyclerView.setAdapter(mCateAdapter);
-                        mLayoutManager = new GridLayoutManager(getActivity(),2,
-                                LinearLayoutManager.VERTICAL,false);
-                        recyclerView.setLayoutManager(mLayoutManager);
-                        mCateAdapter.notifyDataSetChanged();
 
-                        mCateAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(View View, int position) {
-                                /*Intent intent = new Intent(UIUtils.getContext(),CategoryDetailActivity.class);
-                                startActivity(intent);*/
-                                Intent intent = new Intent(UIUtils.getContext(),
-                                        BannerDetailActivity.class);
-                                intent.putExtra("url",categoryList.get(position).getCover());
-                                intent.putExtra("desc",categoryList.get(position).getName());
-                                intent.putExtra("id",categoryList.get(position).getId());
-                                intent.putExtra("title",categoryList.get(position).getName());
-                                intent.putExtra("type","category");  //说明类型是轮播图
-                                startActivity(intent);
-                            }
-                        });
+    @Override
+    public void onGetCategoryVerticalResult(CategoryVerticalModle modle) {
 
-                        if (refreshLayout.isRefreshing()){
-                            refreshLayout.setRefreshing(false);
-                        }
-                    }
+    }
 
-                    @Override
-                    public void onFailure(Call<CategoryModle> call, Throwable t) {
+    @Override
+    public void onGetCategoryResult(CategoryModle modle) {
+        categoryList.addAll(modle.getCategory());
+        mCateAdapter.notifyDataSetChanged();
+        refreshLayout.setRefreshing(false);
+    }
 
-                    }
-                });
+    @Override
+    public void showDialog() {
+
+    }
+
+    @Override
+    public void diamissDialog() {
+
+    }
+
+    @Override
+    public void showToast(String text) {
+        ToastUtils.show(text);
     }
 }

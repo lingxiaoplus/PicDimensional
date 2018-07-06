@@ -70,6 +70,8 @@ public class HotFragment extends BaseFragment implements HotView{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                previsList.clear();
+                picUrlList.clear();
                 mPresenter.getHotResult(ContentValue.limit,1);
             }
         });

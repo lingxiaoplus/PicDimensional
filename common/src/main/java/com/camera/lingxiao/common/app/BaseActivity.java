@@ -95,7 +95,8 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         UltimateBar.newColorBuilder()
                 .statusColor(ContextCompat.getColor(this, mBarcolor))   // 状态栏颜色
                 .applyNav(true)             // 是否应用到导航栏
-                .navColor(100)         // 导航栏颜色
+                .navColor(ContextCompat.getColor(this, mBarcolor))         // 导航栏颜色
+                .navDepth(0)            // 导航栏颜色深度
                 .build(this)
                 .apply();
         ActivityController.addActivity(this);
