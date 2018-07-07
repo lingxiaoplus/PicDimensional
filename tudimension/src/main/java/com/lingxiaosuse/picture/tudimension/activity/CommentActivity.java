@@ -11,13 +11,16 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.CommentRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CommentModle;
+import com.lingxiaosuse.picture.tudimension.presenter.CommentPresenter;
 import com.lingxiaosuse.picture.tudimension.retrofit.CommentInterface;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
+import com.lingxiaosuse.picture.tudimension.view.CommentView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +32,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CommentActivity extends BaseActivity {
+public class CommentActivity extends BaseActivity implements CommentView{
     @BindView(R.id.ll_comment)
     LinearLayout linearLayout;
     @BindView(R.id.toolbar_title)
@@ -39,11 +42,11 @@ public class CommentActivity extends BaseActivity {
     @BindView(R.id.swip_comment)
     SwipeRefreshLayout swipComment;
     private String id;
-    private List<CommentModle.ResBean.CommentBean> commentBeanList;
-    private List<CommentModle.ResBean.CommentBean> mBeanList = new ArrayList<>();
+
+    private List<CommentModle.CommentBean> mBeanList = new ArrayList<>();
     private int skip = 0;
     private CommentRecycleAdapter mAdapter;
-
+    private CommentPresenter mPresenter = new CommentPresenter(this,this);
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_comment;
@@ -52,43 +55,35 @@ public class CommentActivity extends BaseActivity {
     @Override
     protected void initWidget() {
         super.initWidget();
-        id = getIntent().getStringExtra("id");
-        initView();
-    }
-
-    @Override
-    protected void initData() {
-        super.initData();
-        getDataFromeServer(skip);
-    }
-
-    private void initView() {
+        setToolbarBack(toolbarTitle);
         toolbarTitle.setTitle("评论板");
-        setSupportActionBar(toolbarTitle);
-        getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        setSwipeColor(swipComment);
         swipComment.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getDataFromeServer(0);
+                mBeanList.clear();
+                mPresenter.getCommentResult(id, ContentValue.limit,0);
             }
         });
-
         mAdapter = new CommentRecycleAdapter(mBeanList,0,1);
         recycleComment.setAdapter(mAdapter);
         LinearLayoutManager mLayoutManager =
                 new LinearLayoutManager(getApplicationContext());
         recycleComment.setLayoutManager(mLayoutManager);
-        mAdapter.notifyDataSetChanged();
-
         mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
             @Override
             public void onLoadMore() {
                 skip+=30;
-                getDataFromeServer(skip);
+                mPresenter.getCommentResult(id, ContentValue.limit,skip);
             }
         });
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        id = getIntent().getStringExtra("id");
+        mPresenter.getCommentResult(id, ContentValue.limit,0);
     }
 
     @OnClick(R.id.ll_comment)
@@ -97,7 +92,7 @@ public class CommentActivity extends BaseActivity {
             return;
         }
         swipComment.setRefreshing(true);
-        getDataFromeServer(0);
+        mPresenter.getCommentResult(id, ContentValue.limit,0);
     }
 
     @Override
@@ -119,38 +114,37 @@ public class CommentActivity extends BaseActivity {
         overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_top);
     }
 
-    private void getDataFromeServer(int skip){
-        RetrofitHelper.getInstance(this)
-                .getInterface(CommentInterface.class)
-                .commentModle(id,30,skip)
-                .enqueue(new Callback<CommentModle>() {
-                    @Override
-                    public void onResponse(Call<CommentModle> call, Response<CommentModle> response) {
-                        commentBeanList = response.body().getRes().getComment();
-                        mBeanList.addAll(commentBeanList);
-                        if (mBeanList.size()>0){
-                            linearLayout.setVisibility(View.GONE);
-                            recycleComment.setVisibility(View.VISIBLE);
-                            mAdapter.notifyDataSetChanged();
-                        }else {
-                            linearLayout.setVisibility(View.VISIBLE);
-                            recycleComment.setVisibility(View.GONE);
-                        }
-                        if (commentBeanList.size()<30){
-                            mAdapter.isFinish(true);
-                        }
-                        if (swipComment.isRefreshing()){
-                            swipComment.setRefreshing(false);
-                        }
-                    }
+    @Override
+    public void onGetCommentResult(CommentModle modle) {
+        List<CommentModle.CommentBean> commentBeanList = modle.getComment();
+        if (commentBeanList.size()<30){
+            mAdapter.isFinish(true);
+        }
+        mBeanList.addAll(commentBeanList);
+        if (mBeanList.size()>0){
+            linearLayout.setVisibility(View.GONE);
+            recycleComment.setVisibility(View.VISIBLE);
+            mAdapter.notifyDataSetChanged();
+        }else {
+            linearLayout.setVisibility(View.VISIBLE);
+            recycleComment.setVisibility(View.GONE);
+        }
+        mAdapter.notifyDataSetChanged();
+        swipComment.setRefreshing(false);
+    }
 
-                    @Override
-                    public void onFailure(Call<CommentModle> call, Throwable t) {
-                        if (swipComment.isRefreshing()){
-                            swipComment.setRefreshing(false);
-                            ToastUtils.show("刷新完成");
-                        }
-                    }
-                });
+    @Override
+    public void showDialog() {
+
+    }
+
+    @Override
+    public void diamissDialog() {
+
+    }
+
+    @Override
+    public void showToast(String text) {
+        ToastUtils.show(text);
     }
 }

@@ -35,6 +35,7 @@ import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
+import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.activity.MzituActivity;
@@ -131,6 +132,17 @@ public class MainActivity extends BaseActivity implements MainView{
         headImage.setVisibility(View.GONE);
         mPresenter.getHeadImg();
         mPresenter.getHeadText();
+
+        String val = SpUtils.getString(UIUtils.getContext(), ContentValue.DRAWER_MODEL,"");
+        String[] posStr = val.split(",");
+        for (int i = 0; i < posStr.length; i++) {
+            if (StringUtils.isNumeric(posStr[i]) && !posStr[i].isEmpty()){
+                int pos = Integer.valueOf(posStr[i]);
+                //checkedItems[pos] = true;
+                //navigationView.findViewById(R.id.nav_home).setVisibility(View.GONE);
+            }
+        }
+
     }
 
     private void initView() {

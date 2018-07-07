@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.SpUtils;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.ImageLoadAdapter;
@@ -61,6 +62,9 @@ public class ImageLoadingActivity extends BaseActivity {
     RelativeLayout relativeLayout;
     @BindView(R.id.iv_img_comment)
     ImageView commentImg;
+    @BindView(R.id.img_head)
+    SimpleDraweeView headView;
+
     private Intent intent;
     private int mPosition;
     private int itemCount;
@@ -99,6 +103,7 @@ public class ImageLoadingActivity extends BaseActivity {
             //linearLayout.setBackgroundColor(Color.BLACK);
             IdList = intent.getStringArrayListExtra("picIdList");
             commentImg.setVisibility(View.VISIBLE);
+            //headView.setImageURI();
         }
         if (isVertical) {
             IdList = intent.getStringArrayListExtra("picIdList");

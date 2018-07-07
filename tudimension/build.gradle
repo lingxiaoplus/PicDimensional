@@ -83,6 +83,12 @@ dependencies {
     implementation "skin.support:skin-support-design:$rootProject.ext.skinSupportVersion"           // skin-support-design material design 控件支持[可选]
     implementation "skin.support:skin-support-cardview:$rootProject.ext.skinSupportVersion"          // skin-support-cardview CardView 控件支持[可选]
     implementation "skin.support:skin-support-constraint-layout:$rootProject.ext.skinSupportVersion" // skin-support-constraint-layout ConstraintLayout 控件支持[可选]
+
+    //dbflow
+    implementation "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.ext.dbFlowVersion"
+    implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.ext.dbFlowVersion"
+    annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.ext.dbFlowVersion"
+
     testCompile 'junit:junit:4.12'
     compile project(':lang')
     implementation project(':common')

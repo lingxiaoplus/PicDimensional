@@ -84,7 +84,16 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
         if (mListener != null) {
             mListener.onActivityCreated(savedInstanceState);
         }
-        initData();
+
+    }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser){
+            initData();
+        }
     }
 
     @Override

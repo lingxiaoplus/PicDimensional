@@ -42,6 +42,18 @@
                 android:textColor="@color/whiteNor"
                 android:layout_centerInParent="true"
                 android:text="123"/>
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:layout_toRightOf="@id/tv_image_loading"
+                android:id="@+id/img_head"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                app:progressBarImageScaleType="centerInside"
+                app:progressBarImage="@drawable/ic_img_default"
+                app:roundAsCircle="true"
+                app:roundingBorderWidth="1dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"/>
             <ImageView
                 android:id="@+id/iv_image_save"
                 android:layout_centerInParent="true"

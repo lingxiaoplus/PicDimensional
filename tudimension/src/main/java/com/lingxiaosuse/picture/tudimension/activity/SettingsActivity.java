@@ -10,12 +10,14 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.lingxiaosuse.picture.tudimension.db.DrawerSelect;
 import com.lingxiaosuse.picture.tudimension.utils.DialogUtil;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
+import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SettingCardView;
@@ -44,7 +46,7 @@ public class SettingsActivity extends BaseActivity {
     @BindView(R.id.card_model)
     SettingCardView cardModel;
     private String[] mDrawerStr;
-
+    private boolean[] checkedItems;
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_settings;
@@ -67,6 +69,7 @@ public class SettingsActivity extends BaseActivity {
     protected void initData() {
         super.initData();
         mDrawerStr = getResources().getStringArray(R.array.drawer_string);
+        checkedItems = new boolean[mDrawerStr.length];
     }
 
     private void getCacheSize() {
@@ -131,9 +134,16 @@ public class SettingsActivity extends BaseActivity {
                         ContentValue.IS_OPEN_DAILY, cardDaly.getChecked());
                 break;
             case R.id.card_model:
-
+                String val = SpUtils.getString(UIUtils.getContext(), ContentValue.DRAWER_MODEL,"");
+                String[] posStr = val.split(",");
+                for (int i = 0; i < posStr.length; i++) {
+                    if (StringUtils.isNumeric(posStr[i]) && !posStr[i].isEmpty()){
+                        int pos = Integer.valueOf(posStr[i]);
+                        checkedItems[pos] = true;
+                    }
+                }
                 DialogUtil.showMultiChoiceDia("请选择模块"
-                        ,mDrawerStr,SettingsActivity.this);
+                        ,mDrawerStr,checkedItems,SettingsActivity.this);
                 break;
         }
     }

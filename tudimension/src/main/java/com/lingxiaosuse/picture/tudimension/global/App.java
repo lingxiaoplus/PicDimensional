@@ -8,6 +8,7 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.service.InitIalizeService;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.tencent.bugly.crashreport.CrashReport;
 
@@ -30,9 +31,7 @@ public class App extends Application{
         mContext = getApplicationContext();
         mHandler = new Handler();
         mainThreadId = android.os.Process.myPid();
-        //bugly初始化 建议在测试阶段建议设置成true，发布时设置为false。
-        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", false);
-        SkinLib.init(this);
+        InitIalizeService.startInit(this);
     }
     public static Context getContext(){
         return mContext;

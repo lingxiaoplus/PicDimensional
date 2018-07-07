@@ -66,6 +66,11 @@ public class ContentValue {
     public static final String CATEGORY_VERTICAL_URL = "/v1/vertical/category";
 
     /**
+     * 评论
+     */
+    public static final String COMMENT_URL = "/v2/wallpaper/wallpaper";
+
+    /**
      * 每次请求多少个数据
      */
     public static final int limit = 30;

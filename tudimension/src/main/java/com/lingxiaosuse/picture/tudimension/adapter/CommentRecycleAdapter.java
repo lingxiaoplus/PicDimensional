@@ -15,7 +15,7 @@ import java.util.List;
  */
 
 public class CommentRecycleAdapter extends BaseRecycleAdapter{
-    private List<CommentModle.ResBean.CommentBean> commentList;
+    private List<CommentModle.CommentBean> commentList;
     private SimpleDraweeView headImg;
     private TextView username,time,number,content;
 
