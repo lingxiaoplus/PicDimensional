@@ -22,10 +22,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.RxBus;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.rxbus.DeleteEvent;
-import com.lingxiaosuse.picture.tudimension.rxbus.RxBus;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.PhotoViewPager;
@@ -268,7 +268,7 @@ public class LocalImgActivity extends BaseActivity {
         viewPager.setCurrentItem(mPosition);
 
         //通过rxbus发送消息通知订阅者更新数据
-        RxBus.getDefault().post(new DeleteEvent(mPosition));
+        RxBus.getInstance().post(new DeleteEvent(mPosition));
         Log.i("code", "发送删除数据了: ");
     }
 

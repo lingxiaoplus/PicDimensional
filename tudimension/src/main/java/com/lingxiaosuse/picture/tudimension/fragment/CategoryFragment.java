@@ -42,7 +42,7 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
 
     private CategoryAdapter mCateAdapter;
     private GridLayoutManager mLayoutManager;
-    private CategoryPresenter mCategoryPresenter = new CategoryPresenter(this,this);
+    private CategoryPresenter mCategoryPresenter;
     private List<CategoryModle.CategoryBean> categoryList = new ArrayList<>();
 
     @Override
@@ -84,6 +84,7 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
 
     @Override
     protected void initData() {
+        mCategoryPresenter = new CategoryPresenter(this,this);
         mCategoryPresenter.getCategor();
     }
 

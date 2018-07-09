@@ -101,7 +101,7 @@ public class CommentActivity extends BaseActivity implements CommentView{
             case android.R.id.home:
                 finish();
                 //动画
-                overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_top);
+                //overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_top);
                 break;
         }
         return true;
@@ -111,7 +111,7 @@ public class CommentActivity extends BaseActivity implements CommentView{
     public void onBackPressed() {
         super.onBackPressed();
         //动画
-        overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_top);
+        //overridePendingTransition(R.anim.slide_in_top,R.anim.slide_out_top);
     }
 
     @Override

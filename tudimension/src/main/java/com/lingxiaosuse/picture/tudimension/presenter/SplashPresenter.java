@@ -34,21 +34,19 @@ public class SplashPresenter extends BasePresenter<SplashView,SplashActivity>{
         transation.getUpdate(new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                try {
+                if (getView() != null){
                     VersionModle modle = (VersionModle) object[0];
                     SpUtils.putInt(UIUtils.getContext(), ContentValue.VERSION_CODE, modle.getVersionCode());
                     SpUtils.putString(UIUtils.getContext(), ContentValue.VERSION_DES, modle.getVersionDes());
                     SpUtils.putString(UIUtils.getContext(), ContentValue.DOWNLOAD_URL, modle.getDownloadUrl());
-                    LogUtils.i("success presenter:  "+modle.toString());
-                }catch (Exception e){
-                    e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
-                LogUtils.i("error presenter:  "+code);
+                if (getView() != null){
+                    getView().showToast(desc);
+                }
             }
 
             @Override
@@ -65,22 +63,24 @@ public class SplashPresenter extends BasePresenter<SplashView,SplashActivity>{
         transation.getSplashImgUrl(new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                try {
+                if (getView() != null){
                     VerticalModle modle = (VerticalModle) object[0];
                     resultList = modle.getVertical();
                     Random random = new Random();
                     int result = random.nextInt(resultList.size());
                     Uri uri = Uri.parse(resultList.get(result).getImg());
                     getView().showImgUrl(uri,null);
-                }catch (Exception e){
-                    e.printStackTrace();
                 }
+
             }
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
-                getView().showImgUrl(null,null);
+                if (getView() != null){
+                    getView().showToast(desc);
+                    getView().showImgUrl(null,null);
+                }
+
             }
 
             @Override

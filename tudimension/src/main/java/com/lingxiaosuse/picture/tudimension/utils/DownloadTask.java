@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Process;
 
+import com.camera.lingxiao.common.app.ContentValue;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,10 +43,12 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer>{
             long downloadLength = 0;
             String downloadUrl = params[0];
             String fileName = downloadUrl.substring(downloadUrl.lastIndexOf("/"));
-            String directory = Environment
+            /*String directory = Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                    .getPath();
-            //这里下载的图片，目前写死
+                    .getPath();*/
+            String directory = ContentValue.PATH;
+            FileUtil.isExistDir(directory);
+            //这里下载的图片
             mFile = new File(directory +fileName+".jpg");
             if (mFile.exists()){
                 downloadLength = mFile.length();

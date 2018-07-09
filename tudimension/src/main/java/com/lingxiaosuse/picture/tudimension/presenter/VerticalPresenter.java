@@ -18,17 +18,18 @@ public class VerticalPresenter extends BasePresenter<VerticalView,VerticalFragme
         mTrans.getVertical(limit, skip, order, new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                try {
+                if (getView() != null){
                     VerticalModle modle = (VerticalModle) object[0];
                     getView().onGetVerticalResult(modle);
-                }catch (Exception e){
-                    e.printStackTrace();
                 }
             }
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
+                if (getView() != null){
+                    getView().showToast(desc);
+                }
+
             }
 
             @Override

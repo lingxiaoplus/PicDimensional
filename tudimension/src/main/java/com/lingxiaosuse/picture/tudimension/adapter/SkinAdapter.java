@@ -25,9 +25,9 @@ public class SkinAdapter extends BaseRecyclerViewAdapter{
     private TextView textView;
     private Button button;
     private List<Integer> list;
-    private String[] strings = {"默认绿","激情红","知乎蓝","颐缇蓝","基佬紫"};
+    private String[] strings = {"默认绿","激情红","知乎蓝","颐缇蓝","基佬紫","少女粉","重力橘","水鸭青"};
     private Context mContext;
-    private String[] colors = {"#4CAF50","#E57373","#64B5F6","#7986CB","#9575CD"};
+    private String[] colors = {"#4CAF50","#E57373","#64B5F6","#7986CB","#9575CD","#F06292","#ffb74d","#4db6ac"};
     public SkinAdapter(List<Integer> colorList, AdapterListener listener) {
         super(colorList,listener);
 

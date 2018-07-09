@@ -84,15 +84,20 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
         if (mListener != null) {
             mListener.onActivityCreated(savedInstanceState);
         }
-
+        if (!setLazyMode()){
+            initData();
+        }
     }
 
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        //单个的fragment会存在问题
         if (isVisibleToUser){
-            initData();
+            if (setLazyMode()){
+                initData();
+            }
         }
     }
 
@@ -176,6 +181,14 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
      * 初始化相关参数
      */
     protected void initArgs(Bundle bundle){
+    }
+
+    /**
+     * 是否开启懒加载，如果只有一个fragment，则重写该方法
+     * @return
+     */
+    protected boolean setLazyMode(){
+        return false;
     }
 
     /**

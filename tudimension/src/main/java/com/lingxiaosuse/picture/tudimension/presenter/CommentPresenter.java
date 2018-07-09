@@ -17,13 +17,17 @@ public class CommentPresenter extends BasePresenter<CommentView,CommentActivity>
         mCommentTrans.getCommentResult(id, limit, skip, new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                CommentModle modle = (CommentModle) object[0];
-                getView().onGetCommentResult(modle);
+                if (getView() != null){
+                    CommentModle modle = (CommentModle) object[0];
+                    getView().onGetCommentResult(modle);
+                }
             }
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
+                if (getView() != null){
+                    getView().showToast(desc);
+                }
             }
 
             @Override

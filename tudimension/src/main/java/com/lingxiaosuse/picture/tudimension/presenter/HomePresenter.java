@@ -21,9 +21,12 @@ public class HomePresenter extends BasePresenter<HomeView,BaseFragment>{
         mTrans.getHomePage(limit, skip,new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                HomePageModle modle = (HomePageModle) object[0];
-                LogUtils.i("Homepresnter:   "+getView());
-                getView().onGetHomeResult(modle);
+                if (getView() != null){
+                    HomePageModle modle = (HomePageModle) object[0];
+                    LogUtils.i("Homepresnter:   "+getView());
+                    getView().onGetHomeResult(modle);
+                }
+
             }
 
             @Override
@@ -48,7 +51,9 @@ public class HomePresenter extends BasePresenter<HomeView,BaseFragment>{
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
+                if (getView() != null){
+                    getView().showToast(desc);
+                }
             }
 
             @Override

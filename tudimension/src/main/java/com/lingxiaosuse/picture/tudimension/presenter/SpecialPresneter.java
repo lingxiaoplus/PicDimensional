@@ -18,13 +18,17 @@ public class SpecialPresneter extends BasePresenter<SpecialView,SpecialFragment>
         mTrans.getSpecialResult(limit, skip, new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                SpecialModle modle = (SpecialModle) object[0];
-                getView().onGetSpecialData(modle);
+                if (getView() != null){
+                    SpecialModle modle = (SpecialModle) object[0];
+                    getView().onGetSpecialData(modle);
+                }
             }
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
+                if (getView() != null){
+                    getView().showToast(desc);
+                }
             }
 
             @Override

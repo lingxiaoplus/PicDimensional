@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
@@ -55,18 +56,75 @@ public class MzituDetailActivity extends BaseActivity {
     private MzituRecyclerAdapter mAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mzitu_detail);
-        ButterKnife.bind(this);
+    protected int getContentLayoutId() {
+        return R.layout.activity_mzitu_detail;
+    }
 
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         intent = getIntent();
-        initData();
+        String title = intent.getStringExtra("title");
+        imgUrl = intent.getStringExtra("imgurl");
         setToolbarBack(toolbarMzituDetail);
+        tvMzituDetailTitle.setText(title);
 
-        initRecycle();
+        swipMzituDetail.setRefreshing(true);
+        setSwipeColor(swipMzituDetail);
+        swipMzituDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDataFromJsoup(mPage);
+            }
+        });
+        mAdapter = new MzituRecyclerAdapter(mImgList,0,1);
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,
+                StaggeredGridLayoutManager.VERTICAL);
+        rvMzituDetail.setHasFixedSize(true);
+        rvMzituDetail.setLayoutManager(manager);
+        rvMzituDetail.setAdapter(mAdapter);
 
-        getDataFromJsoup(mPage);
+        mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
+            @Override
+            public void onLoadMore() {
+                if (mMaxPage > mPage){
+                    for (int i = mPage; i < mPage+20; i++) {
+                        getDataFromJsoup(i);
+                    }
+                    mAdapter.isFinish(false);
+                }else {
+                    mAdapter.isFinish(true);
+                }
+
+            }
+        });
+
+        mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View View, int position) {
+                Intent intent = new Intent(UIUtils.getContext(),
+                        ImageLoadingActivity.class);
+                intent.putExtra("position",position);
+                intent.putExtra("itemCount",mAdapter.getItemCount());
+                intent.putExtra("id",mImgList.get(position));
+                intent.putStringArrayListExtra("picList", (ArrayList<String>) mImgList);
+                intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        /**
+         * 先请求20组数据
+         */
+        for (int i = 0; i < 20; i++) {
+            getDataFromJsoup(i);
+        }
+
+        //getDataFromJsoup(mPage);
     }
 
     private void getDataFromJsoup(final int page) {
@@ -125,73 +183,6 @@ public class MzituDetailActivity extends BaseActivity {
                 }
             }
         }).start();
-    }
-
-    private void initRecycle() {
-        swipMzituDetail.setRefreshing(true);
-        swipMzituDetail.setColorSchemeResources(
-                R.color.colorPrimary,
-                android.R.color.holo_blue_light,
-                android.R.color.holo_red_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light
-        );
-        swipMzituDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getDataFromJsoup(mPage);
-            }
-        });
-
-        mAdapter = new MzituRecyclerAdapter(mImgList,0,1);
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,
-                StaggeredGridLayoutManager.VERTICAL);
-        rvMzituDetail.setHasFixedSize(true);
-        rvMzituDetail.setLayoutManager(manager);
-        rvMzituDetail.setAdapter(mAdapter);
-
-        /**
-         * 先请求20组数据
-         */
-        for (int i = 0; i < 20; i++) {
-            getDataFromJsoup(i);
-        }
-
-        mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
-            @Override
-            public void onLoadMore() {
-                if (mMaxPage > mPage){
-                    for (int i = mPage; i < mPage+20; i++) {
-                        getDataFromJsoup(i);
-                    }
-                    mAdapter.isFinish(false);
-                }else {
-                    mAdapter.isFinish(true);
-                }
-
-            }
-        });
-
-        mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View View, int position) {
-                Intent intent = new Intent(UIUtils.getContext(),
-                        ImageLoadingActivity.class);
-                intent.putExtra("position",position);
-                intent.putExtra("itemCount",mAdapter.getItemCount());
-                intent.putExtra("id",mImgList.get(position));
-                intent.putStringArrayListExtra("picList", (ArrayList<String>) mImgList);
-                intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
-                startActivity(intent);
-            }
-        });
-    }
-
-    private void initData() {
-        String title = intent.getStringExtra("title");
-        imgUrl = intent.getStringExtra("imgurl");
-        tvMzituDetailTitle.setText(title);
-
     }
 
     @Override

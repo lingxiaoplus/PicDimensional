@@ -2,14 +2,18 @@ package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.app.Service;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
+import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
@@ -28,6 +32,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.ImageLoadAdapter;
+import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.transformer.DepthPageTransformer;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadImgUtils;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
@@ -73,6 +78,19 @@ public class ImageLoadingActivity extends BaseActivity {
     private ImageLoadAdapter mAdapter;
     private boolean isHot, isVertical;
     private File file;
+    private DownloadService mDownloadService;
+    private ServiceConnection mConnect = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mDownloadService = (DownloadService) service;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mDownloadService.stopSelf();
+            mConnect = null;
+        }
+    };
 
     @Override
     protected int getContentLayoutId() {
@@ -150,6 +168,26 @@ public class ImageLoadingActivity extends BaseActivity {
                 showDialog();
             }
         });
+
+        bindDownloadService();
+    }
+
+    private void bindDownloadService() {
+        mConnect = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                DownloadService.DownloadBinder binder = (DownloadService.DownloadBinder) service;
+                mDownloadService = binder.getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mDownloadService = null;
+            }
+        };
+        Intent intent = new Intent(this, DownloadService.class);
+        //最后一个参数，是否自动创建service 这个是自动创建
+        bindService(intent, mConnect, Service.BIND_AUTO_CREATE);
     }
 
     @OnClick(R.id.iv_image_back)
@@ -159,7 +197,11 @@ public class ImageLoadingActivity extends BaseActivity {
 
     @OnClick(R.id.iv_image_save)
     public void imageSave(final View view) {
-        downloadImg();
+        //downloadImg();
+        if (mDownloadService != null){
+            ToastUtils.show("正在下载");
+            mDownloadService.startDownload(picList.get(mPosition));
+        }
     }
 
     @OnClick(R.id.iv_img_comment)
@@ -170,7 +212,7 @@ public class ImageLoadingActivity extends BaseActivity {
         intent.putExtra("id", id);
         startActivity(intent);
         //动画
-        overridePendingTransition(R.anim.slide_in_top, R.anim.slide_in_top);
+        //overridePendingTransition(R.anim.slide_in_top, R.anim.slide_in_top);
     }
 
     //分享图片
@@ -251,6 +293,9 @@ public class ImageLoadingActivity extends BaseActivity {
         super.onDestroy();
         //stopService(mDownloadIntent);
         //unbindService(connection);
+        if (null != mConnect){
+            unbindService(mConnect);
+        }
     }
 
     /**
@@ -333,7 +378,11 @@ public class ImageLoadingActivity extends BaseActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 if (i == 0) {
-                    downloadImg();
+                    //downloadImg();
+                    if (mDownloadService != null){
+                        ToastUtils.show("正在下载");
+                        mDownloadService.startDownload(picList.get(mPosition));
+                    }
                 } else if (i == 1) {
                     copyImgUrl();
                 } else {

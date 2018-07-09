@@ -1,5 +1,8 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -9,12 +12,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.RxBus;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.db.DrawerSelect;
+import com.lingxiaosuse.picture.tudimension.rxbus.DrawerChangeEvent;
 import com.lingxiaosuse.picture.tudimension.utils.DialogUtil;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
@@ -142,7 +147,7 @@ public class SettingsActivity extends BaseActivity {
                         checkedItems[pos] = true;
                     }
                 }
-                DialogUtil.showMultiChoiceDia("请选择模块"
+                showMultiChoiceDia("请选择模块"
                         ,mDrawerStr,checkedItems,SettingsActivity.this);
                 break;
         }
@@ -188,5 +193,41 @@ public class SettingsActivity extends BaseActivity {
         textIntent.setType("text/plain");
         textIntent.putExtra(Intent.EXTRA_TEXT, "我发现了一个不得了的应用：http://tudimension-1252348761.coscd.myqcloud.com/version/tudimension-armeabi-v7a-release.apk");
         startActivity(Intent.createChooser(textIntent, "分享"));
+    }
+
+    public void showMultiChoiceDia(String title,final String[] items,final boolean[] checkedItems,Context context) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setIcon(android.R.drawable.alert_dark_frame);
+        builder.setTitle(title);
+        builder.setMultiChoiceItems(items, checkedItems,
+                new DialogInterface.OnMultiChoiceClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                                        boolean isChecked) {
+                        checkedItems[which] = isChecked;
+                    }
+                });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String checkedStr = "";
+                for (int i = 0; i < items.length; i++) {
+                    if (checkedItems[i]) {
+                        checkedStr +=i+",";
+                    }
+                }
+                SpUtils.putString(UIUtils.getContext(),ContentValue.DRAWER_MODEL,checkedStr);
+                RxBus.getInstance().post(new DrawerChangeEvent(checkedStr));
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+        builder.show();
     }
 }

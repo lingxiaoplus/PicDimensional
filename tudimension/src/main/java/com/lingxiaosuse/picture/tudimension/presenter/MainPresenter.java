@@ -29,15 +29,13 @@ public class MainPresenter extends BasePresenter<MainView,MainActivity>{
         mTrans.getHeadImg(30, 0, new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                try {
+                if (getView() != null){
                     HomePageModle modle = (HomePageModle) object[0];
                     List<HomePageModle.Picture> picList =modle.getWallpaper();
                     Random random = new Random();
                     int result = random.nextInt(picList.size());
                     Uri uri = Uri.parse(picList.get(result).getPreview()+ ContentValue.bigImgRule);
                     getView().onGetHeadBackGround(uri);
-                }catch (Exception e){
-                    e.printStackTrace();
                 }
             }
 

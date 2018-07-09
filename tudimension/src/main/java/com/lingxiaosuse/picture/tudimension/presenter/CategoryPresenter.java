@@ -40,13 +40,17 @@ public class CategoryPresenter extends BasePresenter<CategoryView,BaseFragment>{
         mCategoryTrans.getCategory(new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                CategoryModle modle = (CategoryModle) object[0];
-                getView().onGetCategoryResult(modle);
+                if (getView() != null){
+                    CategoryModle modle = (CategoryModle) object[0];
+                    getView().onGetCategoryResult(modle);
+                }
             }
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
+                if (getView() != null){
+                    getView().showToast(desc);
+                }
             }
 
             @Override

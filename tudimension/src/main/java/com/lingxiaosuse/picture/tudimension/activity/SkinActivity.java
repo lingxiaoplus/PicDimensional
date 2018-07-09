@@ -66,12 +66,18 @@ public class SkinActivity extends BaseActivity{
         colorList.add(R.color.blue300);
         colorList.add(R.color.indigo300);
         colorList.add(R.color.deepPurple300);
+        colorList.add(R.color.pink_300);
+        colorList.add(R.color.orange_300);
+        colorList.add(R.color.teal_300);
 
         colorName.add("red300");
         colorName.add("red300");
         colorName.add("blue300");
         colorName.add("indigo300");
         colorName.add("deepPurple300");
+        colorName.add("pink300");
+        colorName.add("orange300");
+        colorName.add("teal300");
         //final int pos = SpUtils.getInt(this, ContentValue.SKIN_POSITION,0);
         SkinAdapter adapter = new SkinAdapter(colorList, new BaseRecyclerViewAdapter.AdapterListener() {
             @Override

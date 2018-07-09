@@ -17,14 +17,17 @@ public class HotPresenter extends BasePresenter<HotView,HotFragment>{
         mTrans.getHotResult(current, page, new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                HotModle modle = (HotModle) object[0];
-                getView().onGetHotResult(modle);
-                
+                if (getView() != null){
+                    HotModle modle = (HotModle) object[0];
+                    getView().onGetHotResult(modle);
+                }
             }
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
+                if (getView() != null){
+                    getView().showToast(desc);
+                }
             }
 
             @Override

@@ -29,12 +29,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.RxBus;
 import com.camera.lingxiao.common.app.ActivityController;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
+import com.lingxiaosuse.picture.tudimension.rxbus.DrawerChangeEvent;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
@@ -58,6 +60,8 @@ import com.lingxiaosuse.picture.tudimension.view.MainView;
 import java.io.File;
 
 import butterknife.BindView;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -112,6 +116,7 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     protected void initData() {
         super.initData();
+
         initView();
         //初始化headlayout
         initHeadLayout();
@@ -132,20 +137,10 @@ public class MainActivity extends BaseActivity implements MainView{
         headImage.setVisibility(View.GONE);
         mPresenter.getHeadImg();
         mPresenter.getHeadText();
-
-        String val = SpUtils.getString(UIUtils.getContext(), ContentValue.DRAWER_MODEL,"");
-        String[] posStr = val.split(",");
-        for (int i = 0; i < posStr.length; i++) {
-            if (StringUtils.isNumeric(posStr[i]) && !posStr[i].isEmpty()){
-                int pos = Integer.valueOf(posStr[i]);
-                //checkedItems[pos] = true;
-                //navigationView.findViewById(R.id.nav_home).setVisibility(View.GONE);
-            }
-        }
-
     }
 
     private void initView() {
+        initSubscription();
         mTabStr = getResources().getStringArray(R.array.tab_string_array);
         for (int i = 0; i < mTabStr.length; i++) {
             tabLayout.addTab(tabLayout.newTab().setText(mTabStr[i]));
@@ -153,7 +148,7 @@ public class MainActivity extends BaseActivity implements MainView{
         MainPageAdapter adapter = new MainPageAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
         //设置viewpager缓存页面个数
-        viewPager.setOffscreenPageLimit(1);
+        viewPager.setOffscreenPageLimit(4);
         tabLayout.setupWithViewPager(viewPager);
         setSupportActionBar(toolbar);
         //设置返回键可用
@@ -165,7 +160,6 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-
                 startPropertyAnim(simpleDraweeView,1f,2f,1f,10000);
             }
 
@@ -220,6 +214,25 @@ public class MainActivity extends BaseActivity implements MainView{
         });
     }
 
+    private void setVisibility(int pos,boolean vis){
+        Menu menu = navigationView.getMenu();
+        if (pos == 0){
+            menu.findItem(R.id.nav_home).setVisible(vis);
+        }else if(pos == 1){
+            menu.findItem(R.id.nav_vertical).setVisible(vis);
+        }else if(pos == 2){
+            menu.findItem(R.id.nav_mzitu).setVisible(vis);
+        }else if(pos == 3){
+            menu.findItem(R.id.nav_find).setVisible(vis);
+        }else if(pos == 4){
+            menu.findItem(R.id.nav_reception).setVisible(vis);
+        }else if(pos == 5){
+            menu.findItem(R.id.nav_exit).setVisible(vis);
+        }/*else if(pos == 6){
+            navigationView.findViewById(R.id.nav_exit).setVisibility(View.GONE);
+        }*/
+
+    }
     @Override
     public void onGetHeadBackGround(Uri uri) {
         simpleDraweeView.setImageURI(uri);
@@ -297,6 +310,7 @@ public class MainActivity extends BaseActivity implements MainView{
             unregisterReceiver(mNetworkChangeListener);
         }
         mHandler.removeMessages(2);
+        RxBus.getInstance().unSubscribe(this);
     }
     /**
      * 对话框选择搜图接口
@@ -424,4 +438,28 @@ public class MainActivity extends BaseActivity implements MainView{
         set.setDuration(time);
         set.start();
     }
+    /**
+     * 订阅侧滑菜单修改消息
+     */
+    private void initSubscription() {
+        Disposable regist = RxBus.getInstance().register(DrawerChangeEvent.class, new Consumer<DrawerChangeEvent>() {
+            @Override
+            public void accept(DrawerChangeEvent drawerChangeEvent) throws Exception {
+
+                for (int j = 0; j < getResources().getStringArray(R.array.drawer_string).length; j++) {
+                    setVisibility(j,true);
+                }
+                String val = drawerChangeEvent.getPositions();
+                String[] posStr = val.split(",");
+                for (int i = 0; i < posStr.length; i++) {
+                    if (StringUtils.isNumeric(posStr[i]) && !posStr[i].isEmpty()){
+                        int pos = Integer.valueOf(posStr[i]);
+                        setVisibility(pos,false);
+                    }
+                }
+            }
+        });
+        RxBus.getInstance().addSubscription(this,regist);
+    }
+
 }

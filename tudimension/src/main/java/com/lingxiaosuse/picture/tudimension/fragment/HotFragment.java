@@ -55,7 +55,7 @@ public class HotFragment extends BaseFragment implements HotView{
     private GridLayoutManager mLayoutManager;
     private int index = 1;
     private ArrayList<String> picUrlList = new ArrayList<>();//取出图片地址传递给下一个activity
-    private HotPresenter mPresenter = new HotPresenter(this,this);
+    private HotPresenter mPresenter;
 
     @Override
     protected int getContentLayoutId() {
@@ -115,6 +115,7 @@ public class HotFragment extends BaseFragment implements HotView{
     @Override
     protected void initData() {
         super.initData();
+        mPresenter = new HotPresenter(this,this);
         mPresenter.getHotResult(ContentValue.limit,index);
     }
 

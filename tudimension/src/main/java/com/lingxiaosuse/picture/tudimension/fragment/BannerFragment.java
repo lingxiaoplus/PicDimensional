@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.LogUtils;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BannerRecycleAdapter;
@@ -108,6 +109,7 @@ public class BannerFragment extends BaseFragment implements HomeView{
     protected void initData() {
         super.initData();
         mHomePresenter.getBannerDetailData(id, ContentValue.limit,skip,type,order);
+        LogUtils.i("类型和："+type+"   order : "+order);
     }
 
     @Override
@@ -126,14 +128,6 @@ public class BannerFragment extends BaseFragment implements HomeView{
         for (int i = 0; i < picList.size(); i++) {
             picUrlList.add(picList.get(i).getImg());
             IdList.add(picList.get(i).getId());
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser){
-
         }
     }
 

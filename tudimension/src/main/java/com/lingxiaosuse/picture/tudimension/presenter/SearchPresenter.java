@@ -20,13 +20,17 @@ public class SearchPresenter extends BasePresenter<SearchView,SearchActivity>{
         mSearchTrans.getSearchKey(ContentValue.SEARCH_KEY_URL, new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                SearchKeyword modle = (SearchKeyword) object[0];
-                getView().onGetSearchKeyWord(modle);
+                if (getView() != null){
+                    SearchKeyword modle = (SearchKeyword) object[0];
+                    getView().onGetSearchKeyWord(modle);
+                }
             }
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
+                if (getView() != null){
+                    getView().showToast(desc);
+                }
             }
 
             @Override
@@ -41,13 +45,18 @@ public class SearchPresenter extends BasePresenter<SearchView,SearchActivity>{
         mSearchTrans.getSearchResult(keyWord, skip, new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                SearchResultModle modle = (SearchResultModle) object[0];
-                getView().onGetSearchResult(modle);
+                if (getView() != null){
+                    SearchResultModle modle = (SearchResultModle) object[0];
+                    getView().onGetSearchResult(modle);
+                }
+
             }
 
             @Override
             public void onError(int code, String desc) {
-                getView().showToast(desc);
+                if (getView() != null){
+                    getView().showToast(desc);
+                }
             }
 
             @Override

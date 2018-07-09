@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -36,8 +37,8 @@ import java.util.List;
  */
 
 public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    private List<HomePageModle.Picture> list = new ArrayList<>();
-    private List<HomePageModle.slidePic> slideList = new ArrayList<>();
+    private List<HomePageModle.Picture> list;
+    private List<HomePageModle.slidePic> slideList;
     private List<Integer> mHeights;
     private int headCount = 1; //头布局个数
     private int footCount = 1; //尾布局个数
@@ -47,7 +48,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
     private LayoutInflater mLayoutInflater;
     private boolean isFinish;   //是否加载完成 -- 隐藏布局
 
-    private String imgRule = "?imageView2/3/h/230"; //图片规则，从服务器取230大小的图片
+    //private String imgRule = "?imageView2/3/h/230"; //图片规则，从服务器取230大小的图片
     private int mLastPosition = -1;
     public MyRecycleViewAdapter(List<HomePageModle.Picture> list,
                                 List<HomePageModle.slidePic> slideList,
@@ -168,7 +169,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
                 }
             });
         }else if (viewHolder instanceof ViewHolder){
-            final Uri uri = Uri.parse(list.get(position).img +imgRule);
+            final Uri uri = Uri.parse(list.get(position).img + ContentValue.imgRule);
 
             //如果本地JPEG图，有EXIF的缩略图，image pipeline 可以立刻返回它作为一个缩略图
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)

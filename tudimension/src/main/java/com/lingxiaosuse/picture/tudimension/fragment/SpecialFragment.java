@@ -48,7 +48,7 @@ public class SpecialFragment extends BaseFragment implements SpecialView{
     private SpecialRecycleAdapter mAdapter;
     private LinearLayoutManager manager;
     private int skip = 0;
-    private SpecialPresneter mPresenter = new SpecialPresneter(this,this);
+    private SpecialPresneter mPresenter;
     @Override
     protected int getContentLayoutId() {
         return R.layout.fragment_special;
@@ -96,6 +96,7 @@ public class SpecialFragment extends BaseFragment implements SpecialView{
     @Override
     protected void initData() {
         albumBeanList.clear();
+        mPresenter = new SpecialPresneter(this,this);
         mPresenter.getSpecialResult(ContentValue.limit,0);
     }
 

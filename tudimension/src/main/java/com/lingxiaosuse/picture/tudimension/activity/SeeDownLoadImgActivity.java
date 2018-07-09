@@ -14,13 +14,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.RxBus;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.LocalImgAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.rxbus.DeleteEvent;
-import com.lingxiaosuse.picture.tudimension.rxbus.RxBus;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
@@ -33,6 +33,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -108,21 +110,16 @@ public class SeeDownLoadImgActivity extends BaseActivity {
      * 订阅消息
      */
     private void initSubscription() {
-        rxSubscription = RxBus.getDefault().tObservable(DeleteEvent.class)
-                .subscribe(new Action1<DeleteEvent>() {
-                    @Override
-                    public void call(DeleteEvent deleteEvent) {
-                        //刷新数据
-                        mPicList.remove(deleteEvent.getPosition());
-                        mAdapter.notifyDataSetChanged();
-                        Log.i("code", "接收到删除数据了: " + deleteEvent.getPosition());
-                    }
-                }, new Action1<Throwable>() {
-                    @Override
-                    public void call(Throwable throwable) {
-                        ToastUtils.show(throwable.toString());
-                    }
-                });
+        Disposable regist = RxBus.getInstance().register(DeleteEvent.class, new Consumer<DeleteEvent>() {
+            @Override
+            public void accept(DeleteEvent deleteEvent) throws Exception {
+                //刷新数据
+                mPicList.remove(deleteEvent.getPosition());
+                mAdapter.notifyDataSetChanged();
+                Log.i("code", "接收到删除数据了: " + deleteEvent.getPosition());
+            }
+        });
+        RxBus.getInstance().addSubscription(this,regist);
     }
 
     @Override
@@ -281,10 +278,7 @@ public class SeeDownLoadImgActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //取消订阅
-        if (!rxSubscription.isUnsubscribed()) {
-            rxSubscription.unsubscribe();
-        }
+        RxBus.getInstance().unSubscribe(this);
     }
 
     @Override

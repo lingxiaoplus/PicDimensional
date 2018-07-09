@@ -51,7 +51,7 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
     private List<VerticalModle.VerticalBean> verticalBeanList;
     private ArrayList<String> picIdList = new ArrayList<>();
     private ArrayList<String> picUrlList = new ArrayList<>();
-    private VerticalPresenter mPresenter = new VerticalPresenter(this,this);
+    private VerticalPresenter mPresenter;
 
     @BindView(R.id.recycle_vertical_item)
     RecyclerView mRecyclerView;
@@ -113,6 +113,7 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
     @Override
     protected void initData() {
         super.initData();
+        mPresenter = new VerticalPresenter(this,this);
         Bundle bundle = getArguments();
         order = bundle.getString("order");
         mPresenter.getVerticalData(30,skip,order);

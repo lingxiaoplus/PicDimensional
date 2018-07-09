@@ -51,9 +51,10 @@ public class HomeFragment extends BaseFragment implements HomeView{
     SwipeRefreshLayout swipeLayout;
     @BindView(R.id.fab_fragment)
     FloatingActionButton fab;
-    private HomePresenter mPresenter = new HomePresenter(this,this);
+    private HomePresenter mPresenter;
     @Override
     protected void initData() {
+        mPresenter = new HomePresenter(this,this);
         picList.clear();
         homeDesList.clear();
         slideList.clear();
@@ -132,7 +133,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
                 intent.putExtra("desc",slideList.get(position).desc);
                 intent.putExtra("id",slideList.get(position).id);
                 intent.putExtra("title",slideList.get(position).name);
-                intent.putExtra("type","album");  //说明类型是轮播图
+                intent.putExtra("type",ContentValue.TYPE_ALBUM);  //说明类型是轮播图
                 startActivity(intent);
             }
         });

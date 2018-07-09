@@ -15,7 +15,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.SeeDownLoadImgActivity;
+import com.lingxiaosuse.picture.tudimension.receiver.NotificationReceiver;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadTask;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.io.File;
@@ -38,22 +40,17 @@ public class DownloadService extends Service {
             downloadTask = null;
             stopForeground(true);
             getNotificationManager().notify(1,getNotfifcation("下载成功，点击查看",-1));
-            // 其次把文件插入到系统图库
-            try {
-                MediaStore.Images.Media.insertImage(UIUtils.getContext().getContentResolver(),
-                        file.getAbsolutePath(), file.getName(), null);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
             // 最后通知图库更新
             UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
                     Uri.fromFile(new File(file.getPath()))));
+            ToastUtils.show("下载成功");
         }
 
         @Override
         public void onFailed() {
             downloadTask = null;
             stopForeground(true);
+            ToastUtils.show("下载失败");
             getNotificationManager().notify(1,getNotfifcation("下载失败，请重试",-1));
         }
 
@@ -74,35 +71,39 @@ public class DownloadService extends Service {
     }
 
     public class DownloadBinder extends Binder{
-        public void startDownload(String url){
-            if (downloadTask == null){
-                downloadUrl = url;
-                downloadTask = new DownloadTask(listener);
-                downloadTask.execute(downloadUrl);
-                startForeground(1,getNotfifcation("下载中...",0));
-            }
+        public DownloadService getService(){
+            return DownloadService.this;
         }
-        public void pauseDownload(){
-            if (downloadTask != null){
-                downloadTask.setTypePaused();
-            }
+    }
+
+    public void startDownload(String url){
+        if (downloadTask == null){
+            downloadUrl = url;
+            downloadTask = new DownloadTask(listener);
+            downloadTask.execute(downloadUrl);
+            startForeground(1,getNotfifcation("下载中...",0));
         }
-        public void cancelDownload(){
-            if (downloadTask != null){
-                downloadTask.setTypeCanceled();
-            }else {
-                if (downloadUrl != null){
-                    String fileName = downloadUrl.substring(downloadUrl.lastIndexOf("/"));
-                    String directory = Environment
-                            .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
-                            .getPath();
-                    File file = new File(directory +fileName);
-                    if (file.exists()){
-                        file.delete();
-                    }
-                    getNotificationManager().cancel(1);
-                    stopForeground(true);
+    }
+    public void pauseDownload(){
+        if (downloadTask != null){
+            downloadTask.setTypePaused();
+        }
+    }
+    public void cancelDownload(){
+        if (downloadTask != null){
+            downloadTask.setTypeCanceled();
+        }else {
+            if (downloadUrl != null){
+                String fileName = downloadUrl.substring(downloadUrl.lastIndexOf("/"));
+                String directory = Environment
+                        .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+                        .getPath();
+                File file = new File(directory +fileName);
+                if (file.exists()){
+                    file.delete();
                 }
+                getNotificationManager().cancel(1);
+                stopForeground(true);
             }
         }
     }
@@ -111,12 +112,25 @@ public class DownloadService extends Service {
         return (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
     }
     private Notification getNotfifcation(String title,int progress){
-        Intent intent = new Intent(this, SeeDownLoadImgActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this,0,intent,0);
+        //Intent intent = new Intent(this, SeeDownLoadImgActivity.class);
+        //PendingIntent pi = PendingIntent.getActivity(this,0,intent,0);
+
+        Intent intentClick = new Intent(this, NotificationReceiver.class);
+        intentClick.setAction("notification_clicked");
+        intentClick.putExtra(NotificationReceiver.TYPE, 1);
+        //intentClick.putExtra("username",msg.getUserName());
+        PendingIntent pendingIntentClick = PendingIntent.getBroadcast(this, 0, intentClick, PendingIntent.FLAG_ONE_SHOT);
+
+        Intent intentCancel = new Intent(this, NotificationReceiver.class);
+        intentCancel.setAction("notification_cancelled");
+        intentCancel.putExtra(NotificationReceiver.TYPE, 1);
+        PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this, 0, intentCancel, PendingIntent.FLAG_ONE_SHOT);
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
-        builder.setContentIntent(pi);
+        builder.setContentIntent(pendingIntentClick);
+        builder.setDeleteIntent(pendingIntentCancel);
         builder.setContentTitle(title);
         if (progress > 0){
             builder.setContentText(progress + "%");

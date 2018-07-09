@@ -43,7 +43,7 @@ public class CategoryVerticalFragment extends BaseFragment implements CategoryVi
     private CategoryAdapter mCateAdapter;
     private GridLayoutManager mLayoutManager;
     private List<CategoryVerticalModle.CategoryBean> categoryList = new ArrayList<>();
-    private CategoryPresenter mCategoryPresenter = new CategoryPresenter(this,this);
+    private CategoryPresenter mCategoryPresenter;
 
     @Override
     protected int getContentLayoutId() {
@@ -52,6 +52,7 @@ public class CategoryVerticalFragment extends BaseFragment implements CategoryVi
 
     @Override
     protected void initData() {
+        mCategoryPresenter = new CategoryPresenter(this,this);
         mCategoryPresenter.getCategoryVertical();
     }
 
