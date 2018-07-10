@@ -12,7 +12,7 @@
     <color name="white">#11111111</color>
     <color name="whiteNor">#FFFFFFFF</color>
     <color name="trans">#00000000</color>
-
+    <color name="colorGray">#e5e3e4</color>
     <!--splash background color start-->
     <color name="lightblue1">#03A9F4</color>
     <color name="lightblue2">#29B6F6</color>

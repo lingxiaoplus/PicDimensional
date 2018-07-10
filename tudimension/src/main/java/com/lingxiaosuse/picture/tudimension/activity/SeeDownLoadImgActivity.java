@@ -91,6 +91,11 @@ public class SeeDownLoadImgActivity extends BaseActivity {
                 intent.putStringArrayListExtra("list", (ArrayList<String>) mPicList);
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
 
         setSwipeColor(swipDownload);

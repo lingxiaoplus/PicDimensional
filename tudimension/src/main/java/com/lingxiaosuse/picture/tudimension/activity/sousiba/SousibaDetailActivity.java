@@ -99,6 +99,11 @@ public class SousibaDetailActivity extends BaseActivity {
                 intent.putExtra("imgurl",mImgList.get(position));
                 startActivity(intent);*/
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(1,
                 StaggeredGridLayoutManager.VERTICAL);

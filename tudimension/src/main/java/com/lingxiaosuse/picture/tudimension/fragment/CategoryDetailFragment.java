@@ -141,6 +141,11 @@ public class CategoryDetailFragment extends BaseFragment{
                                 intent.putStringArrayListExtra("picIdList",picIdList);
                                 startActivity(intent);
                             }
+
+                            @Override
+                            public void onLongClick(View view, int position) {
+
+                            }
                         });
                     }
 

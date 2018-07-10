@@ -108,6 +108,11 @@ public class MzituFragment extends BaseFragment{
                 intent.putExtra("imgurl",mImgDetailList.get(position));
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
     }
 

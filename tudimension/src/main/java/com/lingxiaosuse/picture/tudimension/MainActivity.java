@@ -4,14 +4,18 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.Service;
 import android.content.ActivityNotFoundException;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -24,6 +28,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,9 +39,11 @@ import com.camera.lingxiao.common.app.ActivityController;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.PopwindowUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.rxbus.DrawerChangeEvent;
+import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
@@ -107,6 +114,9 @@ public class MainActivity extends BaseActivity implements MainView{
     private ProgressDialog uploadDialog;
     private TextView hitokoto;
     private SimpleDraweeView simpleDraweeView;
+    private ServiceConnection mConnect;
+    public DownloadService mDownloadService;
+    private String mHeadImageUrl = "";
     private MainPresenter mPresenter = new MainPresenter(this,this);
     @Override
     protected int getContentLayoutId() {
@@ -126,6 +136,7 @@ public class MainActivity extends BaseActivity implements MainView{
         filter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
         filter.addAction("android.net.wifi.STATE_CHANGE");
         registerReceiver(mNetworkChangeListener, filter);
+        bindDownloadService();
     }
 
     private void initHeadLayout() {
@@ -137,6 +148,38 @@ public class MainActivity extends BaseActivity implements MainView{
         headImage.setVisibility(View.GONE);
         mPresenter.getHeadImg();
         mPresenter.getHeadText();
+
+        simpleDraweeView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                final PopwindowUtil popwindowUtil = new PopwindowUtil
+                        .PopupWindowBuilder(getApplicationContext())
+                        .setView(R.layout.pop_long_click)
+                        .setFocusable(true)
+                        .setTouchable(true)
+                        .setOutsideTouchable(true)
+                        .create();
+                popwindowUtil.showAsLocation(simpleDraweeView,Gravity.CENTER,0, 10);
+
+                popwindowUtil.setOnItemClick(R.id.pop_download, new PopwindowUtil.ItemClickListener() {
+                    @Override
+                    public void onItemClick(View view) {
+                        if (mDownloadService != null && mHeadImageUrl != null){
+                            ToastUtils.show("正在下载");
+                            mDownloadService.startDownload(mHeadImageUrl);
+                        }
+                        popwindowUtil.dissmiss();
+                    }
+                });
+                popwindowUtil.setOnItemClick(R.id.pop_cancel, new PopwindowUtil.ItemClickListener() {
+                    @Override
+                    public void onItemClick(View view) {
+                        popwindowUtil.dissmiss();
+                    }
+                });
+                return true;
+            }
+        });
     }
 
     private void initView() {
@@ -236,11 +279,31 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     public void onGetHeadBackGround(Uri uri) {
         simpleDraweeView.setImageURI(uri);
+        mHeadImageUrl = uri.toString();
     }
 
     @Override
     public void onGetHeadText(String result) {
         hitokoto.setText(result);
+    }
+
+
+    private void bindDownloadService() {
+        mConnect = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                DownloadService.DownloadBinder binder = (DownloadService.DownloadBinder) service;
+                mDownloadService = binder.getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mDownloadService = null;
+            }
+        };
+        Intent intent = new Intent(this, DownloadService.class);
+        //最后一个参数，是否自动创建service 这个是自动创建
+        bindService(intent, mConnect, Service.BIND_AUTO_CREATE);
     }
 
     private class MainPageAdapter extends FragmentPagerAdapter {
@@ -308,6 +371,9 @@ public class MainActivity extends BaseActivity implements MainView{
         //移除网络监听广播
         if (mNetworkChangeListener != null) {
             unregisterReceiver(mNetworkChangeListener);
+        }
+        if (mConnect != null){
+            unbindService(mConnect);
         }
         mHandler.removeMessages(2);
         RxBus.getInstance().unSubscribe(this);

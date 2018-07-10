@@ -5,10 +5,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.PopwindowUtil;
+import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
@@ -79,7 +82,38 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
                 intent.putExtra("type", ContentValue.TYPE_CATEGORY);  //说明类型是轮播图
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, final int position) {
+                final PopwindowUtil popwindowUtil = new PopwindowUtil
+                        .PopupWindowBuilder(getActivity())
+                        .setView(R.layout.pop_long_click)
+                        .setFocusable(true)
+                        .setTouchable(true)
+                        .setOutsideTouchable(true)
+                        .create();
+                popwindowUtil.showAsLocation(view, Gravity.CENTER,0, 10);
+
+                popwindowUtil.setOnItemClick(R.id.pop_download, new PopwindowUtil.ItemClickListener() {
+                    @Override
+                    public void onItemClick(View view) {
+                        MainActivity activity = (MainActivity) getActivity();
+                        if (activity.mDownloadService != null){
+                            ToastUtils.show("正在下载");
+                            activity.mDownloadService.startDownload(categoryList.get(position).getCover());
+                        }
+                        popwindowUtil.dissmiss();
+                    }
+                });
+                popwindowUtil.setOnItemClick(R.id.pop_cancel, new PopwindowUtil.ItemClickListener() {
+                    @Override
+                    public void onItemClick(View view) {
+                        popwindowUtil.dissmiss();
+                    }
+                });
+            }
         });
+
     }
 
     @Override

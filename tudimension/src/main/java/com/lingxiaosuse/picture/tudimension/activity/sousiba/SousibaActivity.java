@@ -67,6 +67,11 @@ public class SousibaActivity extends BaseActivity {
                 intent.putExtra("imgurl",mUrlList.get(position));
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
         mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
             @Override

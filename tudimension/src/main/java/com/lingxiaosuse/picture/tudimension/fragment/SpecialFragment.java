@@ -90,6 +90,11 @@ public class SpecialFragment extends BaseFragment implements SpecialView{
                 intent.putExtra("type","album");  //说明类型位album
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
     }
 

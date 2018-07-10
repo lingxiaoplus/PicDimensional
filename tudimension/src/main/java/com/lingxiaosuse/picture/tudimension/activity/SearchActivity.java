@@ -207,6 +207,11 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
                 intent.putExtra("isHot",false); // 判断是否为最新界面传递过来的
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
     }
 

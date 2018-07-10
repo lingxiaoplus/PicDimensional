@@ -86,6 +86,11 @@ public class CategoryVerticalFragment extends BaseFragment implements CategoryVi
                 intent.putExtra("type","category");  //说明类型是轮播图
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
     }
 

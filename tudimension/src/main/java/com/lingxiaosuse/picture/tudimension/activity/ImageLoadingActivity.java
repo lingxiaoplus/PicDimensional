@@ -79,18 +79,7 @@ public class ImageLoadingActivity extends BaseActivity {
     private boolean isHot, isVertical;
     private File file;
     private DownloadService mDownloadService;
-    private ServiceConnection mConnect = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mDownloadService = (DownloadService) service;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mDownloadService.stopSelf();
-            mConnect = null;
-        }
-    };
+    private ServiceConnection mConnect;
 
     @Override
     protected int getContentLayoutId() {

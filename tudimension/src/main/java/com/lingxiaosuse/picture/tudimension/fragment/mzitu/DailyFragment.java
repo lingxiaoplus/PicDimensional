@@ -109,6 +109,11 @@ public class DailyFragment extends BaseFragment{
                 intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
     }
 

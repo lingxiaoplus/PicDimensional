@@ -97,6 +97,14 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
                     onItemClickListener.onItemClick(holder.itemView,poisition);
                 }
             });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = holder.getAdapterPosition();
+                    onItemClickListener.onLongClick(holder.itemView,pos);
+                    return true;
+                }
+            });
         }
         return holder;
     }
@@ -164,6 +172,7 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
 
     public interface OnItemClickListener {
         void onItemClick(View View, int position);
+        void onLongClick(View view,int position);
     }
 
     private OnItemClickListener onItemClickListener;

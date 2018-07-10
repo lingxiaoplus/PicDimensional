@@ -86,6 +86,11 @@ public class AllFragment extends BaseFragment{
                 intent.putExtra("imgurl",mImgList.get(position));
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
     }
     @Override
