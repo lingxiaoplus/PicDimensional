@@ -7,6 +7,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,8 @@ import android.widget.PopupWindow;
 
 public class PopwindowUtil {
     private Context mContext;
-    private int mWidth;
-    private int mHeight;
+    private int mWidth = 0;
+    private int mHeight = 0;
     private boolean mIsFocusable = true;
     private boolean mIsOutside = true;
     private int mResLayoutId = -1;
@@ -79,7 +80,16 @@ public class PopwindowUtil {
         return this;
     }
 
-
+    public PopwindowUtil showAtLocation(View root){
+        if (mPopupWindow != null){
+            int windowPos[] = calculatePopWindowPos(root, mContentView);
+            int xOff = 20;// 可以自己调整偏移
+            windowPos[0] -= xOff;
+            mPopupWindow.showAtLocation(root, Gravity.TOP | Gravity.START,
+                    windowPos[0], windowPos[1]);
+        }
+        return this;
+    }
     /**
      * 添加属性
      * @param popupWindow
@@ -151,32 +161,6 @@ public class PopwindowUtil {
         return (T) view;
     }
 
-    /**
-     * 注意需要在create执行之后调用，不然会空指针
-     * @param resId
-     * @param listener
-     */
-    public void setOnItemClick(int resId, ItemClickListener listener){
-        this.itemClickListener = listener;
-        View view = getView(resId);
-        if (view == null){
-            Log.i("PopwindowUtil","view is not install!");
-            return;
-        }
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (itemClickListener != null){
-                    itemClickListener.onItemClick(v);
-                }
-            }
-        });
-    }
-
-    public ItemClickListener itemClickListener;
-    public interface ItemClickListener{
-        void onItemClick(View view);
-    }
     public void dissmiss(){
         if(mPopupWindow!=null){
             mPopupWindow.dismiss();
@@ -294,4 +278,49 @@ public class PopwindowUtil {
 
     }
 
+
+    /**
+     * 计算出来的位置，y方向就在anchorView的上面和下面对齐显示，x方向就是与屏幕右边对齐显示
+     * 如果anchorView的位置有变化，就可以适当自己额外加入偏移来修正
+     * @param anchorView  呼出window的view
+     * @param contentView   window的内容布局
+     * @return window显示的左上角的xOff,yOff坐标
+     */
+    private static int[] calculatePopWindowPos(final View anchorView, final View contentView) {
+        final int windowPos[] = new int[2];
+        final int anchorLoc[] = new int[2];
+        // 获取锚点View在屏幕上的左上角坐标位置
+        anchorView.getLocationOnScreen(anchorLoc);
+        final int anchorHeight = anchorView.getHeight();
+        // 获取屏幕的高宽
+        final int screenHeight = getScreenHeight(anchorView.getContext());
+        final int screenWidth = getScreenWidth(anchorView.getContext());
+        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        // 计算contentView的高宽
+        final int windowHeight = contentView.getMeasuredHeight();
+        final int windowWidth = contentView.getMeasuredWidth();
+        // 判断需要向上弹出还是向下弹出显示
+        final boolean isNeedShowUp = (screenHeight - anchorLoc[1] - anchorHeight < windowHeight);
+        if (isNeedShowUp) {
+            windowPos[0] = screenWidth - windowWidth;
+            windowPos[1] = anchorLoc[1] - windowHeight;
+        } else {
+            windowPos[0] = screenWidth - windowWidth;
+            windowPos[1] = anchorLoc[1] + anchorHeight;
+        }
+        return windowPos;
+    }
+
+    /**
+     * 获取屏幕高度(px)
+     */
+    public static int getScreenHeight(Context context) {
+        return context.getResources().getDisplayMetrics().heightPixels;
+    }
+    /**
+     * 获取屏幕宽度(px)
+     */
+    public static int getScreenWidth(Context context) {
+        return context.getResources().getDisplayMetrics().widthPixels;
+    }
 }

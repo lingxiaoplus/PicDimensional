@@ -11,6 +11,7 @@ import android.view.View;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.PopwindowUtil;
+import com.camera.lingxiao.common.widget.BaseHolder;
 import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
@@ -92,11 +93,11 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
                         .setTouchable(true)
                         .setOutsideTouchable(true)
                         .create();
-                popwindowUtil.showAsLocation(view, Gravity.CENTER,0, 10);
+                popwindowUtil.showAtLocation(view);
 
-                popwindowUtil.setOnItemClick(R.id.pop_download, new PopwindowUtil.ItemClickListener() {
+                popwindowUtil.getView(R.id.pop_download).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onItemClick(View view) {
+                    public void onClick(View v) {
                         MainActivity activity = (MainActivity) getActivity();
                         if (activity.mDownloadService != null){
                             ToastUtils.show("正在下载");
@@ -105,9 +106,10 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
                         popwindowUtil.dissmiss();
                     }
                 });
-                popwindowUtil.setOnItemClick(R.id.pop_cancel, new PopwindowUtil.ItemClickListener() {
+                popwindowUtil.getView(R.id.pop_cancel).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onItemClick(View view) {
+                    public void onClick(View v) {
+
                         popwindowUtil.dissmiss();
                     }
                 });

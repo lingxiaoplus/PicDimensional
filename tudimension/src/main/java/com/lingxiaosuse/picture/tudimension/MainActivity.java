@@ -31,6 +31,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -159,11 +160,11 @@ public class MainActivity extends BaseActivity implements MainView{
                         .setTouchable(true)
                         .setOutsideTouchable(true)
                         .create();
-                popwindowUtil.showAsLocation(simpleDraweeView,Gravity.CENTER,0, 10);
+                popwindowUtil.showAtLocation(simpleDraweeView);
 
-                popwindowUtil.setOnItemClick(R.id.pop_download, new PopwindowUtil.ItemClickListener() {
+                popwindowUtil.getView(R.id.pop_download).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onItemClick(View view) {
+                    public void onClick(View v) {
                         if (mDownloadService != null && mHeadImageUrl != null){
                             ToastUtils.show("正在下载");
                             mDownloadService.startDownload(mHeadImageUrl);
@@ -171,9 +172,10 @@ public class MainActivity extends BaseActivity implements MainView{
                         popwindowUtil.dissmiss();
                     }
                 });
-                popwindowUtil.setOnItemClick(R.id.pop_cancel, new PopwindowUtil.ItemClickListener() {
+                popwindowUtil.getView(R.id.pop_cancel).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onItemClick(View view) {
+                    public void onClick(View v) {
+
                         popwindowUtil.dissmiss();
                     }
                 });
