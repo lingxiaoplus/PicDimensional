@@ -23,6 +23,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.widget.MyWebView;
@@ -46,10 +47,13 @@ public class WebActivity extends BaseActivity {
     private ValueCallback<Uri[]> uploadMessageAboveL;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_web);
-        ButterKnife.bind(this);
+    protected int getContentLayoutId() {
+        return R.layout.activity_web;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         initWebView();
         initSwipeLayout();
         setToolbarBack(toolbarTitle);
@@ -69,7 +73,6 @@ public class WebActivity extends BaseActivity {
 
         });
         Log.i("code", "传递过来的图片地址: "+ url);
-
 
         webView.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -125,8 +128,6 @@ public class WebActivity extends BaseActivity {
                 pbWeb.setProgress(newProgress);
             }
         });
-
-
     }
 
     private void openImageChooserActivity() {

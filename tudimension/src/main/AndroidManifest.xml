@@ -43,7 +43,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SplashActivity"></activity>
+        <activity android:name=".activity.SplashActivity" />
         <activity android:name=".activity.BaseActivity" />
         <activity android:name=".activity.ImageLoadingActivity" />
         <activity android:name=".activity.CategoryDetailActivity" />
@@ -94,11 +94,10 @@
                 <action android:name="com.seewo.homewidgets.action.CLICK" />
             </intent-filter>
         </receiver>
-
         <receiver android:name=".receiver.NotificationReceiver">
             <intent-filter>
-                <action android:name="notification_cancelled"/>
-                <action android:name="notification_clicked"/>
+                <action android:name="notification_cancelled" />
+                <action android:name="notification_clicked" />
             </intent-filter>
         </receiver>
 
@@ -110,7 +109,9 @@
 
         <service
             android:name=".service.InitIalizeService"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <activity android:name=".activity.cosplay.CosplayLaActivity"></activity>
     </application>
 
 </manifest>

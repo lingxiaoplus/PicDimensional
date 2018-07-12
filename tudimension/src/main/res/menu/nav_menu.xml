@@ -19,6 +19,11 @@
             android:title="搜丝吧(sousiba.com)"
             android:visible="false"
             />
+        <item android:id="@+id/nav_cosplayla"
+            android:icon="@drawable/ic_img_cosplay"
+            android:title="cosplay.la"
+            android:visible="true"
+            />
         <!--<item android:id="@+id/nav_figure"-->
             <!--android:icon="@drawable/ic_img_figure"-->
             <!--android:title="斗图专题"/>-->

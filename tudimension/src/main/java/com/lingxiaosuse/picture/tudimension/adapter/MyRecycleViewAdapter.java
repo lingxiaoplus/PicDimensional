@@ -155,7 +155,7 @@ public class MyRecycleViewAdapter extends RecyclerView.Adapter<RecyclerView.View
             //设置自动轮播，默认为true
             ((HeadHolder) viewHolder).banner.isAutoPlay(true);
             //设置轮播时间
-            ((HeadHolder) viewHolder).banner.setDelayTime(1500);
+            ((HeadHolder) viewHolder).banner.setDelayTime(ContentValue.BANNER_TIMER);
             //设置指示器位置（当banner模式中有指示器时）
             ((HeadHolder) viewHolder).banner.setIndicatorGravity(BannerConfig.TITLE_BACKGROUND);
             //banner设置方法全部调用完毕时最后调用

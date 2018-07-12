@@ -45,7 +45,7 @@ ext{
     supportVersion = '27.1.1'
     butterknifeVersion = '8.7.0'
     circleimageVersion = '2.2.0'
-    constraintVersion = "1.1.1"
+    constraintVersion = "1.0.2"
     //沉浸式
     ultimatebarVersion = "2.0.0"
     gsonVersion = "2.7"

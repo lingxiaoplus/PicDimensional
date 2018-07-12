@@ -90,7 +90,7 @@ public class ImageLoadingActivity extends BaseActivity {
     protected void initWidget() {
         super.initWidget();
         UltimateBar.newImmersionBuilder()
-                .applyNav(true)         // 是否应用到导航栏
+                .applyNav(false)         // 是否应用到导航栏
                 .build(this)
                 .apply();
         intent = getIntent();

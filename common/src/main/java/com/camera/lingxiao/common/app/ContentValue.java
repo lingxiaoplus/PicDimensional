@@ -122,5 +122,9 @@ public class ContentValue {
      * 记录侧滑模块
      */
     public static final String DRAWER_MODEL = "drawer_model";
+    /**
+     * 设置轮播图时间
+     */
+    public static final int BANNER_TIMER = 2000;
 
 }

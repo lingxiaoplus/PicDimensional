@@ -47,8 +47,16 @@
         <item>首页</item>
         <item>手机壁纸</item>
         <item>妹子图</item>
+        <item>cosplay.la</item>
         <item>以图搜图</item>
         <item>好评一波</item>
         <item>退出软件</item>
+    </string-array>
+
+    <string-array name="cosplayla_tab">
+        <item>默认排序</item>
+        <item>关注度</item>
+        <item>最新发布</item>
+        <item>获赞数</item>
     </string-array>
 </resources>

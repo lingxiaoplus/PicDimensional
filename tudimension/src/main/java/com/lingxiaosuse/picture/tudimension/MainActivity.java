@@ -43,6 +43,7 @@ import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.PopwindowUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
+import com.lingxiaosuse.picture.tudimension.activity.cosplay.CosplayLaActivity;
 import com.lingxiaosuse.picture.tudimension.rxbus.DrawerChangeEvent;
 import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
@@ -247,8 +248,10 @@ public class MainActivity extends BaseActivity implements MainView{
                         StartActivity(MzituActivity.class,false);
                         break;
                     case R.id.nav_sousiba:
-
                         StartActivity(SousibaActivity.class,false);
+                        break;
+                    case R.id.nav_cosplayla:
+                        StartActivity(CosplayLaActivity.class,false);
                         break;
                     default:
                         break;
@@ -268,14 +271,14 @@ public class MainActivity extends BaseActivity implements MainView{
         }else if(pos == 2){
             menu.findItem(R.id.nav_mzitu).setVisible(vis);
         }else if(pos == 3){
-            menu.findItem(R.id.nav_find).setVisible(vis);
+            menu.findItem(R.id.nav_cosplayla).setVisible(vis);
         }else if(pos == 4){
-            menu.findItem(R.id.nav_reception).setVisible(vis);
+            menu.findItem(R.id.nav_find).setVisible(vis);
         }else if(pos == 5){
+            menu.findItem(R.id.nav_reception).setVisible(vis);
+        }else if(pos == 6){
             menu.findItem(R.id.nav_exit).setVisible(vis);
-        }/*else if(pos == 6){
-            navigationView.findViewById(R.id.nav_exit).setVisibility(View.GONE);
-        }*/
+        }
 
     }
     @Override
