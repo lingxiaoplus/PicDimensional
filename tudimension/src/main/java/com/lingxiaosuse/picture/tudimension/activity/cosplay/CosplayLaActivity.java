@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.fragment.cosplay.CosplayFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.AllFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.DailyFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.MzituFragment;
@@ -65,31 +66,9 @@ public class CosplayLaActivity extends BaseActivity {
 
         @Override
         public Fragment getItem(int position) {
-            MzituFragment fragment = new MzituFragment();
+            CosplayFragment fragment = new CosplayFragment();
             Bundle bundle = new Bundle();
-            if (position == 0) {
-                bundle.putString("type", "");
-            } else if (position == 1) {
-                bundle.putString("type", "xinggan");
-            } else if (position == 2) {
-                bundle.putString("type", "japan");
-            } else if (position == 3) {
-                bundle.putString("type", "taiwan");
-            } else if (position == 4) {
-                bundle.putString("type", "mm");
-            } else if (position == 5) {
-                bundle.putString("type", "zipai");
-                DailyFragment dailyFragment = new DailyFragment();
-                dailyFragment.setArguments(bundle);
-                return dailyFragment;
-            } else if (position == 6) {
-                bundle.putString("type", "all");
-                AllFragment allFragment = new AllFragment();
-                allFragment.setArguments(bundle);
-                return allFragment;
-            } else {
-                bundle.putString("type", "");
-            }
+            bundle.putInt("order", position);
             fragment.setArguments(bundle);
             return fragment;
         }

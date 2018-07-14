@@ -74,7 +74,7 @@ public class MzituActivity extends BaseActivity {
             @Override
             public void run() {
                 Connection connection = Jsoup.connect(ContentValue.MZITU_URL)
-                        .header("Referer", "http://www.mzitu.com")
+                        .header("Referer", ContentValue.MZITU_URL)
                         .header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0")
                         .timeout(5000)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
@@ -84,7 +84,6 @@ public class MzituActivity extends BaseActivity {
                     Connection.Response response = connection.execute();
                     response.cookies();
                     doc = connection.get();
-
                     //获取tab的数据
                     Element elementDiv = doc.getElementById("menu-nav");
                     //Elements elementsUl = elementDiv.getElementsByTag("ul");

@@ -105,6 +105,18 @@ public class ContentValue {
     public static final String HITOKOTO_URL = "http://api.hitokoto.cn/";
     //mzitu网址
     public static final String MZITU_URL = "http://www.mzitu.com/";
+
+    /**
+     * cosplay.la
+     */
+    public static final String COSPLAY_LA_URL = "http://api.cosplay.la/share/GetPhotoList";
+
+    public static final String COSPLAY_LA_DETAIL_URL = "http://api.cosplay.la/share/GetById";
+    /**
+     * cosplay requestcode
+     */
+    public static final String COSPLAY_REQUEST_CODE = "8A409431-D3EC-443F-A3B6-098F105B26B0";
+
     //浏览器标志
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0";
 

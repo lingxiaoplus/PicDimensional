@@ -111,7 +111,8 @@
             android:name=".service.InitIalizeService"
             android:exported="false" />
 
-        <activity android:name=".activity.cosplay.CosplayLaActivity"></activity>
+        <activity android:name=".activity.cosplay.CosplayLaActivity" />
+        <activity android:name=".activity.cosplay.CosplayDetailActivity"></activity>
     </application>
 
 </manifest>

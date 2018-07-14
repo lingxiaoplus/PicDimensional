@@ -1,15 +1,20 @@
 package com.camera.lingxiao.common.api;
 
+import com.camera.lingxiao.common.body.CosplayBody;
 import com.camera.lingxiao.common.http.response.HttpResponse;
 
 import java.util.Map;
 import java.util.TreeMap;
 
 import io.reactivex.Observable;
+import okhttp3.RequestBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
+import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.HeaderMap;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
@@ -59,4 +64,14 @@ public interface UserApi {
      */
     @GET
     Observable<Object> other(@Url String url);
+
+    /**
+     * 其他api调用
+     * @param url 全路径
+     * @return
+     */
+    @FormUrlEncoded
+    @POST
+    Observable<Object> otherHeader(@Url String url, @HeaderMap Map<String,String> headers,
+                                   @FieldMap Map<String,Object> values);
 }

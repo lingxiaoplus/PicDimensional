@@ -38,6 +38,7 @@
                     android:singleLine="true"/>
                 <ImageView
                     android:visibility="gone"
+                    tools:visibility="visible"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/iv_mzitu_detail_collect"
