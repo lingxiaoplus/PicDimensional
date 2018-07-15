@@ -9,8 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.activity.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
@@ -46,13 +46,23 @@ public class SousibaActivity extends BaseActivity {
     private Elements nextPages;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sousiba);
-        ButterKnife.bind(this);
+    protected int getContentLayoutId() {
+        return R.layout.activity_sousiba;
+    }
+
+    @Override
+    protected void initWidget() {
+        super.initWidget();
         setToolbarBack(toolbarSousiba);
         toolbarSousiba.setTitle("搜丝吧");
-        initSwipRefresh();
+        swipSousiba.setRefreshing(true);
+        setSwipeColor(swipSousiba);
+        swipSousiba.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getDataFromJsoup();
+            }
+        });
         initRecycler();
         getDataFromJsoup();
     }
@@ -85,24 +95,6 @@ public class SousibaActivity extends BaseActivity {
         rvSousiba.setHasFixedSize(true);
         rvSousiba.setLayoutManager(manager);
         rvSousiba.setAdapter(mAdapter);
-    }
-
-    private void initSwipRefresh() {
-        swipSousiba.setRefreshing(true);
-        swipSousiba.setColorSchemeResources(
-                R.color.colorPrimary,
-                android.R.color.holo_blue_light,
-                android.R.color.holo_red_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light
-        );
-        swipSousiba.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getDataFromJsoup();
-            }
-        });
-
     }
 
     private void getDataFromJsoup() {

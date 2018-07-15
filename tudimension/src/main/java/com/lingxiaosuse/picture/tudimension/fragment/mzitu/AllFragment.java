@@ -9,12 +9,11 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 
+import com.camera.lingxiao.common.app.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.MzituDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.AllMzituAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
-import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
-import com.lingxiaosuse.picture.tudimension.fragment.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
@@ -28,14 +27,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+
 /**
  * Created by lingxiao on 2018/1/20.
  */
 
-public class AllFragment extends BaseFragment{
-    private View view;
-    private RecyclerView rvMzitu;
-    private SwipeRefreshLayout swipMzitu;
+public class AllFragment extends BaseFragment {
+    @BindView(R.id.rv_mzitu)
+    RecyclerView rvMzitu;
+    @BindView(R.id.swip_mzitu)
+    SwipeRefreshLayout swipMzitu;
 
     private List<String> mImgList = new ArrayList<>();  //存放图片地址
     private List<String> mTitleList = new ArrayList<>();
@@ -43,17 +45,13 @@ public class AllFragment extends BaseFragment{
     private AllMzituAdapter mAdapter;
 
     @Override
-    protected void initData() {
-        Bundle bundle = getArguments();
-        type = bundle.getString("type");
-        getDataFromJsoup();
+    protected int getContentLayoutId() {
+        return R.layout.fragment_mzitu;
     }
 
     @Override
-    public View initView() {
-        view = View.inflate(getContext(), R.layout.fragment_mzitu,null);
-        rvMzitu = view.findViewById(R.id.rv_mzitu);
-        swipMzitu = view.findViewById(R.id.swip_mzitu);
+    protected void initWidget(View root) {
+        super.initWidget(root);
         swipMzitu.setRefreshing(true);
         swipMzitu.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -61,18 +59,6 @@ public class AllFragment extends BaseFragment{
                 getDataFromJsoup();
             }
         });
-        initRecyclerView();
-        return view;
-    }
-    private void initRecyclerView() {
-        swipMzitu.setColorSchemeResources(
-                R.color.colorPrimary,
-                android.R.color.holo_blue_light,
-                android.R.color.holo_red_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light
-        );
-
         mAdapter = new AllMzituAdapter(mTitleList,0,1);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvMzitu.setHasFixedSize(true);
@@ -93,9 +79,12 @@ public class AllFragment extends BaseFragment{
             }
         });
     }
+
     @Override
-    public RecyclerView getRecycle() {
-        return null;
+    protected void initData() {
+        Bundle bundle = getArguments();
+        type = bundle.getString("type");
+        getDataFromJsoup();
     }
 
     private void getDataFromJsoup() {

@@ -43,7 +43,6 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     //photoview
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
     implementation "com.android.support:cardview-v7:$rootProject.ext.supportVersion"
@@ -93,6 +92,8 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.ext.dbFlowVersion"
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.ext.dbFlowVersion"
 
+    //debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.ext.leak"
+    //releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.ext.leak"
     testImplementation 'junit:junit:4.12'
     compile project(':lang')
     implementation project(':common')

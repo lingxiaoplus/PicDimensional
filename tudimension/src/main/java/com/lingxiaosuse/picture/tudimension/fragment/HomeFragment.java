@@ -164,10 +164,8 @@ public class HomeFragment extends BaseFragment implements HomeView{
                 slideList.add(homeDesList.get(j).value);
             }
         }
-        Log.i("code", "setRefreshing执行了 picList:"+picList.size());
-        swipeLayout.setRefreshing(false);
         adapter.notifyDataSetChanged();
-        //waveLoading.setVisibility(View.INVISIBLE);
+        swipeLayout.setRefreshing(false);
     }
 
     @Override

@@ -83,7 +83,7 @@ public class PopwindowUtil {
     public PopwindowUtil showAtLocation(View root){
         if (mPopupWindow != null){
             int windowPos[] = calculatePopWindowPos(root, mContentView);
-            int xOff = 20;// 可以自己调整偏移
+            int xOff = 10;// 可以自己调整偏移
             windowPos[0] -= xOff;
             mPopupWindow.showAtLocation(root, Gravity.TOP | Gravity.START,
                     windowPos[0], windowPos[1]);
@@ -286,21 +286,21 @@ public class PopwindowUtil {
      * @param contentView   window的内容布局
      * @return window显示的左上角的xOff,yOff坐标
      */
-    private static int[] calculatePopWindowPos(final View anchorView, final View contentView) {
-        final int windowPos[] = new int[2];
-        final int anchorLoc[] = new int[2];
+    private static int[] calculatePopWindowPos(View anchorView, View contentView) {
+        int windowPos[] = new int[2];
+        int anchorLoc[] = new int[2];
         // 获取锚点View在屏幕上的左上角坐标位置
         anchorView.getLocationOnScreen(anchorLoc);
-        final int anchorHeight = anchorView.getHeight();
+        int anchorHeight = anchorView.getHeight();
         // 获取屏幕的高宽
-        final int screenHeight = getScreenHeight(anchorView.getContext());
-        final int screenWidth = getScreenWidth(anchorView.getContext());
+        int screenHeight = getScreenHeight(anchorView.getContext());
+        int screenWidth = getScreenWidth(anchorView.getContext());
         contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         // 计算contentView的高宽
-        final int windowHeight = contentView.getMeasuredHeight();
-        final int windowWidth = contentView.getMeasuredWidth();
+        int windowHeight = contentView.getMeasuredHeight();
+        int windowWidth = contentView.getMeasuredWidth();
         // 判断需要向上弹出还是向下弹出显示
-        final boolean isNeedShowUp = (screenHeight - anchorLoc[1] - anchorHeight < windowHeight);
+        boolean isNeedShowUp = (screenHeight - anchorLoc[1] - anchorHeight < windowHeight);
         if (isNeedShowUp) {
             windowPos[0] = screenWidth - windowWidth;
             windowPos[1] = anchorLoc[1] - windowHeight;

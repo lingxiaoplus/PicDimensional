@@ -1,5 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
+import com.camera.lingxiao.common.app.BaseFragment;
+
 import java.util.HashMap;
 
 /**
@@ -7,9 +9,9 @@ import java.util.HashMap;
  */
 
 public class FragmentFactory {
-    private static HashMap<Integer, com.camera.lingxiao.common.app.BaseFragment> mFragmentMap = new HashMap<>();
-    public static com.camera.lingxiao.common.app.BaseFragment createFragment(int pos){
-        com.camera.lingxiao.common.app.BaseFragment fragment = mFragmentMap.get(pos);
+    private static HashMap<Integer,BaseFragment> mFragmentMap = new HashMap<>();
+    public static BaseFragment createFragment(int pos){
+        BaseFragment fragment = mFragmentMap.get(pos);
         if (fragment == null){
             switch (pos){
                 case 0:
@@ -37,5 +39,9 @@ public class FragmentFactory {
             mFragmentMap.put(pos,fragment);
         }
         return fragment;
+    }
+    public static void clearFragments(){
+        if (mFragmentMap != null)
+            mFragmentMap.clear();
     }
 }

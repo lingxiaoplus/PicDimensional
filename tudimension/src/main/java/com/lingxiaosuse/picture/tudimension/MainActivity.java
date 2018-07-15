@@ -128,7 +128,6 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     protected void initData() {
         super.initData();
-
         initView();
         //初始化headlayout
         initHeadLayout();
@@ -161,8 +160,9 @@ public class MainActivity extends BaseActivity implements MainView{
                         .setTouchable(true)
                         .setOutsideTouchable(true)
                         .create();
-                popwindowUtil.showAtLocation(simpleDraweeView);
-
+                //popwindowUtil.showAtLocation(simpleDraweeView);
+                popwindowUtil.showAsDropDown(simpleDraweeView,0,
+                        -simpleDraweeView.getHeight()/2);
                 popwindowUtil.getView(R.id.pop_download).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -382,6 +382,7 @@ public class MainActivity extends BaseActivity implements MainView{
         }
         mHandler.removeMessages(2);
         RxBus.getInstance().unSubscribe(this);
+        FragmentFactory.clearFragments();
     }
     /**
      * 对话框选择搜图接口

@@ -91,7 +91,6 @@ public class SkinActivity extends BaseActivity{
                     //UIUtils.changeSkinDef(colorName.get(position));
                 }
                 RxBus.getInstance().post(new SkinChangedEvent(colorList.get(position)));
-                ToastUtils.show(colorName.get(position));
                 SpUtils.putInt(UIUtils.getContext(),ContentValue.SKIN_ID,colorList.get(position));
                 //EventBus.getDefault().post(new SkinChangeEvent(colorList.get(position)));
             }

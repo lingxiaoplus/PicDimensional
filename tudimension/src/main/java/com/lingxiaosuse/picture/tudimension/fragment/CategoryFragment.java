@@ -93,7 +93,8 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
                         .setTouchable(true)
                         .setOutsideTouchable(true)
                         .create();
-                popwindowUtil.showAtLocation(view.getRootView());
+                popwindowUtil.showAsDropDown(view,0,-view.getHeight());
+                //popwindowUtil.showAtLocation(view);
 
                 popwindowUtil.getView(R.id.pop_download).setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -119,6 +120,7 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
 
     @Override
     protected void initData() {
+        categoryList.clear();
         mCategoryPresenter = new CategoryPresenter(this,this);
         mCategoryPresenter.getCategor();
     }

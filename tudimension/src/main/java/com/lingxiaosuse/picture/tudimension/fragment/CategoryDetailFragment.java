@@ -9,6 +9,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.View;
 
+import com.camera.lingxiao.common.app.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
@@ -21,6 +22,7 @@ import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,9 +32,15 @@ import retrofit2.Response;
  */
 
 public class CategoryDetailFragment extends BaseFragment{
-    private RecyclerView mRecyclerView;
+
+    @BindView(R.id.swip_vertical_item)
+    SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.recycle_vertical_item)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.fab_vertical_fragment)
+    FloatingActionButton floatingActionButton;
+
     private int skip = 0;
-    private SwipeRefreshLayout refreshLayout;
     private FloatingActionButton faButton;
     private StaggeredGridLayoutManager manager;
     private String id;
@@ -41,7 +49,34 @@ public class CategoryDetailFragment extends BaseFragment{
     private ArrayList<String> picIdList = new ArrayList<>();
     private ArrayList<String> picUrlList = new ArrayList<>();
     private VerticalAdapter mAdapter;
-    private FloatingActionButton floatingActionButton;
+
+
+    @Override
+    protected int getContentLayoutId() {
+        return R.layout.fragment_vertical_pager;
+    }
+
+    @Override
+    protected void initWidget(View root) {
+        super.initWidget(root);
+        manager = new StaggeredGridLayoutManager(3,
+                StaggeredGridLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(manager);
+
+        refreshLayout.setRefreshing(true);
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0){
+                    floatingActionButton.hide();
+                }else {
+                    floatingActionButton.show();
+                }
+            }
+        });
+    }
 
     @Override
     protected void initData() {
@@ -72,37 +107,6 @@ public class CategoryDetailFragment extends BaseFragment{
         }catch (NullPointerException e){
             Log.i("verticalFragment", "获取bundle数据失败");
         }
-    }
-
-    @Override
-    public View initView() {
-        View view = View.inflate(getContext(),R.layout.fragment_vertical_pager,null);
-        refreshLayout = view.findViewById(R.id.swip_vertical_item);
-        mRecyclerView = view.findViewById(R.id.recycle_vertical_item);
-        floatingActionButton = view.findViewById(R.id.fab_vertical_fragment);
-        manager = new StaggeredGridLayoutManager(3,
-                StaggeredGridLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(manager);
-
-        refreshLayout.setRefreshing(true);
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0){
-                    floatingActionButton.hide();
-                }else {
-                    floatingActionButton.show();
-                }
-            }
-        });
-        return view;
-    }
-
-    @Override
-    public RecyclerView getRecycle() {
-        return null;
     }
 
     private void getDataFromServer(String id,int limit,int skip,String order){

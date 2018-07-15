@@ -31,6 +31,8 @@ public class App extends Application{
         mContext = getApplicationContext();
         mHandler = new Handler();
         mainThreadId = android.os.Process.myPid();
+        //LeakCanary.install(this);
+
         InitIalizeService.startInit(this);
     }
     public static Context getContext(){

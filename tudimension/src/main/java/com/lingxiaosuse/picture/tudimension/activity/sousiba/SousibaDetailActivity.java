@@ -16,8 +16,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.activity.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
@@ -54,34 +54,23 @@ public class SousibaDetailActivity extends BaseActivity {
     private String downloadUrl;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_spusiba_detail);
-        ButterKnife.bind(this);
-
-        setToolbarBack(toolbarSousibaDetail);
-        intent = getIntent();
-        initData();
+    protected int getContentLayoutId() {
+        return R.layout.activity_spusiba_detail;
     }
 
-    private void initData() {
+    @Override
+    protected void initWidget() {
+        super.initWidget();
+        setToolbarBack(toolbarSousibaDetail);
+        intent = getIntent();
         imgUrl = intent.getStringExtra("imgurl");
-
         getDataFromJsoup();
-
         initRecycler();
     }
 
     private void initRecycler() {
-
         swipSousibaDetail.setRefreshing(true);
-        swipSousibaDetail.setColorSchemeResources(
-                R.color.colorPrimary,
-                android.R.color.holo_blue_light,
-                android.R.color.holo_red_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_green_light
-        );
+        setSwipeColor(swipSousibaDetail);
         swipSousibaDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
