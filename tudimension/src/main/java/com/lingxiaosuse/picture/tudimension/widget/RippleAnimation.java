@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
@@ -34,6 +35,7 @@ public class RippleAnimation extends View {
     private AnimatorListenerAdapter mAnimatorListener;
     private ValueAnimator.AnimatorUpdateListener mUpdateListener;
     private long mDuration = 1000;
+
     public RippleAnimation(Context context, float startX, float startY, int radius) {
         super(context);
         //获取activity的根视图，用来添加本view
@@ -49,11 +51,14 @@ public class RippleAnimation extends View {
         initListener();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        int layer = canvas.saveLayer(0,0,getWidth(),getHeight(),null);
+        int layer = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            layer = canvas.saveLayer(0,0,getWidth(),getHeight(),null);
+        }
         canvas.drawBitmap(mBackground,0,0,null);
         canvas.drawCircle(mStartX,mStartY,mCurrentRadius,mPaint);
         canvas.restoreToCount(layer);

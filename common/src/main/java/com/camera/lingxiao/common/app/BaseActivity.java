@@ -19,6 +19,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -50,19 +51,14 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
 
     private PackageManager mPmanager;
     private int versionCode;
-    private Button cancle,ensure;
-
-    private ImageView fanImage;
-    private View dialogView;
-    private AlertDialog mDialog;
-    private int mProgress;
-    public UltimateBar ultimateBar;
     public LifeCycleListener mListener;
     protected Unbinder unBinder;
-    private String[] mPermessions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
     private int mBarcolor;
     private Subscription mRxBus;
-
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,21 +87,17 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
      */
     protected void initBefore() {
         mBarcolor = SpUtils.getInt(this,ContentValue.SKIN_ID,R.color.colorPrimary);
-        //半透明
-        UltimateBar.newColorBuilder()
-                .statusColor(ContextCompat.getColor(this, mBarcolor))   // 状态栏颜色
-                .applyNav(true)             // 是否应用到导航栏
-                .navColor(ContextCompat.getColor(this, mBarcolor))         // 导航栏颜色
-                .navDepth(0)            // 导航栏颜色深度
-                .build(this)
-                .apply();
-        ActivityController.addActivity(this);
-        //权限检测
-        if (!EasyPermissions.hasPermissions(this,mPermessions)){
-            //没有权限就申请
-            EasyPermissions.requestPermissions(this, getString(R.string.permession_title),
-                    ContentValue.PERMESSION_REQUEST_CODE, mPermessions);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT){
+            //半透明
+            UltimateBar.newColorBuilder()
+                    .statusColor(ContextCompat.getColor(this, mBarcolor))   // 状态栏颜色
+                    .applyNav(true)             // 是否应用到导航栏
+                    .navColor(ContextCompat.getColor(this, mBarcolor))         // 导航栏颜色
+                    .navDepth(0)            // 导航栏颜色深度
+                    .build(this)
+                    .apply();
         }
+        ActivityController.addActivity(this);
     }
 
     /**
@@ -155,12 +147,14 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         Disposable regist = RxBus.getInstance().register(SkinChangedEvent.class, new Consumer<SkinChangedEvent>() {
             @Override
             public void accept(SkinChangedEvent skinChangedEvent) throws Exception {
-                UltimateBar.newColorBuilder()
-                        .statusColor(ContextCompat.getColor(getApplicationContext(), skinChangedEvent.getColor()))   // 状态栏颜色
-                        .applyNav(true)             // 是否应用到导航栏
-                        .navColor(ContextCompat.getColor(getApplicationContext(), skinChangedEvent.getColor()))         // 导航栏颜色
-                        .build(BaseActivity.this)
-                        .apply();
+                if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT){
+                    UltimateBar.newColorBuilder()
+                            .statusColor(ContextCompat.getColor(getApplicationContext(), skinChangedEvent.getColor()))   // 状态栏颜色
+                            .applyNav(true)             // 是否应用到导航栏
+                            .navColor(ContextCompat.getColor(getApplicationContext(), skinChangedEvent.getColor()))         // 导航栏颜色
+                            .build(BaseActivity.this)
+                            .apply();
+                }
             }
         });
         RxBus.getInstance().addSubscription(this,regist);

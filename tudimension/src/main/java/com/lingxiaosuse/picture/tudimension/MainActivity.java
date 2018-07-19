@@ -1,5 +1,6 @@
 package com.lingxiaosuse.picture.tudimension;
 
+import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
@@ -75,6 +76,7 @@ import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
+import pub.devrel.easypermissions.EasyPermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -120,6 +122,8 @@ public class MainActivity extends BaseActivity implements MainView{
     public DownloadService mDownloadService;
     private String mHeadImageUrl = "";
     private MainPresenter mPresenter = new MainPresenter(this,this);
+    private String[] mPermessions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_main;
@@ -138,6 +142,12 @@ public class MainActivity extends BaseActivity implements MainView{
         filter.addAction("android.net.wifi.STATE_CHANGE");
         registerReceiver(mNetworkChangeListener, filter);
         bindDownloadService();
+        //权限检测
+        if (!EasyPermissions.hasPermissions(this,mPermessions)){
+            //没有权限就申请
+            EasyPermissions.requestPermissions(this, getString(R.string.permession_title),
+                    ContentValue.PERMESSION_REQUEST_CODE, mPermessions);
+        }
     }
 
     private void initHeadLayout() {

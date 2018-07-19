@@ -86,7 +86,11 @@ dependencies {
     // skin-support-cardview CardView 控件支持[可选]
     implementation "skin.support:skin-support-constraint-layout:$rootProject.ext.skinSupportVersion"
     // skin-support-constraint-layout ConstraintLayout 控件支持[可选]
+    //热修复
+    implementation "com.aliyun.ams:alicloud-android-hotfix:$rootProject.ext.hotfixVersion"
 
+    //兼容4.4
+    implementation 'com.android.support:multidex:1.0.2'
     //dbflow
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.ext.dbFlowVersion"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.ext.dbFlowVersion"

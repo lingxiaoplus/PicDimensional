@@ -2,8 +2,11 @@ package com.lingxiaosuse.picture.tudimension.service;
 
 import android.app.Application;
 import android.app.IntentService;
+import android.app.Notification;
 import android.content.Intent;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.Nullable;
 
 import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.global.App;
@@ -26,10 +29,21 @@ public class InitIalizeService extends IntentService {
         super("InitIalizeService");
     }
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        startForeground(1,new Notification());
+    }
+
     public static void startInit(Context context) {
         Intent intent = new Intent(context, InitIalizeService.class);
         intent.setAction(ACTION_FOO);
-        context.startService(intent);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            context.startForegroundService(intent);
+        } else {
+            context.startService(intent);
+        }
+        //context.startService(intent);
         mContext = context;
     }
     
