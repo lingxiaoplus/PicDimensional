@@ -143,6 +143,11 @@ public class SplashActivity extends BaseActivity implements SplashView{
     }
 
     @Override
+    public void onVersionResult(com.camera.lingxiao.common.VersionModle modle) {
+
+    }
+
+    @Override
     public void showDialog() {
 
     }

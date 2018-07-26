@@ -42,6 +42,7 @@ import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.PopwindowUtil;
+import com.camera.lingxiao.common.utills.SpUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.activity.cosplay.CosplayLaActivity;
@@ -62,10 +63,10 @@ import com.lingxiaosuse.picture.tudimension.modle.FileUploadModle;
 import com.lingxiaosuse.picture.tudimension.presenter.MainPresenter;
 import com.lingxiaosuse.picture.tudimension.receiver.NetworkReceiver;
 import com.lingxiaosuse.picture.tudimension.retrofit.FileUploadInterface;
-import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.MainView;
+import com.liuguangqiang.cookie.CookieBar;
 
 import java.io.File;
 
@@ -107,6 +108,14 @@ public class MainActivity extends BaseActivity implements MainView{
                 if (isCheck) {
                     checkUpdate();
                 }
+            }else if (msg.what == 3){
+                int color = SpUtils.getInt(UIUtils.getContext(),
+                        ContentValue.SKIN_ID,R.color.colorPrimary);
+                new CookieBar.Builder(MainActivity.this)
+                        .setTitle("注意")
+                        .setMessage("当前是移动网络！")
+                        .setBackgroundColor(color)
+                        .show();
             }
         }
     };
@@ -122,7 +131,8 @@ public class MainActivity extends BaseActivity implements MainView{
     public DownloadService mDownloadService;
     private String mHeadImageUrl = "";
     private MainPresenter mPresenter = new MainPresenter(this,this);
-    private String[] mPermessions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private String[] mPermessions = {Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.READ_EXTERNAL_STORAGE};
 
     @Override
     protected int getContentLayoutId() {

@@ -9,9 +9,12 @@ import android.os.Build;
 import android.support.annotation.Nullable;
 
 import com.lingxiao.skinlibrary.SkinLib;
+import com.lingxiaosuse.picture.tudimension.activity.CrashActivity;
 import com.lingxiaosuse.picture.tudimension.global.App;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.tencent.bugly.crashreport.CrashReport;
+
+import java.util.Map;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -32,7 +35,9 @@ public class InitIalizeService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        startForeground(1,new Notification());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(1,new Notification());
+        }
     }
 
     public static void startInit(Context context) {
@@ -64,7 +69,18 @@ public class InitIalizeService extends IntentService {
         //初始化dbflow
         FlowManager.init(mContext);
         //bugly初始化 建议在测试阶段建议设置成true，发布时设置为false。
-        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", true);
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
+        strategy.setCrashHandleCallback(new CrashReport.CrashHandleCallback(){
+            @Override
+            public synchronized Map<String, String> onCrashHandleStart(int crashType, String errorType, String errorMessage, String errorStack) {
+                /*Intent intent  =new Intent(getApplicationContext(), CrashActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("msg",errorStack);
+                startActivity(intent);*/
+                return super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack);
+            }
+        });
+        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", true,strategy);
         SkinLib.init((App) mContext);
     }
 

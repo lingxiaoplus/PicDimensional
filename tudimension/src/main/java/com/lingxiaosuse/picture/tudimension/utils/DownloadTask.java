@@ -30,6 +30,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer>{
     private int lastProgress;
     private DownloadListener listener;
     private File mFile;
+    private String errorMsg;
 
     public DownloadTask(DownloadListener listener){
         this.listener = listener;
@@ -90,6 +91,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer>{
             }
         }catch (Exception e){
             e.printStackTrace();
+            errorMsg = e.getMessage();
         }finally {
             try {
                 if (is != null){
@@ -103,6 +105,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer>{
                 }
             }catch (Exception e){
                 e.printStackTrace();
+                errorMsg = e.getMessage();
             }
         }
         return TYPE_FAILED;
@@ -124,7 +127,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer>{
                 listener.onSuccess(mFile);
                 break;
             case TYPE_FAILED:
-                listener.onFailed();
+                listener.onFailed(errorMsg);
                 break;
             case TYPE_CANCELED:
                 listener.onCanceled();
@@ -163,7 +166,7 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer>{
     public interface DownloadListener{
         void onProgress(int progress);
         void onSuccess(File file);
-        void onFailed();
+        void onFailed(String errormsg);
         void onPaused();
         void onCanceled();
     }

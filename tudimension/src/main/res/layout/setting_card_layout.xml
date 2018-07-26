@@ -2,19 +2,37 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_margin="10dp"
     android:background="@drawable/touchable_background_normal"
     android:padding="10dp">
-    <TextView
-        android:id="@+id/tv_card_title"
-        style="@style/textTitle"
-        android:text="检查更新" />
+    <ImageView
+        android:id="@+id/iv_image"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/ic_launcher"
+        android:layout_marginRight="10dp"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        tools:visibility="visible"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/iv_image"
+        android:layout_centerVertical="true">
+        <TextView
+            android:id="@+id/tv_card_title"
+            style="@style/textTitle"
+            android:text="检查更新"
+            />
 
-    <TextView
-        android:id="@+id/tv_card_message"
-        style="@style/textMsg"
-        android:layout_below="@id/tv_card_title"
-        android:text="新版本提示更新" />
+        <TextView
+            android:id="@+id/tv_card_message"
+            style="@style/textMsg"
+            android:text="新版本提示更新" />
+    </LinearLayout>
+
 
     <android.support.v7.widget.SwitchCompat
         android:id="@+id/switch_card"

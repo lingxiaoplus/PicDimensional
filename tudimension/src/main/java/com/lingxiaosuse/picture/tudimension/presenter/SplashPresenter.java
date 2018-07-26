@@ -3,6 +3,7 @@ package com.lingxiaosuse.picture.tudimension.presenter;
 import android.net.Uri;
 
 import com.camera.lingxiao.common.VersionModle;
+import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.BasePresenter;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
 import com.camera.lingxiao.common.utills.LogUtils;
@@ -18,12 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class SplashPresenter extends BasePresenter<SplashView,SplashActivity>{
+public class SplashPresenter extends BasePresenter<SplashView,BaseActivity>{
 
     //private final String TAG = PhoneAddressPresenter.class.getSimpleName();
     private UpdateTrans transation;
     private List<VerticalModle.VerticalBean> resultList = new ArrayList<>();
-    public SplashPresenter(SplashView view, SplashActivity activity) {
+    public SplashPresenter(SplashView view, BaseActivity activity) {
         super(view, activity);
         transation = new UpdateTrans(getActivity());
     }
@@ -39,6 +40,7 @@ public class SplashPresenter extends BasePresenter<SplashView,SplashActivity>{
                     SpUtils.putInt(UIUtils.getContext(), ContentValue.VERSION_CODE, modle.getVersionCode());
                     SpUtils.putString(UIUtils.getContext(), ContentValue.VERSION_DES, modle.getVersionDes());
                     SpUtils.putString(UIUtils.getContext(), ContentValue.DOWNLOAD_URL, modle.getDownloadUrl());
+                    getView().onVersionResult(modle);
                 }
             }
 

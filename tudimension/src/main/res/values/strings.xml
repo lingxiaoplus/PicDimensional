@@ -11,6 +11,8 @@
     <string name="default_comment">评论空空如也</string>
     <string name="scroll_behavior">com.lingxiaosuse.picture.tudimension.transformer.ScrollAwareFABBehaviorDefault</string>
     <string name="safe_harbor_text">   本应用图片皆来自网络。如有涉嫌侵权图片，请邮件联系lingxiaopua@gmail.com，告知图片URL以及侵权证据。本人将及时删除数据。</string>
+    <string name="update_mark_text">2.0.3-正式版: \n1.修复anroid8.0闪退问题\n2.修复android4.4界面布局\n3.提升系统稳定性\n\n2.0.2-正式版: \n1.修复各种bug\n2.修复各种bug\n3修复各种bug\n4.增加主题换肤功能\n5.增加隐藏模块功能\n6.增加cosplay.la的图片源\n7.优化界面布局</string>
+    <string name="about_app_message">&#064; 2018 Material Design</string>
     <!-- Strings related to Settings -->
 
     <!-- Example General settings -->

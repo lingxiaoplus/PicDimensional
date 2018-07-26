@@ -3,6 +3,8 @@ package com.camera.lingxiao.common.app;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -59,6 +61,9 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
+
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -176,9 +181,6 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
             versionCode = serverVersion;
         }
         if (versionCode<serverVersion){
-            //服务器上面有新版本
-            String url = SpUtils.getString(BaseActivity.this,ContentValue.DOWNLOAD_URL,"");
-            showDialog(url);
             return true;
         }else {
             return false;
@@ -189,12 +191,13 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("检测到新版本");
         builder.setMessage(SpUtils.getString(this,ContentValue.VERSION_DES,""));
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("下载apk", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 //下载
                 //showDownLoadDia();
                 //downLoadApk(url);
+                goToMarket(BaseActivity.this,getPackageName());
             }
         });
         builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
@@ -206,6 +209,18 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
         builder.show();
     }
 
+    /**
+     * @param packageName 目标应用的包名
+     */
+    public static void goToMarket(Context context, String packageName) {
+        Uri uri = Uri.parse("market://details?id=" + packageName);
+        Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+        try {
+            context.startActivity(goToMarket);
+        } catch (ActivityNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      *下载成功后安装
      */
@@ -349,6 +364,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        cancleProgressDialog();
         if (mListener != null) {
             mListener.onDestroy();
         }
@@ -374,5 +390,20 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
      */
     public void setOnLifeCycleListener(LifeCycleListener listener) {
         mListener = listener;
+    }
+
+    /**
+     *显示进度条
+     */
+    public void showProgressDialog(String msg){
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(msg);
+        progressDialog.show();
+    }
+
+    public void cancleProgressDialog(){
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
     }
 }

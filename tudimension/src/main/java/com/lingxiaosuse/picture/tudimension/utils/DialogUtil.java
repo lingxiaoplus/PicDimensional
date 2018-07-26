@@ -56,4 +56,30 @@ public class DialogUtil {
         });
         builder.show();
     }
+
+    public static void showSingleDia(String title,String message,Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setIcon(android.R.drawable.alert_dark_frame);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (null != mCallback){
+                    mCallback.onPositiveClick();
+                }
+                dialog.dismiss();
+            }
+        });
+        builder.show();
+    }
+
+    private static DialogButtonCallback mCallback;
+    public static void setDialogButtonCallback(DialogButtonCallback callback){
+        mCallback = callback;
+    }
+    public interface DialogButtonCallback{
+        void onPositiveClick();
+        void onNegativeClick();
+    }
 }

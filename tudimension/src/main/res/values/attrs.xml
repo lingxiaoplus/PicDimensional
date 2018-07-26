@@ -16,5 +16,13 @@
         <attr name="message" format="string"/>
         <attr name="switchcompat" format="boolean"/>
         <attr name="visable" format="boolean"/>
+        <attr name="iconVisvble" format="boolean"/>
+        <attr name="titleSize" format="dimension"/>
+        <attr name="messageSize" format="dimension"/>
+        <attr name="titleColor" format="color"/>
+        <attr name="messageColor" format="color"/>
+        <attr name="iconSrc" format="reference"/>
+        <attr name="iconWidth" format="dimension"/>
+        <attr name="iconHeight" format="dimension"/>
     </declare-styleable>
 </resources>

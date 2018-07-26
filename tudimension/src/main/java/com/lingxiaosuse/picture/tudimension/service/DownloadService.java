@@ -1,6 +1,8 @@
 package com.lingxiaosuse.picture.tudimension.service;
 
+import android.app.Activity;
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -8,17 +10,22 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Environment;
 import android.os.IBinder;
 import android.provider.MediaStore;
 import android.support.v4.app.NotificationCompat;
 
+import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.SpUtils;
+import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.SeeDownLoadImgActivity;
 import com.lingxiaosuse.picture.tudimension.receiver.NotificationReceiver;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadTask;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.liuguangqiang.cookie.CookieBar;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -47,10 +54,10 @@ public class DownloadService extends Service {
         }
 
         @Override
-        public void onFailed() {
+        public void onFailed(String msg) {
             downloadTask = null;
             stopForeground(true);
-            ToastUtils.show("下载失败");
+            ToastUtils.show("下载失败:"+msg);
             getNotificationManager().notify(1,getNotfifcation("下载失败，请重试",-1));
         }
 
@@ -65,6 +72,16 @@ public class DownloadService extends Service {
             stopForeground(true);
         }
     };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForeground(1,new Notification());
+        }
+
+    }
+
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
@@ -115,6 +132,7 @@ public class DownloadService extends Service {
         //Intent intent = new Intent(this, SeeDownLoadImgActivity.class);
         //PendingIntent pi = PendingIntent.getActivity(this,0,intent,0);
 
+
         Intent intentClick = new Intent(this, NotificationReceiver.class);
         intentClick.setAction("notification_clicked");
         intentClick.putExtra(NotificationReceiver.TYPE, 1);
@@ -126,7 +144,26 @@ public class DownloadService extends Service {
         intentCancel.putExtra(NotificationReceiver.TYPE, 1);
         PendingIntent pendingIntentCancel = PendingIntent.getBroadcast(this, 0, intentCancel, PendingIntent.FLAG_ONE_SHOT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        NotificationCompat.Builder builder;
+        String name = "my_package_channel";//渠道名字
+        String id = "my_package_channel_1"; // 渠道ID
+        String description = "my_package_first_channel"; // 渠道解释说明
+        //判断是否是8.0上设备
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel mChannel = null;
+            if (mChannel == null) {
+                mChannel = new NotificationChannel(id, name, importance);
+                mChannel.setDescription(description);
+                mChannel.enableLights(true); //是否在桌面icon右上角展示小红点
+                getNotificationManager().createNotificationChannel(mChannel);
+            }
+            builder = new NotificationCompat.Builder(this,id);
+            builder.setChannelId(id);
+        }else {
+            builder = new NotificationCompat.Builder(this);
+        }
+
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setLargeIcon(BitmapFactory.decodeResource(getResources(),R.mipmap.ic_launcher));
         builder.setContentIntent(pendingIntentClick);
@@ -134,6 +171,7 @@ public class DownloadService extends Service {
         builder.setContentTitle(title);
         if (progress > 0){
             builder.setContentText(progress + "%");
+
             builder.setProgress(100,progress,false);
         }
         return builder.build();

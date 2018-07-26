@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#fff"
+    android:orientation="vertical">
+
+    <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/ic_androidesk"
+        app:iconVisvble="true"
+        app:message="推荐 分类 专辑页面和搜索等页面api都来自于这家"
+        app:title="安卓壁纸"
+        app:visable="false" />
+
+    <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/work"
+        app:iconVisvble="true"
+        app:message="最新页面的壁纸"
+        app:title="gank.io"
+        app:visable="false" />
+
+    <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/ic_img_mzitu"
+        app:iconVisvble="true"
+        app:message="侧滑菜单的妹子图源"
+        app:title="妹子图(mzitu.com)"
+        app:visable="false" />
+
+    <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:iconSrc="@drawable/ic_img_mzitu"
+        app:iconVisvble="true"
+        app:message="侧滑菜单的cosplay.la"
+        app:title="cosplay"
+        app:visable="false" />
+</LinearLayout>

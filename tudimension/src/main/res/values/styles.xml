@@ -16,6 +16,7 @@
         <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
         <!-- 设置activity切换动画 -->
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
+        <item name="android:alertDialogTheme">@android:style/Theme.Holo.Light.Dialog</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -88,4 +89,5 @@
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
 </resources>

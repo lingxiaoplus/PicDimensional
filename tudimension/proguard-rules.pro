@@ -204,3 +204,4 @@ public static ** valueOf(java.lang.String);
 -keep class com.ta.utdid2.device.**{*;}
 #防止inline
 -dontoptimize
+-dontwarn com.alibaba.sdk.android.utils.**

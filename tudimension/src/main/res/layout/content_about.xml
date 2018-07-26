@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
@@ -17,121 +18,126 @@
             style="@style/cardStyle"
             android:id="@+id/card_about_safe"
             android:layout_height="wrap_content"
-            card_view:cardCornerRadius="5dp"
-            card_view:cardElevation="5dp"
-            card_view:contentPadding="8dp"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="2dp"
+            card_view:contentPadding="3dp"
             >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
-                <TextView
-                    android:layout_width="wrap_content"
+                <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                    android:id="@+id/card_appname"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="#888"
-                    android:textSize="16sp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/safe_harbor_text"/>
+                    app:title="图次元"
+                    app:iconSrc="@mipmap/about_us"
+                    app:iconVisvble="true"
+                    app:message="@string/about_app_message"
+                    app:visable="false"/>
+                <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                    android:id="@+id/card_licenses"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:iconSrc="@mipmap/ic_license"
+                    app:iconVisvble="true"
+                    app:title="版权说明"
+                    app:visable="false"/>
+                <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                    android:id="@+id/card_update_mark"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:iconSrc="@mipmap/ic_update_mark"
+                    app:iconVisvble="true"
+                    app:title="更新日志"
+                    app:visable="false"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
         <android.support.v7.widget.CardView
             style="@style/cardStyle"
-            card_view:cardCornerRadius="5dp"
-            card_view:cardElevation="5dp"
-            card_view:contentPadding="8dp"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="2dp"
+            card_view:contentPadding="3dp"
             android:id="@+id/card_about_version"
             >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher"
-                    android:layout_gravity="center"/>
+                android:orientation="vertical">
                 <TextView
-                    android:id="@+id/tv_about_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"
-                    android:layout_gravity="center_vertical"
-                    android:text="Version：" />
+                    android:layout_margin="10dp"
+                    android:text="Author"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="16sp" />
+                <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                    android:id="@+id/card_author"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:iconSrc="@mipmap/ic_author"
+                    app:iconVisvble="true"
+                    app:title="开发者(凌霄)"
+                    app:message="点击和凌霄py"
+                    app:visable="false"/>
+                <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                    android:id="@+id/card_github"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:iconSrc="@mipmap/ic_github"
+                    app:iconVisvble="true"
+                    app:title="Fork on GitHub"
+                    app:message="该项目已开源"
+                    app:visable="false"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
         <android.support.v7.widget.CardView
             style="@style/cardStyle"
-            card_view:cardCornerRadius="5dp"
-            card_view:cardElevation="5dp"
-            card_view:contentPadding="8dp"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="2dp"
+            card_view:contentPadding="3dp"
             android:id="@+id/card_about_me"
             >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher"
-                    android:layout_gravity="center"/>
+                android:orientation="vertical">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"
-                    android:layout_gravity="center_vertical"
-                    android:text="@string/large_text" />
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-        <android.support.v7.widget.CardView
-            style="@style/cardStyle"
-            card_view:cardCornerRadius="5dp"
-            card_view:cardElevation="5dp"
-            card_view:contentPadding="8dp"
-            android:id="@+id/card_about_gank"
-            >
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="40dp"
+                    android:layout_margin="10dp"
+                    android:text="Convenience Builder"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="16sp" />
+                <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                    android:id="@+id/card_version"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/work"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="wrap_content"
+                    app:iconSrc="@mipmap/ic_update"
+                    app:iconVisvble="true"
+                    app:title="Version"
+                    app:message="2.0.2"
+                    app:visable="false"/>
+                <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                    android:id="@+id/card_blog"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"
-                    android:layout_gravity="center_vertical"
-                    android:text="每日分享妹子图 和 技术干货，还有供大家中午休息的休闲视频" />
-            </LinearLayout>
-
-        </android.support.v7.widget.CardView>
-        <android.support.v7.widget.CardView
-            style="@style/cardStyle"
-            card_view:cardCornerRadius="5dp"
-            card_view:cardElevation="5dp"
-            card_view:contentPadding="8dp"
-            android:id="@+id/card_about_wallpaper"
-            >
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/ic_androidesk"
-                    android:layout_gravity="center"/>
-                <TextView
-                    android:layout_width="wrap_content"
+                    app:iconSrc="@mipmap/ic_blog"
+                    app:iconVisvble="true"
+                    app:title="个人博客"
+                    app:message="http://www.lingxiaosuse.cn"
+                    app:visable="false"/>
+                <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                    android:id="@+id/card_from"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="@dimen/text_margin"
-                    android:layout_gravity="center_vertical"
-                    android:text="连续5年关注手机美化，一键改变桌面锁屏" />
+                    app:iconSrc="@mipmap/ic_from"
+                    app:iconVisvble="true"
+                    app:title="数据来源"
+                    app:message="本项目所有图片数据均来源于网络"
+                    app:visable="false"/>
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>

@@ -8,17 +8,21 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
 
+import com.camera.lingxiao.common.utills.LogUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.service.InitIalizeService;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
+import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.taobao.sophix.PatchStatus;
 import com.taobao.sophix.SophixManager;
 import com.taobao.sophix.listener.PatchLoadStatusListener;
 import com.tencent.bugly.crashreport.CrashReport;
 
+import java.util.Map;
 
 
 /**
@@ -51,6 +55,7 @@ public class App extends Application{
         mainThreadId = android.os.Process.myPid();
         //LeakCanary.install(this);
         InitIalizeService.startInit(this);
+
     }
     public static Context getContext(){
         return mContext;
@@ -79,11 +84,14 @@ public class App extends Application{
                         // 补丁加载回调通知
                         if (code == PatchStatus.CODE_LOAD_SUCCESS) {
                             // 表明补丁加载成功
+                            LogUtils.e("补丁加载成功");
                         } else if (code == PatchStatus.CODE_LOAD_RELAUNCH) {
                             // 表明新补丁生效需要重启. 开发者可提示用户或者强制重启;
                             // 建议: 用户可以监听进入后台事件, 然后调用killProcessSafely自杀，以此加快应用补丁，详见1.3.2.3
+                            ToastUtils.show("请重启app完成更新");
                         } else {
                             // 其它错误信息, 查看PatchStatus类说明
+                            LogUtils.e("hotfix错误："+code);
                         }
                     }
                 }).initialize();
