@@ -20,10 +20,16 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class DialogUtil {
-
-
+    private static AlertDialog.Builder mBuilder;
+    private static DialogUtil mDialogutil;
+    public static DialogUtil getInstence(){
+        if (mDialogutil == null){
+            mDialogutil = new DialogUtil();
+        }
+        return mDialogutil;
+    }
     public static void showMultiChoiceDia(String title,final String[] items,final boolean[] checkedItems,Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        AlertDialog.Builder builder  = new AlertDialog.Builder(context);
         builder.setIcon(android.R.drawable.alert_dark_frame);
         builder.setTitle(title);
         builder.setMultiChoiceItems(items, checkedItems,
@@ -57,7 +63,7 @@ public class DialogUtil {
         builder.show();
     }
 
-    public static void showSingleDia(String title,String message,Context context){
+    public void showSingleDia(String title,String message,Context context){
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setIcon(android.R.drawable.alert_dark_frame);
         builder.setTitle(title);
@@ -65,13 +71,17 @@ public class DialogUtil {
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (null != mCallback){
-                    mCallback.onPositiveClick();
-                }
                 dialog.dismiss();
             }
         });
         builder.show();
+    }
+
+    public AlertDialog.Builder setNormalDialog(String title,String message,Context context){
+        AlertDialog.Builder builder  = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+        return builder;
     }
 
     private static DialogButtonCallback mCallback;

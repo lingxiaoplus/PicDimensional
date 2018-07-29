@@ -2,7 +2,9 @@ package com.camera.lingxiao.common.utills;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
@@ -11,7 +13,9 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 public class PopwindowUtil {
     private Context mContext;
@@ -31,6 +35,7 @@ public class PopwindowUtil {
     private int mSoftInputMode = -1;
     private boolean mTouchable = true;//default is ture
     private View.OnTouchListener mOnTouchListener;
+    private Drawable mBackgroundDrawable;
 
     private PopwindowUtil(Context context){
         this.mContext = context;
@@ -132,7 +137,9 @@ public class PopwindowUtil {
         apply(mPopupWindow);//设置一些属性
 
         mPopupWindow.setFocusable(mIsFocusable);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if (null != mBackgroundDrawable){
+            mPopupWindow.setBackgroundDrawable(mBackgroundDrawable);
+        }
         mPopupWindow.setOutsideTouchable(mIsOutside);
 
         if(mWidth == 0 || mHeight == 0){
@@ -159,6 +166,11 @@ public class PopwindowUtil {
             sparseArray.put(resId,view);
         }
         return (T) view;
+    }
+
+    public void setText(int resId,String text){
+        TextView textView = getView(resId);
+        textView.setText(text);
     }
 
     public void dissmiss(){
@@ -269,6 +281,10 @@ public class PopwindowUtil {
             return this;
         }
 
+        public PopupWindowBuilder setBackgroundDrawable(BitmapDrawable drawable){
+            mCustomPopWindow.mBackgroundDrawable = drawable;
+            return this;
+        }
 
         public PopwindowUtil create(){
             //构建PopWindow
@@ -323,4 +339,5 @@ public class PopwindowUtil {
     public static int getScreenWidth(Context context) {
         return context.getResources().getDisplayMetrics().widthPixels;
     }
+
 }

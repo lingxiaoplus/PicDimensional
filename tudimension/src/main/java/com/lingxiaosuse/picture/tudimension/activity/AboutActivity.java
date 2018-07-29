@@ -23,6 +23,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -54,6 +55,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +65,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AboutActivity extends BaseActivity implements SplashView{
+public class AboutActivity extends BaseActivity implements SplashView {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
@@ -95,7 +97,7 @@ public class AboutActivity extends BaseActivity implements SplashView{
     private SplashPresenter mPresenter;
     private ServiceConnection mConnect;
     private DownloadService mDownloadService;
-
+    private CookieBar cookieBar;
 
     @Override
     protected int getContentLayoutId() {
@@ -115,7 +117,8 @@ public class AboutActivity extends BaseActivity implements SplashView{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new CookieBar.Builder(AboutActivity.this)
+                if (null == cookieBar)
+                cookieBar = new CookieBar.Builder(AboutActivity.this)
                         .setTitle("恭喜")
                         .setMessage("妹子向你发来一条消息")
                         .setBackgroundColor(R.color.colorPrimary)
@@ -134,10 +137,11 @@ public class AboutActivity extends BaseActivity implements SplashView{
         toolbar.setTitle("关于图次元");
         //设置版本号
         setVersion();
-        mPresenter = new SplashPresenter(this,this);
+        mPresenter = new SplashPresenter(this, this);
     }
 
     Bitmap bitmap;
+
     @Override
     protected void initData() {
         super.initData();
@@ -151,7 +155,7 @@ public class AboutActivity extends BaseActivity implements SplashView{
                 if (null != fileList && fileList.size() != 0) {
                     for (int i = 0; i < fileList.size(); i++) {
                         String path = fileList.get(i).getAbsolutePath();
-                        if (BitmapUtils.isLandscape(path)){
+                        if (BitmapUtils.isLandscape(path) && getFileSize(new File(path)) < 2L) {
                             picList.add(path);
                         }
                     }
@@ -161,21 +165,21 @@ public class AboutActivity extends BaseActivity implements SplashView{
                 try {
                     FileInputStream inputStream = new FileInputStream(picList.get(index));
                     bitmap = BitmapUtils.compressImageByResolution(BitmapFactory.decodeStream(inputStream),
-                            840f,400f);
+                            840f, 400f);
 
                     UIUtils.runOnUIThread(new Runnable() {
                         @Override
                         public void run() {
-                            float scale = bitmap.getWidth() /(float) bitmap.getHeight();
+                            float scale = bitmap.getWidth() / (float) bitmap.getHeight();
                             float width = appBarLayout.getWidth();
                             float height = width / scale;
                             CoordinatorLayout.LayoutParams params = new CoordinatorLayout
-                                    .LayoutParams((int) width,(int) height);
+                                    .LayoutParams((int) width, (int) height);
                             appBarLayout.setLayoutParams(params);
                             imageAbout.setImageBitmap(bitmap);
                         }
                     });
-                } catch (FileNotFoundException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -226,33 +230,87 @@ public class AboutActivity extends BaseActivity implements SplashView{
 
     @OnClick({R.id.card_appname, R.id.card_licenses,
             R.id.card_update_mark, R.id.card_author,
-            R.id.card_github,R.id.card_version,
-            R.id.card_blog,R.id.card_from})
+            R.id.card_github, R.id.card_version,
+            R.id.card_blog, R.id.card_from})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.card_appname:
-                goToMarket(AboutActivity.this, getPackageName());
+                DialogUtil.getInstence()
+                        .setNormalDialog("跳转到应用市场",
+                                "是否跳转到应用市场给好评?",
+                                AboutActivity.this)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                goToMarket(AboutActivity.this, getPackageName());
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                goToMarket(AboutActivity.this, getPackageName());
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+
                 break;
             case R.id.card_licenses:
-                DialogUtil.showSingleDia("版权说明",
-                        getResources().getString(R.string.safe_harbor_text),AboutActivity.this);
+                DialogUtil.getInstence().showSingleDia("版权说明",
+                        getResources().getString(R.string.safe_harbor_text), AboutActivity.this);
                 break;
             case R.id.card_update_mark:
-                DialogUtil.showSingleDia("更新日志",
-                        getResources().getString(R.string.update_mark_text),AboutActivity.this);
+                DialogUtil.getInstence().showSingleDia("更新日志",
+                        getResources().getString(R.string.update_mark_text), AboutActivity.this);
                 break;
             case R.id.card_author:
                 showPayDialog();
                 break;
             case R.id.card_github:
-                goToInternet(AboutActivity.this, "https://github.com/lingxiaopua/PicDimensional");
+                DialogUtil.getInstence()
+                        .setNormalDialog("跳转到github",
+                                "是否跳转到作者github?",
+                                AboutActivity.this)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                goToInternet(AboutActivity.this, "https://github.com/lingxiaopua/PicDimensional");
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
                 break;
             case R.id.card_version:
                 showProgressDialog("正在检测更新...");
                 mPresenter.getVersion();
                 break;
             case R.id.card_blog:
-                goToInternet(AboutActivity.this, "http://www.lingxiaosuse.cn");
+                DialogUtil
+                        .getInstence()
+                        .setNormalDialog("跳转到博客",
+                        "是否跳转到作者博客?",
+                        AboutActivity.this)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                goToInternet(AboutActivity.this, "http://www.lingxiaosuse.cn");
+                                dialog.dismiss();
+                            }
+                        })
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
                 break;
             case R.id.card_from:
                 showCardFromDia();
@@ -261,8 +319,9 @@ public class AboutActivity extends BaseActivity implements SplashView{
     }
 
     private AlertDialog dialog;
+
     private void showCardFromDia() {
-        if (dialog == null){
+        if (dialog == null) {
             View cardFromView = UIUtils.inflate(R.layout.dialog_card_from);
             AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
             builder.setView(cardFromView);
@@ -301,15 +360,15 @@ public class AboutActivity extends BaseActivity implements SplashView{
         dialogView = UIUtils.inflate(R.layout.dialog_download);
         if (!checkUpdate()) {
             int color = SpUtils.getInt(UIUtils.getContext(),
-                    ContentValue.SKIN_ID,R.color.colorPrimary);
+                    ContentValue.SKIN_ID, R.color.colorPrimary);
             new CookieBar.Builder(AboutActivity.this)
                     .setTitle("恭喜")
                     .setMessage("已经是最新版本了")
                     .setBackgroundColor(color)
                     .show();
-        }else {
+        } else {
             //服务器上面有新版本
-            String url = SpUtils.getString(AboutActivity.this, ContentValue.DOWNLOAD_URL,"");
+            String url = SpUtils.getString(AboutActivity.this, ContentValue.DOWNLOAD_URL, "");
             showDialog(url);
         }
     }
@@ -333,7 +392,7 @@ public class AboutActivity extends BaseActivity implements SplashView{
     private void showDialog(final String url) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("检测到新版本");
-        builder.setMessage(SpUtils.getString(this,ContentValue.VERSION_DES,""));
+        builder.setMessage(SpUtils.getString(this, ContentValue.VERSION_DES, ""));
         builder.setPositiveButton("下载apk", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -349,6 +408,7 @@ public class AboutActivity extends BaseActivity implements SplashView{
         });
         builder.show();
     }
+
     private void startDownloadService(final String url) {
         mConnect = new ServiceConnection() {
             @Override
@@ -412,5 +472,33 @@ public class AboutActivity extends BaseActivity implements SplashView{
             }
         });
         builder.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (null != bitmap) {
+            bitmap.recycle();
+        }
+    }
+
+    private long getFileSize(File file) {
+        if (file == null) {
+            return 0;
+        }
+        long size = 0;
+        if (file.exists()) {
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(file);
+                size = fis.available();
+                fis.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+        size = size / 1024 / 1024; //mb
+        return size;
     }
 }

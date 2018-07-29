@@ -90,4 +90,10 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <!--popwindow anim-->
+    <style name="contextMenuAnim" parent="@android:style/Animation.Activity">
+        <item name="android:windowEnterAnimation">@anim/pop_bottom_enter</item>
+        <item name="android:windowExitAnimation">@anim/pop_bottom_exit</item>
+    </style>
+
 </resources>

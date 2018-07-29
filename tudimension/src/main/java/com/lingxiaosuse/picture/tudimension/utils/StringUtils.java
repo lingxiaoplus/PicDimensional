@@ -61,12 +61,16 @@ public class StringUtils {
 
     // currentTime要转换的long类型的时间
     // formatType要转换的时间格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日 HH时mm分ss秒
-    public static Date longToDate(long currentTime, String formatType)
-            throws ParseException {
-        Date dateOld = new Date(currentTime); // 根据long类型的毫秒数生命一个date类型的时间
-        String sDateTime = dateToString(dateOld, formatType); // 把date类型的时间转换为string
-        Date date = stringToDate(sDateTime, formatType); // 把String类型转换为Date类型
-        return date;
+    public static Date longToDate(long currentTime, String formatType) {
+        try {
+            Date dateOld = new Date(currentTime); // 根据long类型的毫秒数生命一个date类型的时间
+            String sDateTime = dateToString(dateOld, formatType); // 把date类型的时间转换为string
+            Date date = stringToDate(sDateTime, formatType); // 把String类型转换为Date类型
+            return date;
+        }catch (ParseException e){
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // formatType格式为yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日 HH时mm分ss秒
@@ -75,6 +79,9 @@ public class StringUtils {
         return new SimpleDateFormat(formatType).format(data);
     }
 
+    public static String longToString(long time,String formatType){
+        return dateToString(longToDate(time,formatType),formatType);
+    }
     // strTime要转换的string类型的时间，formatType要转换的格式yyyy-MM-dd HH:mm:ss//yyyy年MM月dd日
     // HH时mm分ss秒，
     // strTime的时间格式必须要与formatType的时间格式相同

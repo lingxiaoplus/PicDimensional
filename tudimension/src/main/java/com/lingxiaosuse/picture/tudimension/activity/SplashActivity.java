@@ -1,28 +1,35 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.app.ActivityOptions;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
+import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.ScaleAnimation;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.VersionModle;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.utills.LogUtils;
+import com.camera.lingxiao.common.utills.PopwindowUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.global.ContentValue;
-import com.lingxiaosuse.picture.tudimension.modle.VersionModle;
 import com.lingxiaosuse.picture.tudimension.modle.VerticalModle;
 import com.lingxiaosuse.picture.tudimension.presenter.SplashPresenter;
+import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.HttpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
@@ -48,7 +55,10 @@ public class SplashActivity extends BaseActivity implements SplashView{
     @BindView(R.id.splash_image)
     SimpleDraweeView draweeView;
     private boolean isFirst;
-
+    private boolean mLongClickEnable;
+    private ServiceConnection mConnect;
+    public DownloadService mDownloadService;
+    private String mUrl = "";
     private SplashPresenter presenter = new SplashPresenter(this,this);
     @Override
     protected int getContentLayoutId() {
@@ -56,7 +66,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
         if (!SpUtils.getBoolean(this, ContentValue.IS_OPEN_DAILY, true)) {
             StartActivity(MainActivity.class, true);
         }
-
+        bindDownloadService();
         return R.layout.activity_splash;
     }
 
@@ -71,6 +81,46 @@ public class SplashActivity extends BaseActivity implements SplashView{
                 StartActivity(MainActivity.class, true);
             }
         });
+        draweeView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                mLongClickEnable = true;
+                final PopwindowUtil popwindowUtil = new PopwindowUtil
+                        .PopupWindowBuilder(SplashActivity.this)
+                        .setView(R.layout.pop_long_click)
+                        .setFocusable(true)
+                        .setTouchable(true)
+                        .setOutsideTouchable(true)
+                        .create();
+                popwindowUtil.showAtLocation(draweeView);
+                popwindowUtil.getView(R.id.pop_download).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (null != mDownloadService && !mUrl.isEmpty()){
+                            mDownloadService.startDownload(mUrl);
+                        }
+                        popwindowUtil.dissmiss();
+                        if (isFirst) {
+                            StartActivity(IndicatorActivity.class, true);
+                        } else {
+                            StartActivity(MainActivity.class, true);
+                        }
+                    }
+                });
+                popwindowUtil.getView(R.id.pop_cancel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popwindowUtil.dissmiss();
+                        if (isFirst) {
+                            StartActivity(IndicatorActivity.class, true);
+                        } else {
+                            StartActivity(MainActivity.class, true);
+                        }
+                    }
+                });
+                return true;
+            }
+        });
     }
 
     @Override
@@ -82,6 +132,24 @@ public class SplashActivity extends BaseActivity implements SplashView{
                 .applyNav(true)         // 是否应用到导航栏
                 .build(this)
                 .apply();
+    }
+
+    private void bindDownloadService() {
+        mConnect = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                DownloadService.DownloadBinder binder = (DownloadService.DownloadBinder) service;
+                mDownloadService = binder.getService();
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mDownloadService = null;
+            }
+        };
+        Intent intent = new Intent(this, DownloadService.class);
+        //最后一个参数，是否自动创建service 这个是自动创建
+        bindService(intent, mConnect, Service.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -114,10 +182,12 @@ public class SplashActivity extends BaseActivity implements SplashView{
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                if (isFirst) {
-                    StartActivity(IndicatorActivity.class, true);
-                } else {
-                    StartActivity(MainActivity.class, true);
+                if (!mLongClickEnable){
+                    if (isFirst) {
+                        StartActivity(IndicatorActivity.class, true);
+                    } else {
+                        StartActivity(MainActivity.class, true);
+                    }
                 }
             }
 
@@ -130,6 +200,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
 
     @Override
     public void showImgUrl(Uri uri,String error) {
+        mUrl = uri.toString();
         if (null == error){
             draweeView.setImageURI(uri);
             startAnim();
@@ -143,7 +214,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
     }
 
     @Override
-    public void onVersionResult(com.camera.lingxiao.common.VersionModle modle) {
+    public void onVersionResult(VersionModle modle) {
 
     }
 
@@ -160,5 +231,13 @@ public class SplashActivity extends BaseActivity implements SplashView{
     @Override
     public void showToast(String text) {
         ToastUtils.show(text);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mConnect != null){
+            unbindService(mConnect);
+        }
     }
 }

@@ -3,6 +3,8 @@ package com.lingxiaosuse.picture.tudimension.activity;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
+import android.app.WallpaperManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -15,15 +17,20 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.RxBus;
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.utills.PopwindowUtil;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.rxbus.DeleteEvent;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
@@ -33,6 +40,7 @@ import com.lingxiaosuse.picture.tudimension.widget.PhotoViewPager;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -82,10 +90,12 @@ public class LocalImgActivity extends BaseActivity {
                 File file = new File(localUrl);
                 toolbar.setTitle(file.getName());
             }
+
             @Override
             public void onPageSelected(int position) {
 
             }
+
             @Override
             public void onPageScrollStateChanged(int state) {
 
@@ -95,6 +105,8 @@ public class LocalImgActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        String localUrl = list.get(mPosition).substring(6);
+        File file = new File(localUrl);
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
@@ -112,8 +124,7 @@ public class LocalImgActivity extends BaseActivity {
                 showDeleteDialog();
                 break;
             case R.id.menu_share:
-                String localUrl = list.get(mPosition).substring(6);
-                File file = new File(localUrl);
+
                 Intent shareImgIntent = new Intent(Intent.ACTION_SEND);
                 shareImgIntent.setType("image/*");
                 Uri u = Uri.fromFile(file);
@@ -122,10 +133,53 @@ public class LocalImgActivity extends BaseActivity {
                 file = null;
                 break;
             case R.id.menu_info:
-                showInfoDialog();
+                backgroundAlpha(0.5f);
+                final PopwindowUtil popwindowUtil = new PopwindowUtil
+                        .PopupWindowBuilder(LocalImgActivity.this)
+                        .setView(R.layout.pop_image_info)
+                        .setAnimationStyle(R.style.contextMenuAnim)
+                        .setBackgroundDrawable(new BitmapDrawable())
+                        .setOnDissmissListener(new PopupWindow.OnDismissListener() {
+                            @Override
+                            public void onDismiss() {
+                                backgroundAlpha(1f);
+                            }
+                        })
+                        .setFocusable(true)
+                        .setTouchable(true)
+                        .setOutsideTouchable(true)
+                        .create();
+                View rootview = LayoutInflater.from(LocalImgActivity.this)
+                        .inflate(R.layout.activity_local_img, null);
+                popwindowUtil.showAsLocation(rootview, Gravity.BOTTOM, 0, 20);
+
+                popwindowUtil.setText(R.id.tv_pop_name, "名称：" + file.getName());
+                popwindowUtil.setText(R.id.tv_pop_time, "时间：" + StringUtils.longToString(file.lastModified(), "yyyy-MM-dd HH:mm:ss"));
+                popwindowUtil.setText(R.id.tv_pop_size, "文件大小：" + StringUtils.getDataSize(getFileSize(file)));
+                popwindowUtil.setText(R.id.tv_pop_path, "路径：" + file.getAbsolutePath());
+
+                popwindowUtil.getView(R.id.tv_pop_close)
+                        .setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                popwindowUtil.dissmiss();
+                            }
+                        });
+                //showInfoDialog();
                 break;
         }
         return true;
+    }
+
+    /**
+     * 设置添加屏幕的背景透明度
+     *
+     * @param bgAlpha
+     */
+    public void backgroundAlpha(float bgAlpha) {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.alpha = bgAlpha; //0.0-1.0
+        getWindow().setAttributes(lp);
     }
 
     @Override
@@ -216,7 +270,7 @@ public class LocalImgActivity extends BaseActivity {
                     conslayoutRoot.setBackgroundColor(getResources()
                             .getColor(R.color.trans));
                     toolbar.setVisibility(View.GONE);
-                }else {
+                } else {
                     conslayoutRoot.setBackgroundColor(getResources()
                             .getColor(R.color.whiteNor));
                     toolbar.setVisibility(View.VISIBLE);
@@ -236,6 +290,7 @@ public class LocalImgActivity extends BaseActivity {
     }
 
     private void setWallpaper() {
+
         //截取字符串，不需要file://
         String localUrl = list.get(mPosition).substring(6);
         Intent intent = new Intent(Intent.ACTION_ATTACH_DATA);
@@ -254,6 +309,18 @@ public class LocalImgActivity extends BaseActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+
+        // TODO: 18-7-28  上面的方法对小米等手机无效
+        /*try {
+            WallpaperManager wpm = (WallpaperManager) getSystemService(Context.WALLPAPER_SERVICE);
+            if (wallpaper != null) {
+
+                wpm.setBitmap(bitmap);
+                Log.i("xzy", "wallpaper not null");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }*/
     }
 
     /**
@@ -339,17 +406,22 @@ public class LocalImgActivity extends BaseActivity {
         file = null;
     }
 
-    public long getFileSize(File file) throws Exception {
-        if (file == null) {
-            return 0;
+    public long getFileSize(File file) {
+        try {
+            if (file == null) {
+                return 0;
+            }
+            long size = 0;
+            if (file.exists()) {
+                FileInputStream fis = null;
+                fis = new FileInputStream(file);
+                size = fis.available();
+                fis.close();
+            }
+            return size;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        long size = 0;
-        if (file.exists()) {
-            FileInputStream fis = null;
-            fis = new FileInputStream(file);
-            size = fis.available();
-            fis.close();
-        }
-        return size;
+        return 0;
     }
 }
