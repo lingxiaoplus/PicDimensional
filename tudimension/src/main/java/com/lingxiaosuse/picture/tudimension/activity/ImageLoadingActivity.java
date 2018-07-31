@@ -292,6 +292,10 @@ public class ImageLoadingActivity extends BaseActivity {
      * 隐藏底部导航栏
      */
     private void toggleButtomView() {
+        // TODO: 2018/7/31  可能会为空，原因不明
+        if (null == relativeLayout){
+            return;
+        }
         float current = relativeLayout.getTranslationY();
         ObjectAnimator animator = ObjectAnimator
                 .ofFloat(relativeLayout, "translationY", current, current == 0 ? relativeLayout.getHeight() + 100 : 0);

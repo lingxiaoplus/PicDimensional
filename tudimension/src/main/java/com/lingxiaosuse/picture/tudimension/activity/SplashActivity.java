@@ -200,8 +200,8 @@ public class SplashActivity extends BaseActivity implements SplashView{
 
     @Override
     public void showImgUrl(Uri uri,String error) {
-        mUrl = uri.toString();
         if (null == error){
+            mUrl = uri.toString();
             draweeView.setImageURI(uri);
             startAnim();
         }else {

@@ -99,14 +99,19 @@ public class HotFragment extends BaseFragment implements HotView{
                         picUrlList.add(previsList.get(i).getUrl());
                     }
                 }
-                Intent intent = new Intent(UIUtils.getContext(),
-                        ImageLoadingActivity.class);
-                intent.putExtra("position",position);
-                intent.putExtra("itemCount",mAdapter.getItemCount());
-                intent.putExtra("id",previsList.get(position).get_id());
-                intent.putStringArrayListExtra("picList",picUrlList);
-                intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(UIUtils.getContext(),
+                            ImageLoadingActivity.class);
+                    intent.putExtra("position",position);
+                    intent.putExtra("itemCount",mAdapter.getItemCount());
+                    intent.putExtra("id",previsList.get(position).get_id());
+                    intent.putStringArrayListExtra("picList",picUrlList);
+                    intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
+                    startActivity(intent);
+                }catch (IndexOutOfBoundsException e){
+                    e.printStackTrace();
+                }
+
             }
 
             @Override

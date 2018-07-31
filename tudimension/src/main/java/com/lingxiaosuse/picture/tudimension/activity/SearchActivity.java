@@ -197,15 +197,20 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
                     }
                     IdList.add(wallPaperList.get(i).getId());
                 }
-                Intent intent = new Intent(UIUtils.getContext(),
-                        ImageLoadingActivity.class);
-                intent.putExtra("position",position);
-                intent.putExtra("itemCount",mAdapter.getItemCount());
-                intent.putExtra("id",wallPaperList.get(position).getId());
-                intent.putStringArrayListExtra("picList",picUrlList);
-                intent.putStringArrayListExtra("picIdList",IdList);
-                intent.putExtra("isHot",false); // 判断是否为最新界面传递过来的
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(UIUtils.getContext(),
+                            ImageLoadingActivity.class);
+                    intent.putExtra("position",position);
+                    intent.putExtra("itemCount",mAdapter.getItemCount());
+                    intent.putExtra("id",wallPaperList.get(position).getId());
+                    intent.putStringArrayListExtra("picList",picUrlList);
+                    intent.putStringArrayListExtra("picIdList",IdList);
+                    intent.putExtra("isHot",false); // 判断是否为最新界面传递过来的
+                    startActivity(intent);
+                }catch (IndexOutOfBoundsException e){
+                    e.printStackTrace();
+                }
+
             }
 
             @Override

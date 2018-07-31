@@ -160,9 +160,12 @@ public class AboutActivity extends BaseActivity implements SplashView {
                         }
                     }
                 }
-                Random random = new Random();
-                int index = random.nextInt(picList.size());
+
                 try {
+                    // TODO: 2018/7/31  虚拟机报参数不匹配？？
+                    Random random = new Random();
+                    int index = random.nextInt(picList.size());
+
                     FileInputStream inputStream = new FileInputStream(picList.get(index));
                     bitmap = BitmapUtils.compressImageByResolution(BitmapFactory.decodeStream(inputStream),
                             840f, 400f);

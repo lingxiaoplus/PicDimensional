@@ -70,7 +70,9 @@ public class MainPresenter extends BasePresenter<MainView,MainActivity>{
                 UIUtils.runOnUIThread(new Runnable() {
                     @Override
                     public void run() {
-                        getView().onGetHeadText(hotModle.getHitokoto());
+                        if (getView() != null){
+                            getView().onGetHeadText(hotModle.getHitokoto());
+                        }
                     }
                 });
             }

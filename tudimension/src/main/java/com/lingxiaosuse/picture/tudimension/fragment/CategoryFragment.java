@@ -74,14 +74,18 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
         mCateAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View View, int position) {
-                Intent intent = new Intent(UIUtils.getContext(),
-                        BannerDetailActivity.class);
-                intent.putExtra("url",categoryList.get(position).getCover());
-                intent.putExtra("desc",categoryList.get(position).getName());
-                intent.putExtra("id",categoryList.get(position).getId());
-                intent.putExtra("title",categoryList.get(position).getName());
-                intent.putExtra("type", ContentValue.TYPE_CATEGORY);  //说明类型是轮播图
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(UIUtils.getContext(),
+                            BannerDetailActivity.class);
+                    intent.putExtra("url",categoryList.get(position).getCover());
+                    intent.putExtra("desc",categoryList.get(position).getName());
+                    intent.putExtra("id",categoryList.get(position).getId());
+                    intent.putExtra("title",categoryList.get(position).getName());
+                    intent.putExtra("type", ContentValue.TYPE_CATEGORY);  //说明类型是轮播图
+                    startActivity(intent);
+                }catch (IndexOutOfBoundsException e){
+                    e.printStackTrace();
+                }
             }
 
             @Override

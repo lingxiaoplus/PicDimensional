@@ -168,7 +168,8 @@ public class MzituDetailActivity extends BaseActivity {
                     @Override
                     public void run() {
                         mAdapter.notifyDataSetChanged();
-                        if (swipMzituDetail.isRefreshing()){
+                        // TODO: 2018/7/31 部分机型报空指针
+                        if (null != swipMzituDetail && swipMzituDetail.isRefreshing()){
                             swipMzituDetail.setRefreshing(false);
                         }
                     }

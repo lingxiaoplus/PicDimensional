@@ -32,11 +32,10 @@ public class MzituRecyclerAdapter extends BaseRecycleAdapter{
     }
     @Override
     public void bindData(BaseViewHolder holder, int position, List mList) {
-        mImgList = mList;
-        Uri uri = Uri.parse(mImgList.get(position));
-        TextView title = (TextView) holder.getView(R.id.tv_mzitu_title);
-
         try{
+            mImgList = mList;
+            Uri uri = Uri.parse(mImgList.get(position));
+            TextView title = (TextView) holder.getView(R.id.tv_mzitu_title);
             if (null == mTitleList){
                 title.setVisibility(View.GONE);
             }else {
