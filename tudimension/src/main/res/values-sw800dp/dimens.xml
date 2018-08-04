@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+	<dimen name="app_bar_height">577.7778dp</dimen>
+	<dimen name="fab_margin">35.5556dp</dimen>
+	<dimen name="text_margin">35.5556dp</dimen>
+	<dimen name="banner_height">408.8889dp</dimen>
+	<dimen name="nav_header_height">533.3333dp</dimen>
+	<dimen name="banner_detail">400dp</dimen>
+	<dimen name="mzitu_detail_height">600dp</dimen>
+</resources>

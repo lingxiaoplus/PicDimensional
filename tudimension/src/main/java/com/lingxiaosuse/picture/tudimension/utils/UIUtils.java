@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.view.View;
 
-import com.lingxiaosuse.picture.tudimension.global.App;
+import com.lingxiaosuse.picture.tudimension.App;
 /**
  * Created by lingxiao on 2017/6/13.
  */

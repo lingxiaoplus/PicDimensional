@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.util.ByteConstants;
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -18,7 +19,6 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.ImageInfo;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.widget.ZoomableDrawwView;
 
 import java.io.File;

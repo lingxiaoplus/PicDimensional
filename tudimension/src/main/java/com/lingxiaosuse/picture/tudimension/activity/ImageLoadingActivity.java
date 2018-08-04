@@ -117,7 +117,8 @@ public class ImageLoadingActivity extends BaseActivity {
             IdList = intent.getStringArrayListExtra("picIdList");
             commentImg.setVisibility(View.VISIBLE);
         }
-        mAdapter = new ImageLoadAdapter(picList, isHot);
+        int imageRule = SpUtils.getInt(this, ContentValue.PIC_RESOLUTION,0);
+        mAdapter = new ImageLoadAdapter(picList, isHot,isVertical,imageRule);
         mAdapter.setMoveListener(viewPager);
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mPosition);

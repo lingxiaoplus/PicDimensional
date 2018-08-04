@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.camera.lingxiao.common.VersionModle;
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.LogUtils;
 import com.camera.lingxiao.common.utills.PopwindowUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -26,7 +27,6 @@ import com.github.zackratos.ultimatebar.UltimateBar;
 import com.google.gson.Gson;
 import com.lingxiaosuse.picture.tudimension.MainActivity;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.VerticalModle;
 import com.lingxiaosuse.picture.tudimension.presenter.SplashPresenter;
 import com.lingxiaosuse.picture.tudimension.service.DownloadService;

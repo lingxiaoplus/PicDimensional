@@ -12,11 +12,11 @@ import android.util.Log;
 import android.view.MenuItem;
 
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.AllFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.DailyFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.MzituFragment;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
 

@@ -1,4 +1,4 @@
-package com.lingxiaosuse.picture.tudimension.rxbus;
+package com.lingxiaosuse.picture.tudimension.rxbusevent;
 
 /**
  * Created by lingxiao on 2017/10/20.

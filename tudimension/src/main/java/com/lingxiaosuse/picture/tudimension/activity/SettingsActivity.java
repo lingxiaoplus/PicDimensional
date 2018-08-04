@@ -4,33 +4,26 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.camera.lingxiao.common.RxBus;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.SpUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.imagepipeline.core.ImagePipeline;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.db.DrawerSelect;
-import com.lingxiaosuse.picture.tudimension.rxbus.DrawerChangeEvent;
-import com.lingxiaosuse.picture.tudimension.utils.DialogUtil;
-import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
+import com.lingxiaosuse.picture.tudimension.rxbusevent.DrawerChangeEvent;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
-import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SettingCardView;
 
 import java.text.DecimalFormat;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 
@@ -50,8 +43,12 @@ public class SettingsActivity extends BaseActivity {
     SettingCardView cardSkin;
     @BindView(R.id.card_model)
     SettingCardView cardModel;
+    @BindView(R.id.card_comparse)
+    SettingCardView cardComparse;
+
     private String[] mDrawerStr;
     private boolean[] checkedItems;
+    String[] resolutionItems = {"显示720p的图片","显示1080p的图片","显示原图(可能会卡顿)"};
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_settings;
@@ -68,6 +65,9 @@ public class SettingsActivity extends BaseActivity {
         cardUpdate.setChecked(isCheck);
         boolean isCheck1 = SpUtils.getBoolean(this, ContentValue.IS_OPEN_DAILY, true);
         cardDaly.setChecked(isCheck1);
+
+        int position = SpUtils.getInt(this,ContentValue.PIC_RESOLUTION,0);
+        cardComparse.setMessage(resolutionItems[position]);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class SettingsActivity extends BaseActivity {
         return true;
     }
 
-    @OnClick({R.id.card_update, R.id.card_cache, R.id.card_share, R.id.card_skin, R.id.card_daly,R.id.card_model})
+    @OnClick({R.id.card_update, R.id.card_cache, R.id.card_share, R.id.card_skin, R.id.card_daly,R.id.card_model,R.id.card_comparse})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.card_update:
@@ -150,7 +150,27 @@ public class SettingsActivity extends BaseActivity {
                 showMultiChoiceDia("请选择模块"
                         ,mDrawerStr,checkedItems,SettingsActivity.this);
                 break;
+            case R.id.card_comparse:
+                int position = SpUtils.getInt(this,ContentValue.PIC_RESOLUTION,0);
+                showSingleChoiceDia("选择显示图片质量",position,SettingsActivity.this);
+                break;
         }
+    }
+
+
+    public void showSingleChoiceDia(String title,int checked,Context context){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setIcon(android.R.drawable.alert_dark_frame);
+        builder.setTitle(title);
+        builder.setSingleChoiceItems(resolutionItems, checked, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                SpUtils.putInt(UIUtils.getContext(),ContentValue.PIC_RESOLUTION,i);
+                cardComparse.setMessage(resolutionItems[i]);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.show();
     }
 
     /**

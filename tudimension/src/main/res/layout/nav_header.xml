@@ -3,7 +3,7 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:id="@+id/rl_head_menu"
     android:layout_width="match_parent"
-    android:layout_height="240dp">
+    android:layout_height="@dimen/nav_header_height">
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/image_head_background"

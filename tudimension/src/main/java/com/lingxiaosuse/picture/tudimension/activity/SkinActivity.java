@@ -78,12 +78,10 @@ public class SkinActivity extends BaseActivity{
         colorName.add("pink300");
         colorName.add("orange300");
         colorName.add("teal300");
-        //final int pos = SpUtils.getInt(this, ContentValue.SKIN_POSITION,0);
         SkinAdapter adapter = new SkinAdapter(colorList, new BaseRecyclerViewAdapter.AdapterListener() {
             @Override
             public void onItemClick(BaseHolder holder, Object o,int position) {
                 RippleAnimation.create(holder.getView(R.id.bt_skin_use)).setDuration(1000).start();
-                //SpUtils.putInt(UIUtils.getContext(), ContentValue.SKIN_POSITION,position);
                 if (holder.getAdapterPosition() == 0){
                     SkinLib.resetSkin();
                 }else {
@@ -91,7 +89,7 @@ public class SkinActivity extends BaseActivity{
                     //UIUtils.changeSkinDef(colorName.get(position));
                 }
                 RxBus.getInstance().post(new SkinChangedEvent(colorList.get(position)));
-                SpUtils.putInt(UIUtils.getContext(),ContentValue.SKIN_ID,colorList.get(position));
+                SpUtils.putInt(UIUtils.getContext(), ContentValue.SKIN_ID,colorList.get(position));
                 //EventBus.getDefault().post(new SkinChangeEvent(colorList.get(position)));
             }
 

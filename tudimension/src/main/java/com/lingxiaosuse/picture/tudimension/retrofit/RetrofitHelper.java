@@ -3,8 +3,8 @@ package com.lingxiaosuse.picture.tudimension.retrofit;
 import android.content.Context;
 import android.util.Log;
 
+import com.camera.lingxiao.common.app.ContentValue;
 import com.google.gson.GsonBuilder;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;

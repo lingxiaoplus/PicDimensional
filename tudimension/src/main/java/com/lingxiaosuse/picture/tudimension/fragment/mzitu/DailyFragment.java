@@ -9,12 +9,12 @@ import android.util.Log;
 import android.view.View;
 
 import com.camera.lingxiao.common.app.BaseFragment;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.activity.MzituDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 

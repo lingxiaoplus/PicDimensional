@@ -2,4 +2,8 @@
     <dimen name="app_bar_height">260dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="banner_height">184dp</dimen>
+    <dimen name="nav_header_height">240dp</dimen>
+    <dimen name="banner_detail">100dp</dimen>
+    <dimen name="mzitu_detail_height">300dp</dimen>
 </resources>

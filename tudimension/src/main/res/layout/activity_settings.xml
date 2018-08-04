@@ -108,6 +108,13 @@
                         app:visable="false"
                         app:title="换肤">
                     </com.lingxiaosuse.picture.tudimension.widget.SettingCardView>
+                    <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                        android:id="@+id/card_comparse"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:message="显示720p图片"
+                        app:visable="false"
+                        app:title="浏览图片质量"/>
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         </LinearLayout>

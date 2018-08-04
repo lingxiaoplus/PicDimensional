@@ -11,7 +11,10 @@ import com.camera.lingxiao.common.R;
 public class ContentValue {
     public static final String imgRule ="?imageView2/3/h/230";//图片规则，从服务器取230大小的图片
     public static final String bigImgRule ="?imageView2/3/h/1080";
+    public static final String hor_720ImgRule ="?imageView2/3/h/720";
 
+    public static final String vertical720_ImgRule ="?imageView16/9/h/1080";
+    public static final String vertical1080_ImgRule ="?imageView16/9/h/1080";
     //升级接口
     public static final String UPDATEURL = "http://www.lingxiaosuse.cn/tudimension/update.json";
     public static final int PERMESSION_REQUEST_CODE = 200;
@@ -138,5 +141,10 @@ public class ContentValue {
      * 设置轮播图时间
      */
     public static final int BANNER_TIMER = 2000;
+
+    /**
+     * 设置浏览图片的分辨率
+     */
+    public static final String PIC_RESOLUTION = "pic_resolution";
 
 }

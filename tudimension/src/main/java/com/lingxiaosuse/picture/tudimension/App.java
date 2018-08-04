@@ -1,4 +1,4 @@
-package com.lingxiaosuse.picture.tudimension.global;
+package com.lingxiaosuse.picture.tudimension;
 
 import android.app.Application;
 import android.content.Context;

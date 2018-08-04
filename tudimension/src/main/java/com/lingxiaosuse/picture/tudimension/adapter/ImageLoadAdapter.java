@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.SpUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -39,11 +41,24 @@ public class ImageLoadAdapter extends PagerAdapter{
     private ArrayList<String> urlList;
     private PhotoDraweeView image;
     private boolean isHot;
-    private String imgRule ="?imageView2/3/h/1080";
+    private String imgRule ="";
     private ZoomableViewpager viewpager;
-    public ImageLoadAdapter(ArrayList<String> urlList,boolean isHot){
+    public ImageLoadAdapter(ArrayList<String> urlList,boolean isHot,boolean isVertical,int rule){
         this.urlList = urlList;
         this.isHot = isHot;
+        if (isVertical){
+            if (rule == 0){
+                imgRule = ContentValue.vertical720_ImgRule;
+            }else if (rule == 1){
+                imgRule = ContentValue.vertical1080_ImgRule;
+            }
+        }else {
+            if (rule == 0){
+                imgRule = ContentValue.hor_720ImgRule;
+            }else if (rule == 1){
+                imgRule = ContentValue.bigImgRule;
+            }
+        }
     }
 
     public void setMoveListener(ZoomableViewpager viewpager){
@@ -63,10 +78,25 @@ public class ImageLoadAdapter extends PagerAdapter{
     public Object instantiateItem(ViewGroup container, int position) {
         View view =null;
         try {
+            view = UIUtils.inflate(R.layout.pager_load_hot);
+            image = view.findViewById(R.id.simple_pager_load_hot);
+            Uri uri = Uri.parse(urlList.get(position)+imgRule);
+            Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
+            setControll(uri,image);
+            image.setPhotoUri(uri);
+            container.addView(view);
+            setOnclick(image);
+            setOnLongClick(image);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        /*try {
             if (isHot){
                 view = UIUtils.inflate(R.layout.pager_load_hot);
                 image = view.findViewById(R.id.simple_pager_load_hot);
                 Uri uri = Uri.parse(urlList.get(position));
+
                 Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
                 setControll(uri,image);
                 image.setPhotoUri(uri);
@@ -75,28 +105,28 @@ public class ImageLoadAdapter extends PagerAdapter{
                 setOnLongClick(image);
                 //image.setOnMovingListener(viewpager);
                 //设置宽高自适应
-                /*FrescoHelper.setControllerListener(image,
+                *//*FrescoHelper.setControllerListener(image,
                         uri,
-                        FrescoHelper.getScreenWidth(UIUtils.getContext()));*/
+                        FrescoHelper.getScreenWidth(UIUtils.getContext()));*//*
             }else {
                 view = UIUtils.inflate(R.layout.pager_load);
                 image = view.findViewById(R.id.simple_pager_load);
                 Uri uri = Uri.parse(urlList.get(position)+imgRule);
-                Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
+                Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position)+imgRule);
                 setControll(uri,image);
                 image.setPhotoUri(uri);
                 container.addView(view);
                 setOnclick(image);
                 setOnLongClick(image);
                 //设置宽高自适应
-                /*FrescoHelper.setControllerListener(image,
+                *//*FrescoHelper.setControllerListener(image,
                         uri,
-                        FrescoHelper.getScreenWidth(UIUtils.getContext()));*/
+                        FrescoHelper.getScreenWidth(UIUtils.getContext()));*//*
             }
 
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
 
         return view;
     }

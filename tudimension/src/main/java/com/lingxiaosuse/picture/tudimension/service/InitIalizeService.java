@@ -1,16 +1,13 @@
 package com.lingxiaosuse.picture.tudimension.service;
 
-import android.app.Application;
 import android.app.IntentService;
 import android.app.Notification;
 import android.content.Intent;
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.Nullable;
 
 import com.lingxiao.skinlibrary.SkinLib;
-import com.lingxiaosuse.picture.tudimension.activity.CrashActivity;
-import com.lingxiaosuse.picture.tudimension.global.App;
+import com.lingxiaosuse.picture.tudimension.App;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.tencent.bugly.crashreport.CrashReport;
 

@@ -24,15 +24,13 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -44,9 +42,8 @@ import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.PopwindowUtil;
 import com.camera.lingxiao.common.utills.SpUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.activity.cosplay.CosplayLaActivity;
-import com.lingxiaosuse.picture.tudimension.rxbus.DrawerChangeEvent;
+import com.lingxiaosuse.picture.tudimension.rxbusevent.DrawerChangeEvent;
 import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
@@ -158,6 +155,20 @@ public class MainActivity extends BaseActivity implements MainView{
             EasyPermissions.requestPermissions(this, getString(R.string.permession_title),
                     ContentValue.PERMESSION_REQUEST_CODE, mPermessions);
         }
+        float density = getResources().getDisplayMetrics().density;
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int heightPixels = dm.heightPixels;
+        int widthPixels = dm.widthPixels;
+        float heightDP = heightPixels / density;
+        float widthDP = widthPixels / density;
+        float smallestWidthDP;
+        if(widthDP < heightDP) {
+            smallestWidthDP = widthDP;
+        }else {
+            smallestWidthDP = heightDP;
+        }
+        ToastUtils.show("最小宽度："+smallestWidthDP);
     }
 
     private void initHeadLayout() {

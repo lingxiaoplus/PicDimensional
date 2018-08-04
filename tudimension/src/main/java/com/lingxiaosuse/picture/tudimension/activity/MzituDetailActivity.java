@@ -13,10 +13,10 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;

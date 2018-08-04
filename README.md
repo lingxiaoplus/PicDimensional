@@ -3,7 +3,18 @@ picture dimensional
 
 主要用到的框架是现在流行的retrofit+rxjava+rxandroid
 
-## V1.0
+### 项目分包
+
+![](E:\android project\PicDimensional\picdimensional_package.png)
+
+项目分为四个模块：
+
+1. 第一个common包里对网络请求进行了封装，还有一些base类和工具类
+2. 第二个包对语言进行封装，做国际化
+3. 第三个sjinlibrary是皮肤包，对换肤框架的实现
+4. 第四个是主项目，在里面实现相应的功能
+
+#### V1.0
 
 1.图片查看和下载
 
@@ -11,7 +22,7 @@ picture dimensional
 
 3.首页轮播图
 
-## V1.1
+#### V1.1
 
 1.启动页面增加开关，如果不想显示可以关闭
 
@@ -21,7 +32,7 @@ picture dimensional
 
 4.图片详情界面可以分享了
 
-## V1.2
+#### V1.2
 
 1.修复图片下载失败的几率
 
@@ -35,7 +46,7 @@ picture dimensional
 
 6.修改应用图标
 
-## V1.3
+#### V1.3
 1.首页图片添加悬浮按钮,一键回到顶部
 
 2.增加了menu侧滑菜单,内容比较少,以后会添加的
@@ -51,6 +62,14 @@ picture dimensional
 7.添加百度识图
 
 8.修复部分bug
+
+#### V2.0.2
+
+1. 使用rxjava2+retrofit2+mvp重构应用
+2. 加入换肤支持
+3. 搜索接口优化
+4. 增加阿里云热修复
+5. 组件化开发
 
 ## 用到的开源库
 强大的图片加载框架   [fresco](https://www.fresco-cn.org/docs/getting-started.html)

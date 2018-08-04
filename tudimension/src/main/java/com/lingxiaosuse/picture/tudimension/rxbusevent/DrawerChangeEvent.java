@@ -1,4 +1,4 @@
-package com.lingxiaosuse.picture.tudimension.rxbus;
+package com.lingxiaosuse.picture.tudimension.rxbusevent;
 
 /**
  * @author lingxiao

@@ -12,7 +12,7 @@
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_banner_image"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="@dimen/banner_detail"
             fresco:viewAspectRatio="1.7"
             fresco:progressBarImageScaleType="centerInside"
             fresco:progressBarImage="@drawable/ic_img_default"

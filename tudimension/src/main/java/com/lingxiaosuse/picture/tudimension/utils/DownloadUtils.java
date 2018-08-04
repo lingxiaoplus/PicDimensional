@@ -4,7 +4,7 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
+import com.camera.lingxiao.common.app.ContentValue;
 
 import java.io.File;
 import java.io.FileOutputStream;

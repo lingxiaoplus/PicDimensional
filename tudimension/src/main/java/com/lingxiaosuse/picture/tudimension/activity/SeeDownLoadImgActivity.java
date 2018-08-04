@@ -1,9 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,11 +14,11 @@ import android.widget.TextView;
 
 import com.camera.lingxiao.common.RxBus;
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.LocalImgAdapter;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
-import com.lingxiaosuse.picture.tudimension.rxbus.DeleteEvent;
+import com.lingxiaosuse.picture.tudimension.rxbusevent.DeleteEvent;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
@@ -32,11 +30,9 @@ import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import rx.Subscription;
-import rx.functions.Action1;
 
 public class SeeDownLoadImgActivity extends BaseActivity {
     @BindView(R.id.swip_download)

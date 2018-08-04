@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.SearchResultModle;
 
 import java.util.List;

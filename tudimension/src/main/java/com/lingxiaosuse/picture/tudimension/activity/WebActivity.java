@@ -65,6 +65,9 @@ public class WebActivity extends BaseActivity {
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
+                if (null == pbWeb || null == swipWeb){
+                    return;
+                }
                 pbWeb.setVisibility(View.INVISIBLE);
                 if (swipWeb.isRefreshing()){
                     swipWeb.setRefreshing(false);

@@ -26,7 +26,6 @@ import com.camera.lingxiao.common.app.BaseActivity;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.SearchRecyAdapter;
-import com.lingxiaosuse.picture.tudimension.global.ContentValue;
 import com.lingxiaosuse.picture.tudimension.modle.SearchKeyword;
 import com.lingxiaosuse.picture.tudimension.modle.SearchResultModle;
 import com.lingxiaosuse.picture.tudimension.presenter.SearchPresenter;
