@@ -60,6 +60,8 @@
     <color name="colorPrimary_default">#4CAF50</color>
     <color name="colorPrimary_red300">@color/red_300</color>
     <color name="colorPrimary_blue300">@color/blue300</color>
+    <color name="colorPrimary_lightBlue300">@color/light_blue_300</color>
+    <color name="colorPrimary_cyan300">@color/cyan_300</color>
     <color name="colorPrimary_indigo300">@color/indigo300</color>
     <color name="colorPrimary_deepPurple300">@color/deepPurple300</color>
     <color name="colorPrimary_pink300">@color/pink_300</color>
@@ -70,6 +72,8 @@
     <color name="colorPrimaryDark_default">#388E3C</color>
     <color name="colorPrimaryDark_red300">@color/red_500</color>
     <color name="colorPrimaryDark_blue300">@color/blue500</color>
+    <color name="colorPrimaryDark_lightBlue300">@color/light_blue_500</color>
+    <color name="colorPrimaryDark_cyan300">@color/cyan_500</color>
     <color name="colorPrimaryDark_indigo300">@color/indigo500</color>
     <color name="colorPrimaryDark_deepPurple300">@color/deepPurple500</color>
     <color name="colorPrimaryDark_pink300">@color/pink_500</color>
@@ -80,6 +84,8 @@
     <color name="skinBackground_default">#ffffffff</color>
     <color name="skinBackground_red300">@color/red_300</color>
     <color name="skinBackground_blue300">@color/blue300</color>
+    <color name="skinBackground_lightBlue300">@color/light_blue_300</color>
+    <color name="skinBackground_cyan300">@color/cyan_300</color>
     <color name="skinBackground_indigo300">@color/indigo300</color>
     <color name="skinBackground_deepPurple300">@color/deepPurple300</color>
     <color name="skinBackground_pink300">@color/pink_300</color>

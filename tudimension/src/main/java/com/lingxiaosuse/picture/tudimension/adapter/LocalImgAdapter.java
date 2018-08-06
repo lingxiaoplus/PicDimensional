@@ -26,7 +26,6 @@ import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.util.List;
 
-import uk.co.senab.photoview.PhotoView;
 
 /**
  * Created by lingxiao on 2017/9/18.

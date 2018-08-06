@@ -134,16 +134,21 @@ public class CategoryDetailFragment extends BaseFragment{
                         mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(View View, int position) {
-                                Intent intent = new Intent(UIUtils.getContext(),
-                                        ImageLoadingActivity.class);
-                                intent.putExtra("position",position);
-                                intent.putExtra("itemCount",mAdapter.getItemCount());
-                                intent.putExtra("id",mPicList.get(position).getId());
-                                intent.putExtra("isHot",true);
-                                intent.putExtra("isVertical",true);
-                                intent.putStringArrayListExtra("picList",picUrlList);
-                                intent.putStringArrayListExtra("picIdList",picIdList);
-                                startActivity(intent);
+                                try {
+                                    Intent intent = new Intent(UIUtils.getContext(),
+                                            ImageLoadingActivity.class);
+                                    intent.putExtra("position",position);
+                                    intent.putExtra("itemCount",mAdapter.getItemCount());
+                                    intent.putExtra("id",mPicList.get(position).getId());
+                                    intent.putExtra("isHot",true);
+                                    intent.putExtra("isVertical",true);
+                                    intent.putStringArrayListExtra("picList",picUrlList);
+                                    intent.putStringArrayListExtra("picIdList",picIdList);
+                                    startActivity(intent);
+                                }catch (IndexOutOfBoundsException e){
+                                    e.printStackTrace();
+                                }
+
                             }
 
                             @Override

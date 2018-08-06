@@ -5,7 +5,7 @@ picture dimensional
 
 ### 项目分包
 
-![](E:\android project\PicDimensional\picdimensional_package.png)
+![](http://oqz3bypff.bkt.clouddn.com/picdimensional_package.png)
 
 项目分为四个模块：
 

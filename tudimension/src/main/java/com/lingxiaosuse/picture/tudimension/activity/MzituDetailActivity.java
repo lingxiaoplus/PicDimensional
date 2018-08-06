@@ -169,19 +169,19 @@ public class MzituDetailActivity extends BaseActivity {
                     public void run() {
                         mAdapter.notifyDataSetChanged();
                         // TODO: 2018/7/31 部分机型报空指针
-                        if (null != swipMzituDetail && swipMzituDetail.isRefreshing()){
+                        if (null != swipMzituDetail){
                             swipMzituDetail.setRefreshing(false);
                         }
                     }
                 });
-                } catch (final Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }finally {
                     UIUtils.runOnUIThread(new Runnable() {
                         @Override
                         public void run() {
                             //ToastUtils.show(e.getMessage()+"请重试");
-                            if (swipMzituDetail.isRefreshing()){
+                            if (null != swipMzituDetail){
                                 swipMzituDetail.setRefreshing(false);
                             }
                         }

@@ -254,17 +254,12 @@ public class ImageLoadingActivity extends BaseActivity {
         try {
             bos = new BufferedOutputStream(new FileOutputStream(file));
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-        } catch (FileNotFoundException e) {
+            bos.flush();
+            bos.close();
+        } catch (IOException e) {
             e.printStackTrace();
             msg = "保存失败";
             return msg;
-        } finally {
-            try {
-                bos.flush();
-                bos.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
         // 其次把文件插入到系统图库
         try {

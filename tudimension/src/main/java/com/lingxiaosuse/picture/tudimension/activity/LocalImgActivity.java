@@ -22,12 +22,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.RxBus;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.utills.PopwindowUtil;
+import com.github.chrisbanes.photoview.OnPhotoTapListener;
+import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.rxbusevent.DeleteEvent;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
@@ -41,8 +45,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import uk.co.senab.photoview.PhotoView;
-import uk.co.senab.photoview.PhotoViewAttacher;
+
 
 public class LocalImgActivity extends BaseActivity {
     @BindView(R.id.viewpager_local)
@@ -206,17 +209,14 @@ public class LocalImgActivity extends BaseActivity {
             photoView.setImageURI(uri);
             mAttacher.update();
             //不能给photoview设置单击事件  不然没有效果
-            mAttacher.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+            mAttacher.setOnPhotoTapListener(new OnPhotoTapListener() {
                 @Override
-                public void onPhotoTap(View view, float v, float v1) {
+                public void onPhotoTap(ImageView view, float x, float y) {
                     toggleToolbar();
                 }
 
-                @Override
-                public void onOutsidePhotoTap() {
-
-                }
             });
+
             container.addView(view);
             return view;
         }
@@ -370,36 +370,6 @@ public class LocalImgActivity extends BaseActivity {
             }
         });
         builder.show();
-    }
-
-    private void showInfoDialog() {
-        String localUrl = list.get(mPosition).substring(6);
-        File file = new File(localUrl);
-        builder = new AlertDialog.Builder(this);
-        final AlertDialog dialog = builder.create();
-        View view = UIUtils.inflate(R.layout.dialog_img_info);
-        dialog.setView(view);
-        TextView title = view.findViewById(R.id.tv_info_title);
-        TextView time = view.findViewById(R.id.tv_info_time);
-        TextView path = view.findViewById(R.id.tv_info_path);
-        TextView size = view.findViewById(R.id.tv_info_size);
-        Button button = view.findViewById(R.id.bt_info);
-        try {
-            title.setText("名称：" + file.getName());
-            time.setText("时间：" + StringUtils.longToDate(file.lastModified(), "yyyy-MM-dd HH:mm:ss"));
-            path.setText("路径：" + file.getAbsolutePath());
-            size.setText("文件大小：" + StringUtils.getDataSize(getFileSize(file)));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.cancel();
-            }
-        });
-        dialog.show();
-        file = null;
     }
 
     public long getFileSize(File file) {

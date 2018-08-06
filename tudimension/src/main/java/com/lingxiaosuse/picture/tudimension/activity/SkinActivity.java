@@ -69,6 +69,8 @@ public class SkinActivity extends BaseActivity{
         colorList.add(R.color.pink_300);
         colorList.add(R.color.orange_300);
         colorList.add(R.color.teal_300);
+        colorList.add(R.color.light_blue_300);
+        colorList.add(R.color.cyan_300);
 
         colorName.add("red300");
         colorName.add("red300");
@@ -78,6 +80,8 @@ public class SkinActivity extends BaseActivity{
         colorName.add("pink300");
         colorName.add("orange300");
         colorName.add("teal300");
+        colorName.add("lightBlue300");
+        colorName.add("cyan300");
         SkinAdapter adapter = new SkinAdapter(colorList, new BaseRecyclerViewAdapter.AdapterListener() {
             @Override
             public void onItemClick(BaseHolder holder, Object o,int position) {
