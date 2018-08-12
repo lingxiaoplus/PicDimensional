@@ -1,6 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.animation.Animator;
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -28,7 +29,9 @@ import android.widget.TextView;
 
 import com.camera.lingxiao.common.RxBus;
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.PopwindowUtil;
+import com.camera.lingxiao.common.utills.SpUtils;
 import com.github.chrisbanes.photoview.OnPhotoTapListener;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.github.chrisbanes.photoview.PhotoViewAttacher;
@@ -52,8 +55,8 @@ public class LocalImgActivity extends BaseActivity {
     PhotoViewPager viewPager;
     @BindView(R.id.toolbar_local)
     Toolbar toolbar;
-    @BindView(R.id.conslayout_root)
-    ConstraintLayout conslayoutRoot;
+    //@BindView(R.id.conslayout_root)
+    //ConstraintLayout conslayoutRoot;
     private ArrayList<String> list;
     private int mPosition;
     private PhotoViewAttacher mAttacher;
@@ -246,14 +249,24 @@ public class LocalImgActivity extends BaseActivity {
     }
 
     /**
-     * 隐藏toolbar
+     * 隐藏toolbar 注意根布局不能是LinearLayout，最好是relativelayout，不然隐藏后显示的是Activity的底色
      */
+    private boolean isHiddened;
     private void toggleToolbar() {
         final float current = toolbar.getTranslationY();
-        ObjectAnimator animator = ObjectAnimator
-                .ofFloat(toolbar, "translationY", current, current == 0 ? -toolbar.getHeight() : 0);
-        animator.start();
-        animator.addListener(new Animator.AnimatorListener() {
+        if (current == 0){
+            isHiddened = false;
+        }else {
+            isHiddened = true;
+        }
+        ObjectAnimator translationY = ObjectAnimator
+                .ofFloat(toolbar, "translationY", current,isHiddened ? 0 : -toolbar.getHeight());
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(toolbar, "alpha", isHiddened ? 0f:1.0f, isHiddened ? 1.0f:0f);
+        AnimatorSet set = new AnimatorSet();
+        set.play(translationY).with(alpha);
+        set.setDuration(500);
+        set.start();
+        set.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
 
@@ -262,15 +275,6 @@ public class LocalImgActivity extends BaseActivity {
             @Override
             public void onAnimationEnd(Animator animator) {
                 //toolbar显示与隐藏
-                if (current == 0) {
-                    conslayoutRoot.setBackgroundColor(getResources()
-                            .getColor(R.color.trans));
-                    toolbar.setVisibility(View.GONE);
-                } else {
-                    conslayoutRoot.setBackgroundColor(getResources()
-                            .getColor(R.color.whiteNor));
-                    toolbar.setVisibility(View.VISIBLE);
-                }
             }
 
             @Override

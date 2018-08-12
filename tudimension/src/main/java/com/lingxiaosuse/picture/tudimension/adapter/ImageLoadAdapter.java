@@ -59,6 +59,9 @@ public class ImageLoadAdapter extends PagerAdapter{
                 imgRule = ContentValue.bigImgRule;
             }
         }
+        if (isHot){
+            imgRule = "";
+        }
     }
 
     public void setMoveListener(ZoomableViewpager viewpager){

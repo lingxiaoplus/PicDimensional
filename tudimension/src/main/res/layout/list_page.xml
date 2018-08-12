@@ -8,7 +8,7 @@
     app:cardCornerRadius="4dp"
     android:layout_marginTop="3dp"
     android:layout_marginLeft="3dp"
-    app:cardBackgroundColor="#fff"
+    app:cardBackgroundColor="@color/whiteNor"
     >
 
     <LinearLayout
@@ -30,7 +30,7 @@
             android:id="@+id/tv_home_des"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#4CAF50"
+            android:textColor="@color/colorPrimary"
             android:textSize="16sp"
             android:text="2343245"
             android:maxLines="2"

@@ -9,6 +9,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,12 @@ import com.lingxiaosuse.picture.tudimension.transation.HomeTrans;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.HomeView;
+
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +59,7 @@ public class BannerFragment extends BaseFragment implements HomeView{
     private String id;
     private String type;
     private String order;
+    private static final String TAG = "BannerFragment";
 
     @Override
     protected int getContentLayoutId() {
@@ -92,6 +100,8 @@ public class BannerFragment extends BaseFragment implements HomeView{
         swipView.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+                picUrlList.clear();
+                IdList.clear();
                 mHomePresenter.getBannerDetailData(id, ContentValue.limit,0,type,order);
             }
         });
@@ -129,6 +139,47 @@ public class BannerFragment extends BaseFragment implements HomeView{
             picUrlList.add(picList.get(i).getImg());
             IdList.add(picList.get(i).getId());
         }
+
+        if (picList.size() < 1){
+            ToastUtils.show("图片数据解析失败了，是否跳转到网页版");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Connection connection = Jsoup.connect("http://adesk.com/p/album/5b697be5e7bce7670c24213e")
+                            .timeout(5000)
+                            .userAgent("Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.75 Safari/537.36");//设置urer-agent  get();;
+
+                    Document doc = null;
+                    try {
+                        Connection.Response response = connection.execute();
+                        response.cookies();
+                        doc = connection.get();
+                        Log.e(TAG, "地址: "+doc);
+                        Element elementCtx = doc.getElementById("album_context");
+                        Elements elementsarticle = elementCtx.getElementsByClass("wallpaper-album").select("data-reactid=1");
+                        Elements elementsUl = elementsarticle.get(0).getElementsByTag("ul");
+                        Elements elementsLi = elementsUl.get(0).getElementsByTag("li");
+                        for (Element element : elementsLi) {
+                            String targetUrl = element.getElementsByTag("a").attr("href");
+                            Log.e(TAG, "地址: "+targetUrl);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.i("MzituActivity", e.getMessage());
+                    } finally {
+                        UIUtils.runOnUIThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.show("解析完成");
+                            }
+                        });
+                    }
+
+                }
+
+            }).start();
+        }
+
     }
 
     @Override

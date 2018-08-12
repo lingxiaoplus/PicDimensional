@@ -38,6 +38,7 @@ BannerDetailActivity extends BaseActivity {
     private String id;
     private String title;
     private String type;
+    private int total = 1;
 
     @Override
     protected int getContentLayoutId() {
@@ -49,13 +50,6 @@ BannerDetailActivity extends BaseActivity {
         super.initWidget();
         tabStr[0] = getResources().getString(R.string.tab_new);
         tabStr[1] = getResources().getString(R.string.tab_hot);
-        initIntentValue(); //接受intent参数
-    }
-
-    /**
-     * 用于根据传递过来的值初始化控件
-     */
-    private void initIntentValue() {
         try {
             String url = getIntent().getStringExtra("url");
             String message = getIntent().getStringExtra("desc");
@@ -71,11 +65,13 @@ BannerDetailActivity extends BaseActivity {
                 //从轮播图过来的
                 //tabView.addTab(tabView.newTab().setText(tabStr[0]));
                 tabView.setVisibility(View.GONE);
+                total = 1;
             }else if (type.equals(ContentValue.TYPE_CATEGORY)){
                 for (int i = 0; i < tabStr.length; i++) {
                     tabView.addTab(tabView.newTab().setText(tabStr[i]));
                 }
                 tabView.setupWithViewPager(viewPager);
+                total = 2;
             }
 
             mPagerAdapter = new
@@ -85,8 +81,8 @@ BannerDetailActivity extends BaseActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
     private class PagerAdapter extends FragmentPagerAdapter {
 
         public PagerAdapter(FragmentManager fm) {
@@ -95,7 +91,7 @@ BannerDetailActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return tabStr.length;
+            return total;
         }
 
         @Override

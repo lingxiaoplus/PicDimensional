@@ -1,13 +1,18 @@
 package com.lingxiaosuse.picture.tudimension.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.lingxiaosuse.picture.tudimension.App;
+
+import java.lang.ref.Reference;
+
 /**
  * Created by lingxiao on 2017/6/13.
  */
@@ -90,5 +95,27 @@ public class UIUtils {
     public static int sp2px(Context context, float spValue) {
         final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
         return (int) (spValue * fontScale + 0.5f);
+    }
+
+    /**
+     * 获取最小宽度限定
+     * @param activity
+     * @return
+     */
+    public static float smallestWidth(Activity activity){
+        float density = activity.getResources().getDisplayMetrics().density;
+        DisplayMetrics dm = new DisplayMetrics();
+        activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int heightPixels = dm.heightPixels;
+        int widthPixels = dm.widthPixels;
+        float heightDP = heightPixels / density;
+        float widthDP = widthPixels / density;
+        float smallestWidthDP;
+        if(widthDP < heightDP) {
+            smallestWidthDP = widthDP;
+        }else {
+            smallestWidthDP = heightDP;
+        }
+        return smallestWidthDP;
     }
 }

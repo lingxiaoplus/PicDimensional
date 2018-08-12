@@ -117,19 +117,23 @@ public class AboutActivity extends BaseActivity implements SplashView {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (null == cookieBar)
-                cookieBar = new CookieBar.Builder(AboutActivity.this)
-                        .setTitle("恭喜")
-                        .setMessage("妹子向你发来一条消息")
-                        .setBackgroundColor(R.color.colorPrimary)
-                        .setIcon(R.drawable.ic_default_about)
-                        .setAction("点击回复", new OnActionClickListener() {
-                            @Override
-                            public void onClick() {
-                                ToastUtils.show("骗你的，你哪来的妹子");
-                            }
-                        })
-                        .show();
+                if (null == cookieBar){
+                    int color = SpUtils.getInt(UIUtils.getContext(),
+                            ContentValue.SKIN_ID,R.color.colorPrimary);
+                    cookieBar = new CookieBar.Builder(AboutActivity.this)
+                            .setTitle("恭喜")
+                            .setMessage("妹子向你发来一条消息")
+                            .setBackgroundColor(color)
+                            .setIcon(R.drawable.ic_default_about)
+                            .setAction("点击回复", new OnActionClickListener() {
+                                @Override
+                                public void onClick() {
+                                    ToastUtils.show("骗你的，你哪来的妹子");
+                                }
+                            })
+                            .show();
+                }
+
             }
         });
 
@@ -303,7 +307,7 @@ public class AboutActivity extends BaseActivity implements SplashView {
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                goToInternet(AboutActivity.this, "http://www.lingxiaosuse.cn");
+                                goToInternet(AboutActivity.this, "https://www.lingxiaosuse.cn");
                                 dialog.dismiss();
                             }
                         })

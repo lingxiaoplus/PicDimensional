@@ -155,20 +155,7 @@ public class MainActivity extends BaseActivity implements MainView{
             EasyPermissions.requestPermissions(this, getString(R.string.permession_title),
                     ContentValue.PERMESSION_REQUEST_CODE, mPermessions);
         }
-        float density = getResources().getDisplayMetrics().density;
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int heightPixels = dm.heightPixels;
-        int widthPixels = dm.widthPixels;
-        float heightDP = heightPixels / density;
-        float widthDP = widthPixels / density;
-        float smallestWidthDP;
-        if(widthDP < heightDP) {
-            smallestWidthDP = widthDP;
-        }else {
-            smallestWidthDP = heightDP;
-        }
-        ToastUtils.show("最小宽度："+smallestWidthDP);
+
     }
 
     private void initHeadLayout() {

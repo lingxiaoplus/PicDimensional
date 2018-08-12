@@ -16,7 +16,7 @@ public class ContentValue {
     public static final String vertical720_ImgRule ="?imageView16/9/h/1080";
     public static final String vertical1080_ImgRule ="?imageView16/9/h/1080";
     //升级接口
-    public static final String UPDATEURL = "http://www.lingxiaosuse.cn/tudimension/update.json";
+    public static final String UPDATEURL = "https://www.lingxiaosuse.cn/tudimension/update.json";
     public static final int PERMESSION_REQUEST_CODE = 200;
     //是否是第一次进入
     public static String ISFIRST_KEY = "isfirst_key";
