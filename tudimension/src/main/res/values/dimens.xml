@@ -6,4 +6,5 @@
     <dimen name="nav_header_height">240dp</dimen>
     <dimen name="banner_detail">100dp</dimen>
     <dimen name="mzitu_detail_height">300dp</dimen>
+    <dimen name="login_header_margin_top">30dp</dimen>
 </resources>

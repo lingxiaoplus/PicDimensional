@@ -180,7 +180,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
             e.printStackTrace();
             versionCode = serverVersion;
         }
-        if (versionCode<serverVersion){
+        if (versionCode < serverVersion){
             return true;
         }else {
             return false;

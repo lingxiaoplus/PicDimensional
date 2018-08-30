@@ -1,5 +1,6 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -20,6 +21,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -287,15 +289,28 @@ public class ImageLoadingActivity extends BaseActivity {
     /**
      * 隐藏底部导航栏
      */
+    private boolean isHiddened;
     private void toggleButtomView() {
         // TODO: 2018/7/31  可能会为空，原因不明
         if (null == relativeLayout){
+            Log.d("ImageLoading", "relativeLayout: is null ");
             return;
         }
         float current = relativeLayout.getTranslationY();
+        if (current == 0){
+            isHiddened = true;
+        }else {
+            isHiddened = false;
+        }
         ObjectAnimator animator = ObjectAnimator
-                .ofFloat(relativeLayout, "translationY", current, current == 0 ? relativeLayout.getHeight() + 100 : 0);
-        animator.start();
+                .ofFloat(relativeLayout, "translationY", current, isHiddened ? relativeLayout.getHeight() + 100 : 0);
+        ObjectAnimator alpha = ObjectAnimator.ofFloat(relativeLayout, "alpha", isHiddened ? 1.0f:0f, isHiddened ? 0f:1.0f);
+
+        AnimatorSet set = new AnimatorSet();
+        set.play(animator).with(alpha);
+        set.setDuration(500);
+        set.start();
+        Log.d("ImageLoading", "toggleButtomView: "+current);
     }
 
     private void downloadImg() {

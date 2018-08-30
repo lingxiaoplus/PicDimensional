@@ -53,6 +53,7 @@ public class HomeTrans extends BaseTransation{
         request.put("skip",skip);
         request.put("adult",adult);
         request.put("order",order);
+        request.put("first",1);
 
         /**
          * 解析数据

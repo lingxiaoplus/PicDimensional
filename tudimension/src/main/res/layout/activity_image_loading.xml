@@ -22,7 +22,7 @@
             android:id="@+id/rl_loading"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="@color/colorTrans300"
+            android:background="@color/colorTrans500"
             android:layout_alignParentBottom="true"
             >
             <ImageView

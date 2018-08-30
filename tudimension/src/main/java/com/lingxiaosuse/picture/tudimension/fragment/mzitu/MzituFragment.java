@@ -141,13 +141,13 @@ public class MzituFragment extends BaseFragment {
                         mImgDetailList.add(imgUrl);
                     }
                 }catch (Exception e){
-
+                    e.printStackTrace();
                 }finally {
                     UIUtils.runOnUIThread(new Runnable() {
                         @Override
                         public void run() {
                             mAdapter.notifyDataSetChanged();
-                            if (swipMzitu.isRefreshing()){
+                            if (swipMzitu != null && swipMzitu.isRefreshing()){
                                 swipMzitu.setRefreshing(false);
                             }
 

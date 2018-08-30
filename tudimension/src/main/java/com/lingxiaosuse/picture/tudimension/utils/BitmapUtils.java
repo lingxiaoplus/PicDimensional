@@ -1,6 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.utils;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -8,6 +9,11 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.renderscript.Allocation;
+import android.renderscript.Element;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
+import android.renderscript.Type;
 
 import com.camera.lingxiao.common.utills.LogUtils;
 
@@ -417,6 +423,48 @@ public class BitmapUtils {
         options.inPurgeable = true;
         options.inSampleSize = inSampleSize;
         return options;
+    }
+
+
+    /**
+     * 模糊图像
+     * @param bitmap
+     * @param radius 模糊程度 0<radius<=25
+     * @param context
+     * @return
+     */
+    public static Bitmap blurBitmap(Bitmap bitmap, float radius, Context context) {
+        //Create renderscript
+        RenderScript rs = RenderScript.create(context);
+
+        //Create allocation from Bitmap bitmap中的数据装填
+        Allocation allocation = Allocation.createFromBitmap(rs, bitmap);
+
+        Type t = allocation.getType();
+
+        //Create allocation with the same type 与第一个allocation的大小和type都相同多2D数组
+        Allocation blurredAllocation = Allocation.createTyped(rs, t);
+
+        //Create script
+        ScriptIntrinsicBlur blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs));
+        //Set blur radius (maximum 25.0)
+        blurScript.setRadius(radius);
+        //Set input for script
+        blurScript.setInput(allocation);
+        //Call script for output allocation
+        blurScript.forEach(blurredAllocation);
+
+        //Copy script result into bitmap
+        blurredAllocation.copyTo(bitmap);
+
+        //Destroy everything to free memory
+        allocation.destroy();
+        blurredAllocation.destroy();
+        blurScript.destroy();
+
+        //t.destroy();
+        rs.destroy();
+        return bitmap;
     }
 
 }

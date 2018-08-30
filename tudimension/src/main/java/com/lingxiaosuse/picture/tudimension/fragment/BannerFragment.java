@@ -17,8 +17,10 @@ import android.view.ViewGroup;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.LogUtils;
+import com.camera.lingxiao.common.utills.SpUtils;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
+import com.lingxiaosuse.picture.tudimension.activity.WebActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BannerRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
@@ -27,6 +29,8 @@ import com.lingxiaosuse.picture.tudimension.transation.HomeTrans;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.HomeView;
+import com.liuguangqiang.cookie.CookieBar;
+import com.liuguangqiang.cookie.OnActionClickListener;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -141,8 +145,24 @@ public class BannerFragment extends BaseFragment implements HomeView{
         }
 
         if (picList.size() < 1){
-            ToastUtils.show("图片数据解析失败了，是否跳转到网页版");
-            new Thread(new Runnable() {
+
+            int color = SpUtils.getInt(UIUtils.getContext(),
+                    ContentValue.SKIN_ID,R.color.colorPrimary);
+            new CookieBar.Builder(getActivity())
+                    .setTitle("ERROR")
+                    .setMessage("图片数据解析失败了")
+                    .setBackgroundColor(color)
+                    .setAction("跳转到网页版", new OnActionClickListener() {
+                        @Override
+                        public void onClick() {
+                            Intent intent = new Intent(UIUtils.getContext(), WebActivity.class);
+                            intent.putExtra("title","");
+                            intent.putExtra("url","http://adesk.com/p/album/"+id);
+                            startActivity(intent);
+                        }
+                    })
+                    .show();
+           /* new Thread(new Runnable() {
                 @Override
                 public void run() {
                     Connection connection = Jsoup.connect("http://adesk.com/p/album/5b697be5e7bce7670c24213e")
@@ -166,18 +186,11 @@ public class BannerFragment extends BaseFragment implements HomeView{
                     } catch (Exception e) {
                         e.printStackTrace();
                         Log.i("MzituActivity", e.getMessage());
-                    } finally {
-                        UIUtils.runOnUIThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ToastUtils.show("解析完成");
-                            }
-                        });
                     }
 
                 }
 
-            }).start();
+            }).start();*/
         }
 
     }

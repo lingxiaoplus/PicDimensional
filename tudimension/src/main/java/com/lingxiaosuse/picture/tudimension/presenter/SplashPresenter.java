@@ -37,9 +37,7 @@ public class SplashPresenter extends BasePresenter<SplashView,BaseActivity>{
             public void onSuccess(Object... object) {
                 if (getView() != null){
                     VersionModle modle = (VersionModle) object[0];
-                    SpUtils.putInt(UIUtils.getContext(), ContentValue.VERSION_CODE, modle.getVersionCode());
-                    SpUtils.putString(UIUtils.getContext(), ContentValue.VERSION_DES, modle.getVersionDes());
-                    SpUtils.putString(UIUtils.getContext(), ContentValue.DOWNLOAD_URL, modle.getDownloadUrl());
+
                     getView().onVersionResult(modle);
                 }
             }

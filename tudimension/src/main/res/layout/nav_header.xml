@@ -17,9 +17,9 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"
-        fresco:placeholderImage="@drawable/first"
+        fresco:placeholderImage="@drawable/ic_img_header"
         fresco:roundAsCircle="true"
-        fresco:roundingBorderWidth="1dp" />
+        fresco:roundingBorderWidth="2dp" />
 
     <TextView
         android:id="@+id/tv_hitokoto"

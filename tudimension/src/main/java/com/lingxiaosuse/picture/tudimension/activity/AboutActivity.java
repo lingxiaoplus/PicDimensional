@@ -28,6 +28,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -253,10 +254,9 @@ public class AboutActivity extends BaseActivity implements SplashView {
                                 dialog.dismiss();
                             }
                         })
-                        .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                goToMarket(AboutActivity.this, getPackageName());
                                 dialog.dismiss();
                             }
                         })
@@ -330,15 +330,16 @@ public class AboutActivity extends BaseActivity implements SplashView {
     private void showCardFromDia() {
         if (dialog == null) {
             View cardFromView = UIUtils.inflate(R.layout.dialog_card_from);
-            AlertDialog.Builder builder = new AlertDialog.Builder(AboutActivity.this);
-            builder.setView(cardFromView);
+            AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(AboutActivity.this,
+                    R.style.Theme_Transparent));
+            dialog = builder.create();
+            dialog.setView(cardFromView,0,0,0,0);
             builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                 }
             });
-            dialog = builder.create();
         }
         dialog.show();
     }
@@ -364,6 +365,16 @@ public class AboutActivity extends BaseActivity implements SplashView {
     @Override
     public void onVersionResult(VersionModle modle) {
         cancleProgressDialog();
+        SpUtils.putInt(UIUtils.getContext(),
+                ContentValue.VERSION_CODE,
+                modle.getVersionCode());
+        SpUtils.putString(UIUtils.getContext(),
+                ContentValue.VERSION_DES,
+                modle.getVersionDes());
+        SpUtils.putString(UIUtils.getContext(),
+                ContentValue.DOWNLOAD_URL,
+                modle.getDownloadUrl());
+
         dialogView = UIUtils.inflate(R.layout.dialog_download);
         if (!checkUpdate()) {
             int color = SpUtils.getInt(UIUtils.getContext(),

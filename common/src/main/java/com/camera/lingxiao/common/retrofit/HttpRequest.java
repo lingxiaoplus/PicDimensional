@@ -23,7 +23,6 @@ public class HttpRequest {
 
     private final String appKey = "1889b37351288";
     private final String k_key = "key";
-    //第三个是安卓壁纸
     public enum Method{
         GET,
         POST

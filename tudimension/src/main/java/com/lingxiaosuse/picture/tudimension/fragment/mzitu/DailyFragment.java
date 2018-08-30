@@ -16,6 +16,7 @@ import com.lingxiaosuse.picture.tudimension.activity.MzituDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
+import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import org.jsoup.Connection;
@@ -82,14 +83,19 @@ public class DailyFragment extends BaseFragment {
         mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View View, int position) {
-                Intent intent = new Intent(UIUtils.getContext(),
-                        ImageLoadingActivity.class);
-                intent.putExtra("position",position);
-                intent.putExtra("itemCount",mAdapter.getItemCount());
-                intent.putExtra("id",mImgList.get(position));
-                intent.putStringArrayListExtra("picList", (ArrayList<String>) mImgList);
-                intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
-                startActivity(intent);
+                try {
+                    Intent intent = new Intent(UIUtils.getContext(),
+                            ImageLoadingActivity.class);
+                    intent.putExtra("position",position);
+                    intent.putExtra("itemCount",mAdapter.getItemCount());
+                    intent.putExtra("id",mImgList.get(position));
+                    intent.putStringArrayListExtra("picList", (ArrayList<String>) mImgList);
+                    intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
+                    startActivity(intent);
+                }catch (Exception e){
+                    e.printStackTrace();
+                    ToastUtils.show(e.getMessage());
+                }
             }
 
             @Override

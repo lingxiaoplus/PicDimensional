@@ -120,7 +120,7 @@ public class CategoryDetailFragment extends BaseFragment{
                         verticalBeanList = response.body().getRes().getVertical();
                         mPicList.addAll(verticalBeanList);
                         mAdapter.notifyDataSetChanged();
-                        if (refreshLayout.isRefreshing()){
+                        if (refreshLayout != null && refreshLayout.isRefreshing()){
                             refreshLayout.setRefreshing(false);
                         }
                         picUrlList.clear();

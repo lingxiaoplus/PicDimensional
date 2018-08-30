@@ -42,6 +42,7 @@ import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.PopwindowUtil;
 import com.camera.lingxiao.common.utills.SpUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.lingxiaosuse.picture.tudimension.activity.LoginActivity;
 import com.lingxiaosuse.picture.tudimension.activity.cosplay.CosplayLaActivity;
 import com.lingxiaosuse.picture.tudimension.rxbusevent.DrawerChangeEvent;
 import com.lingxiaosuse.picture.tudimension.service.DownloadService;
@@ -164,7 +165,13 @@ public class MainActivity extends BaseActivity implements MainView{
         hitokoto = headerLayout.findViewById(R.id.tv_hitokoto);
         simpleDraweeView = headerLayout.findViewById(R.id.image_head_background);
         SimpleDraweeView headImage = headerLayout.findViewById(R.id.image_head);
-        headImage.setVisibility(View.GONE);
+        //headImage.setVisibility(View.GONE);
+        headImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StartActivity(LoginActivity.class,false);
+            }
+        });
         mPresenter.getHeadImg();
         mPresenter.getHeadText();
 
