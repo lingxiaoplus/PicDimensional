@@ -74,4 +74,14 @@ public interface UserApi {
     @POST
     Observable<Object> otherHeader(@Url String url, @HeaderMap Map<String,String> headers,
                                    @FieldMap Map<String,Object> values);
+
+
+    /**
+     * 短信验证码
+     * @param url 全路径
+     * @return
+     */
+    @POST
+    Observable<Object> sendCode(@Url String url, @HeaderMap Map<String,String> headers,
+                                   @Body RequestBody body);
 }

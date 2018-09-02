@@ -1,6 +1,7 @@
 package com.camera.lingxiao.common.app;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
 
     private Unbinder mRootUnbinder;
     public LifeCycleListener mListener;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onAttach(Activity activity) {
@@ -253,5 +255,20 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
      */
     public void setOnLifeCycleListener(LifeCycleListener listener) {
         mListener = listener;
+    }
+
+    /**
+     *显示进度条
+     */
+    public void showProgressDialog(String msg,Context context){
+        progressDialog = new ProgressDialog(context);
+        progressDialog.setMessage(msg);
+        progressDialog.show();
+    }
+
+    public void cancleProgressDialog(){
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
     }
 }

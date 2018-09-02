@@ -28,9 +28,10 @@
             android:textSize="18sp"
             android:layout_marginLeft="20dp"/>
     </LinearLayout>
+
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:src="@mipmap/ic_launcher"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/login_header_margin_top"
@@ -48,21 +49,24 @@
             android:layout_height="35dp"
             app:srcCompat="@drawable/ic_img_header"
             android:layout_margin="5dp"
+            android:padding="6dp"
             />
         <EditText
             android:id="@+id/et_username"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:hint="请输入用户名"
-            android:background="@null"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:layout_height="wrap_content"
+            android:hint="请输入手机号"
+            android:background="@null"
+            android:padding="6dp"
             />
 
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="6dp"
             >
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/img_username"
@@ -99,22 +103,25 @@
             android:layout_height="35dp"
             app:srcCompat="@drawable/ic_img_password"
             android:layout_margin="5dp"
-            android:layout_marginRight="5dp"
+            android:padding="5dp"
             />
+
         <EditText
             android:id="@+id/et_password"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:hint="请输入密码"
-            android:background="@null"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+            android:hint="请输入密码"
+            android:background="@null"
+            android:padding="6dp"
             />
+
         <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="6dp"
             >
             <android.support.v7.widget.AppCompatImageView
                 android:id="@+id/img_password"
@@ -122,7 +129,8 @@
                 android:layout_height="wrap_content"
                 app:srcCompat="@drawable/ic_img_right"
                 android:visibility="invisible"
-                tools:visibility="visible"/>
+                tools:visibility="visible"
+                />
             <ProgressBar
                 android:id="@+id/progress_password"
                 android:layout_width="24dp"
@@ -141,7 +149,7 @@
     <Button
         android:id="@+id/bt_login"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginTop="30dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
@@ -151,7 +159,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="30dp"
         >
         <TextView
             android:id="@+id/tv_forget_password"
@@ -168,11 +176,48 @@
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
     <TextView
+        android:id="@+id/tv_or"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="or"
-        android:textColor="@color/black_alpha_208"
-        android:textSize="20sp"
-        android:layout_gravity="center_horizontal"/>
-
+        android:textColor="@color/black_alpha_128"
+        android:textSize="18sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_margin="10dp">
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/login_weibo"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            app:placeholderImage="@drawable/ic_login_weibo"
+            app:roundAsCircle="true"
+            app:roundingBorderWidth="2dp"
+            android:background="?android:attr/selectableItemBackground"
+            />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/login_qq"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            app:placeholderImage="@drawable/ic_login_qq"
+            app:roundAsCircle="true"
+            app:roundingBorderWidth="2dp"
+            android:background="?android:attr/selectableItemBackground"
+            />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/login_wechat"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="1"
+            app:placeholderImage="@drawable/ic_login_wechat"
+            app:roundAsCircle="true"
+            app:roundingBorderWidth="2dp"
+            android:background="?android:attr/selectableItemBackground"
+            />
+    </LinearLayout>
 </LinearLayout>

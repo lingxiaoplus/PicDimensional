@@ -32,6 +32,7 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.RxBus;
@@ -164,7 +165,7 @@ public class MainActivity extends BaseActivity implements MainView{
                 navigationView.inflateHeaderView(R.layout.nav_header);
         hitokoto = headerLayout.findViewById(R.id.tv_hitokoto);
         simpleDraweeView = headerLayout.findViewById(R.id.image_head_background);
-        SimpleDraweeView headImage = headerLayout.findViewById(R.id.image_head);
+        ImageView headImage = headerLayout.findViewById(R.id.image_head);
         //headImage.setVisibility(View.GONE);
         headImage.setOnClickListener(new View.OnClickListener() {
             @Override

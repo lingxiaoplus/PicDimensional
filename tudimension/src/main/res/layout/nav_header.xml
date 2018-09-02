@@ -12,15 +12,14 @@
         fresco:placeholderImage="@drawable/last"
         fresco:placeholderImageScaleType="focusCrop"/>
 
-    <com.facebook.drawee.view.SimpleDraweeView
+    <ImageView
         android:id="@+id/image_head"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="@dimen/header_size"
+        android:layout_height="@dimen/header_size"
         android:layout_centerInParent="true"
-        fresco:placeholderImage="@drawable/ic_img_header"
-        fresco:roundAsCircle="true"
-        fresco:roundingBorderWidth="2dp" />
-
+        android:src="@mipmap/ic_launcher"
+        android:layout_gravity="center"
+        />
     <TextView
         android:id="@+id/tv_hitokoto"
         android:layout_width="wrap_content"
@@ -39,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@id/tv_hitokoto"
         android:layout_marginLeft="5dp"
-        android:text="@string/app_name"
+        android:text="未登陆"
         android:textColor="@color/colorPrimary"
         android:padding="5dp"
         android:textSize="16sp" />

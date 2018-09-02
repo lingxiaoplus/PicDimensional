@@ -113,7 +113,8 @@
         <activity android:name=".activity.cosplay.CosplayLaActivity" />
         <activity android:name=".activity.cosplay.CosplayDetailActivity" />
         <activity android:name=".activity.CrashActivity" />
-        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.RegisterActivity"></activity>
     </application>
 
 </manifest>

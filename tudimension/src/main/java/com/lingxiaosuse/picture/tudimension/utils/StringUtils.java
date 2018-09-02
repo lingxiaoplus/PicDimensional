@@ -140,4 +140,14 @@ public class StringUtils {
         }
         return true;
     }
+
+    public static boolean isNotEmpty(String tmp) {
+        if (null == tmp){
+            return false;
+        }
+        if (tmp.isEmpty()){
+            return false;
+        }
+        return true;
+    }
 }
