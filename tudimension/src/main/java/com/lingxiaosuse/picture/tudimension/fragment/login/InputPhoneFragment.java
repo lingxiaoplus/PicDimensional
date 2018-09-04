@@ -43,19 +43,20 @@ public class InputPhoneFragment extends BaseFragment {
             return;
         }
 
+        String code = createCode(4);
         JsonReqClient client = new JsonReqClient(this);
         String sid = "79e97a4f75301edaec354149c09c2f7e";
         String token = "f33f9435e36610e71c924d8b480eba55";
         String appid = "a868bbc024f24b18b90a3ea922299252";
         String templateid = "35082";
-        String param = "图次元,"+createCode(4)+",1";
+        String param = "图次元,"+code+",1";
         String uid = "";
         IdentifyCodeModle result = client.sendSms(sid, token, appid, templateid, param, mobile, uid);
 
         RegisterActivity activity = (RegisterActivity) getActivity();
         Bundle bundle = new Bundle();
         bundle.putString("phone",mobile);
-        bundle.putString("code","1234");
+        bundle.putString("code",code);
         activity.checkoutFragment(1,bundle);
     }
 
