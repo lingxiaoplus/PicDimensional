@@ -45,6 +45,7 @@
         android:gravity="center_vertical"
         >
         <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/iv_username"
             android:layout_width="35dp"
             android:layout_height="35dp"
             app:srcCompat="@drawable/ic_img_header"
@@ -99,6 +100,7 @@
         android:gravity="center_vertical"
         >
         <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/iv_password"
             android:layout_width="35dp"
             android:layout_height="35dp"
             app:srcCompat="@drawable/ic_img_password"
@@ -180,7 +182,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="or"
-        android:textColor="@color/black_alpha_128"
+        android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="20dp"/>

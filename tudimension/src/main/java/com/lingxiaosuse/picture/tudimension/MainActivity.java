@@ -28,14 +28,15 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.camera.lingxiao.common.RxBus;
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.AVUser;
+import com.camera.lingxiao.common.rxbus.RxBus;
 import com.camera.lingxiao.common.app.ActivityController;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.BaseFragment;
@@ -44,6 +45,7 @@ import com.camera.lingxiao.common.utills.PopwindowUtil;
 import com.camera.lingxiao.common.utills.SpUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.activity.LoginActivity;
+import com.lingxiaosuse.picture.tudimension.activity.UserInfoActivity;
 import com.lingxiaosuse.picture.tudimension.activity.cosplay.CosplayLaActivity;
 import com.lingxiaosuse.picture.tudimension.rxbusevent.DrawerChangeEvent;
 import com.lingxiaosuse.picture.tudimension.service.DownloadService;
@@ -118,6 +120,20 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         }
     };
+    private Runnable mLoadingRunnable = new Runnable() {
+        @Override
+        public void run() {
+            //初始化leancloud的sdk  只能在主线程初始化
+            // 初始化参数依次为 this, AppId, AppKey
+            // 初始化参数依次为 this, AppId, AppKey
+            AVOSCloud.initialize(UIUtils.getContext(),
+                    "NeAGyi58wfImRBFUcGrPRdxx-gzGzoHsz",
+                    "On3B4dFI9RH0XNTFWK4kdCUS");
+            // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可     开启调试日志
+            AVOSCloud.setDebugLogEnabled(true);
+        }
+    };
+    private Handler mInitHandler = new Handler();
     private NetworkReceiver mNetworkChangeListener;
     private ActionBarDrawerToggle mDrawerToggle;
     private FileUploadInterface fileUploadInterface;
@@ -158,6 +174,13 @@ public class MainActivity extends BaseActivity implements MainView{
                     ContentValue.PERMESSION_REQUEST_CODE, mPermessions);
         }
 
+        //延迟加载 提升速度
+        getWindow().getDecorView().post(new Runnable() {
+            @Override
+            public void run() {
+                mInitHandler.post(mLoadingRunnable);
+            }
+        });
     }
 
     private void initHeadLayout() {
@@ -170,7 +193,16 @@ public class MainActivity extends BaseActivity implements MainView{
         headImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StartActivity(LoginActivity.class,false);
+                AVUser currentUser = AVUser.getCurrentUser();
+                if (currentUser != null) {
+                    // 跳转到首页
+                    ToastUtils.show("已经登录了");
+                    StartActivity(UserInfoActivity.class,false);
+                } else {
+                    //缓存用户对象为空时，可打开用户注册界面…
+                    StartActivity(LoginActivity.class,false);
+                }
+
             }
         });
         mPresenter.getHeadImg();

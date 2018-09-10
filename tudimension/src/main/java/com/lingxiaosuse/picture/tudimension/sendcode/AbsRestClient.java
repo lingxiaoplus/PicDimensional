@@ -5,6 +5,7 @@
  */
 package com.lingxiaosuse.picture.tudimension.sendcode;
 
+import com.camera.lingxiao.common.observer.HttpRxCallback;
 import com.lingxiaosuse.picture.tudimension.modle.IdentifyCodeModle;
 
 public abstract class AbsRestClient {
@@ -21,7 +22,7 @@ public abstract class AbsRestClient {
 	 * @param uid
 	 * @return
 	 */
-	public abstract IdentifyCodeModle sendSms(String sid, String token, String appid, String templateid, String param, String mobile, String uid);
+	public abstract IdentifyCodeModle sendSms(String sid, String token, String appid, String templateid, String param, String mobile, String uid, HttpRxCallback callback);
 	
 	/**
 	 * 
@@ -34,7 +35,7 @@ public abstract class AbsRestClient {
 	 * @param uid
 	 * @return
 	 */
-	public abstract IdentifyCodeModle sendSmsBatch(String sid, String token, String appid, String templateid, String param, String mobile, String uid);
+	public abstract IdentifyCodeModle sendSmsBatch(String sid, String token, String appid, String templateid, String param, String mobile, String uid, HttpRxCallback callback);
 	
 	/**
 	 * 
@@ -47,7 +48,7 @@ public abstract class AbsRestClient {
 	 * @param content
 	 * @return
 	 */
-	public abstract IdentifyCodeModle addSmsTemplate(String sid, String token, String appid, String type, String template_name, String autograph, String content);
+	public abstract IdentifyCodeModle addSmsTemplate(String sid, String token, String appid, String type, String template_name, String autograph, String content, HttpRxCallback callback);
 	 
 	/**
 	 * 
@@ -59,7 +60,7 @@ public abstract class AbsRestClient {
 	 * @param page_size
 	 * @return
 	 */
-	public abstract IdentifyCodeModle getSmsTemplate(String sid, String token, String appid, String templateid, String page_num, String page_size);
+	public abstract IdentifyCodeModle getSmsTemplate(String sid, String token, String appid, String templateid, String page_num, String page_size, HttpRxCallback callback);
 	
 	/**
 	 * 
@@ -73,7 +74,7 @@ public abstract class AbsRestClient {
 	 * @param content
 	 * @return
 	 */
-	public abstract IdentifyCodeModle editSmsTemplate(String sid, String token, String appid, String templateid, String type, String template_name, String autograph, String content);
+	public abstract IdentifyCodeModle editSmsTemplate(String sid, String token, String appid, String templateid, String type, String template_name, String autograph, String content, HttpRxCallback callback);
 	
 	/**
 	 * 
@@ -83,7 +84,7 @@ public abstract class AbsRestClient {
 	 * @param templateid
 	 * @return
 	 */
-	public abstract IdentifyCodeModle deleterSmsTemplate(String sid, String token, String appid, String templateid);
+	public abstract IdentifyCodeModle deleterSmsTemplate(String sid, String token, String appid, String templateid, HttpRxCallback callback);
 	
 	
 	public StringBuffer getStringBuffer() {

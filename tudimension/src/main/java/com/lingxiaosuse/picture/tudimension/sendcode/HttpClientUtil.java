@@ -27,7 +27,7 @@ public class HttpClientUtil {
 	
 	public static boolean isTest = true;
 	private static IdentifyCodeModle result = null;
-	public static IdentifyCodeModle postJson(String url, String body ,LifecycleProvider lifecycle) {
+	public static IdentifyCodeModle postJson(String url, String body ,LifecycleProvider lifecycle,HttpRxCallback callback) {
 		Map<String,String> headerMap = new HashMap<>();
 		RequestBody requestBody = RequestBody.create(
 				MediaType.parse("application/json; charset=utf-8"),
@@ -36,23 +36,6 @@ public class HttpClientUtil {
 		headerMap.put("Content-Type","application/json;charset=utf-8");
 
 		Observable apiObservable;
-		HttpRxCallback callback = new HttpRxCallback() {
-			@Override
-			public void onSuccess(Object... object) {
-				result = (IdentifyCodeModle) object[0];
-				Log.e("HttpClient", "onSuccess: "+result.toString());
-			}
-
-			@Override
-			public void onError(int code, String desc) {
-				Log.e("HttpClient", "onError: "+desc);
-			}
-
-			@Override
-			public void onCancel() {
-
-			}
-		};
 		callback.setParseHelper(new ParseHelper() {
 			@Override
 			public Object[] parse(JsonElement element) {

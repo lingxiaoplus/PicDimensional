@@ -16,8 +16,6 @@ import com.lingxiaosuse.picture.tudimension.adapter.CategoryAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryVerticalModle;
 import com.lingxiaosuse.picture.tudimension.presenter.CategoryPresenter;
-import com.lingxiaosuse.picture.tudimension.retrofit.CategoryVerticalInterface;
-import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.CategoryView;
 

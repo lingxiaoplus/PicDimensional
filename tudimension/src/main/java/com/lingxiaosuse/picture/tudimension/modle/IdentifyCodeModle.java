@@ -6,7 +6,7 @@ public class IdentifyCodeModle {
      * code : 000000
      * count : 1
      * create_date : 2018-09-02 20:59:19
-     * mobile : 15182631360
+     * mobile :
      * msg : OK
      * smsid : a88b82407eae24e58aac558846a69849
      * uid :

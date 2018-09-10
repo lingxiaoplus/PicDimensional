@@ -13,17 +13,25 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVUser;
 import com.camera.lingxiao.common.app.BaseActivity;
+import com.camera.lingxiao.common.rxbus.RxBus;
+import com.camera.lingxiao.common.rxbus.SkinChangedEvent;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.presenter.LoginPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
+import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.view.LoginView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements LoginView{
     @BindView(R.id.et_username)
     EditText etUsername;
     @BindView(R.id.img_username)
@@ -52,17 +60,11 @@ public class LoginActivity extends BaseActivity {
     SimpleDraweeView loginQq;
     @BindView(R.id.login_wechat)
     SimpleDraweeView loginWechat;
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            progressName.setVisibility(View.INVISIBLE);
-            progressPassword.setVisibility(View.INVISIBLE);
-            imgUsername.setVisibility(View.VISIBLE);
-            imgPassword.setVisibility(View.VISIBLE);
-        }
-    };
+    @BindView(R.id.iv_username)
+    AppCompatImageView ivUsername;
+    @BindView(R.id.iv_password)
+    AppCompatImageView ivPassword;
+    private LoginPresenter mPresenter;
 
     @Override
     protected int getContentLayoutId() {
@@ -78,6 +80,7 @@ public class LoginActivity extends BaseActivity {
         spannableString.setSpan(sizeSpan01, 0, 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(sizeSpan02, 1, 2, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         tvOr.setText(spannableString);
+        mPresenter = new LoginPresenter(this,this);
     }
 
     @Override
@@ -91,20 +94,19 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.bt_login)
     public void onLogin() {
+        String et_phone = etUsername.getText().toString().trim();
+        String et_password = etPassword.getText().toString().trim();
+        if (et_phone.isEmpty() || et_phone.length() < 11){
+            ToastUtils.show("手机号码不正确");
+            return;
+        }
+        if (et_password.isEmpty()){
+            ToastUtils.show("密码不能为空");
+            return;
+        }
         progressName.setVisibility(View.VISIBLE);
         progressPassword.setVisibility(View.VISIBLE);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(2000);
-                    mHandler.sendEmptyMessage(0);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        mPresenter.login(et_phone,et_password);
     }
 
     @OnClick(R.id.img_exit)
@@ -112,10 +114,10 @@ public class LoginActivity extends BaseActivity {
         finish();
     }
 
-    @OnClick({R.id.login_weibo,R.id.login_qq,R.id.login_wechat})
+    @OnClick({R.id.login_weibo, R.id.login_qq, R.id.login_wechat})
     public void onLoginByOther(View view) {
         ToastUtils.show("暂不支持第三方登陆");
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.login_weibo:
                 break;
             case R.id.login_qq:
@@ -128,8 +130,28 @@ public class LoginActivity extends BaseActivity {
     }
 
     @OnClick(R.id.tv_register)
-    public void onRegister(){
-        StartActivity(RegisterActivity.class,false);
+    public void onRegister() {
+        StartActivity(RegisterActivity.class, false);
     }
 
+    @Override
+    protected void onSkinChanged(int color) {
+        super.onSkinChanged(color);
+        ToastUtils.show("皮肤改变");
+        UIUtils.changeSVGColor(ivUsername, R.drawable.ic_img_header, color);
+        UIUtils.changeSVGColor(ivPassword, R.drawable.ic_img_password, color);
+    }
+
+    @Override
+    public void onLogin(boolean success, AVUser avUser, String msg) {
+        progressName.setVisibility(View.INVISIBLE);
+        progressPassword.setVisibility(View.INVISIBLE);
+        if (success){
+            imgUsername.setVisibility(View.VISIBLE);
+            imgPassword.setVisibility(View.VISIBLE);
+            finish();
+        }else {
+            ToastUtils.show(msg);
+        }
+    }
 }

@@ -17,8 +17,6 @@ import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.CommentRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CommentModle;
 import com.lingxiaosuse.picture.tudimension.presenter.CommentPresenter;
-import com.lingxiaosuse.picture.tudimension.retrofit.CommentInterface;
-import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.view.CommentView;
 

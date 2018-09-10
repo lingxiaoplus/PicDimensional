@@ -13,7 +13,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         vectorDrawables.useSupportLibrary = true
-
+        //bmob 兼容android6.0
+        useLibrary 'org.apache.http.legacy'
     }
     buildTypes {
         release {
@@ -22,6 +23,11 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    //为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
     lintOptions {
         checkReleaseBuilds false
@@ -97,6 +103,8 @@ dependencies {
     implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.ext.dbFlowVersion"
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.ext.dbFlowVersion"
     implementation 'com.github.didikee:AndroidDonate:0.1.0'
+    // LeanCloud 基础包
+    implementation "cn.leancloud.android:avoscloud-sdk:$rootProject.ext.leancloudVersion"
     //debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.ext.leak"
     //releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.ext.leak"
     testImplementation 'junit:junit:4.12'

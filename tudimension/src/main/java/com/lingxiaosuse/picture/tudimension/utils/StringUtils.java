@@ -9,6 +9,7 @@ import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Formatter;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -149,5 +150,21 @@ public class StringUtils {
             return false;
         }
         return true;
+    }
+
+    /**
+     * 创建随机数 用于验证码发送
+     * @param max
+     * @return
+     */
+    public static String createCode(int max){
+        String code = "";
+        Random random = new Random();
+        for (int i = 0; i < max; i++) {
+            int r = random.nextInt(10); //每次随机出一个数字（0-9）
+            code = code + r;  //把每次随机出的数字拼在一起
+
+        }
+        return code;
     }
 }

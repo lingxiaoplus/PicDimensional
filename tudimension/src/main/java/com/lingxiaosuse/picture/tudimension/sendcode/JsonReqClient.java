@@ -1,6 +1,7 @@
 
 package com.lingxiaosuse.picture.tudimension.sendcode;
 
+import com.camera.lingxiao.common.observer.HttpRxCallback;
 import com.lingxiaosuse.picture.tudimension.modle.IdentifyCodeModle;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
@@ -13,7 +14,7 @@ public class JsonReqClient extends AbsRestClient {
 	}
 	@Override
 	public IdentifyCodeModle sendSms(String sid, String token, String appid, String templateid, String param, String mobile,
-									 String uid) {
+									 String uid, HttpRxCallback callback) {
 
 		IdentifyCodeModle result = null;
 		
@@ -33,7 +34,7 @@ public class JsonReqClient extends AbsRestClient {
 			
 			System.out.println("body = " + body);
 			
-			result = HttpClientUtil.postJson(url, body, mLifecycle);
+			result = HttpClientUtil.postJson(url, body, mLifecycle,callback);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -43,7 +44,7 @@ public class JsonReqClient extends AbsRestClient {
 
 	@Override
 	public IdentifyCodeModle sendSmsBatch(String sid, String token, String appid, String templateid, String param, String mobile,
-			String uid) {
+			String uid, HttpRxCallback callback) {
 
 		IdentifyCodeModle result = null;
 		
@@ -63,7 +64,7 @@ public class JsonReqClient extends AbsRestClient {
 			
 			System.out.println("body = " + body);
 			
-			result = HttpClientUtil.postJson(url, body, mLifecycle);
+			result = HttpClientUtil.postJson(url, body, mLifecycle,callback);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -73,7 +74,7 @@ public class JsonReqClient extends AbsRestClient {
 
 	@Override
 	public IdentifyCodeModle addSmsTemplate(String sid, String token, String appid, String type, String template_name,
-			String autograph, String content) {
+			String autograph, String content, HttpRxCallback callback) {
 
 		IdentifyCodeModle result = null;
 		
@@ -93,7 +94,7 @@ public class JsonReqClient extends AbsRestClient {
 			
 			System.out.println("body = " + body);
 			
-			result = HttpClientUtil.postJson(url, body, mLifecycle);
+			result = HttpClientUtil.postJson(url, body, mLifecycle,callback);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -103,7 +104,7 @@ public class JsonReqClient extends AbsRestClient {
 
 	@Override
 	public IdentifyCodeModle getSmsTemplate(String sid, String token, String appid, String templateid, String page_num,
-			String page_size) {
+			String page_size, HttpRxCallback callback) {
 
 		IdentifyCodeModle result = null;
 		
@@ -122,7 +123,7 @@ public class JsonReqClient extends AbsRestClient {
 			
 			System.out.println("body = " + body);
 			
-			result = HttpClientUtil.postJson(url, body, mLifecycle);
+			result = HttpClientUtil.postJson(url, body, mLifecycle,callback);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -132,7 +133,7 @@ public class JsonReqClient extends AbsRestClient {
 
 	@Override
 	public IdentifyCodeModle editSmsTemplate(String sid, String token, String appid, String templateid, String type,
-			String template_name, String autograph, String content) {
+			String template_name, String autograph, String content, HttpRxCallback callback) {
 
 		IdentifyCodeModle result = null;
 		
@@ -153,7 +154,7 @@ public class JsonReqClient extends AbsRestClient {
 			
 			System.out.println("body = " + body);
 			
-			result = HttpClientUtil.postJson(url, body, mLifecycle);
+			result = HttpClientUtil.postJson(url, body, mLifecycle,callback);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -162,7 +163,7 @@ public class JsonReqClient extends AbsRestClient {
 	}
 
 	@Override
-	public IdentifyCodeModle deleterSmsTemplate(String sid, String token, String appid, String templateid) {
+	public IdentifyCodeModle deleterSmsTemplate(String sid, String token, String appid, String templateid, HttpRxCallback callback) {
 
 		IdentifyCodeModle result = null;
 		
@@ -179,7 +180,7 @@ public class JsonReqClient extends AbsRestClient {
 			
 			System.out.println("body = " + body);
 			
-			result = HttpClientUtil.postJson(url, body, mLifecycle);
+			result = HttpClientUtil.postJson(url, body, mLifecycle,callback);
 			
 		} catch (Exception e) {
 			e.printStackTrace();

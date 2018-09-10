@@ -1,13 +1,19 @@
 package com.lingxiaosuse.picture.tudimension.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.widget.AppCompatDrawableManager;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.lingxiaosuse.picture.tudimension.App;
 
@@ -117,5 +123,31 @@ public class UIUtils {
             smallestWidthDP = heightDP;
         }
         return smallestWidthDP;
+    }
+
+    /**
+     * 改变SVG图片着色
+     * @param imageView
+     * @param iconResId svg资源id
+     * @param color 期望的着色
+     */
+    public static void changeSVGColor(ImageView imageView, int iconResId, int color){
+        @SuppressLint("RestrictedApi") Drawable drawable =  AppCompatDrawableManager.get().getDrawable(getContext(), iconResId);
+        imageView.setImageDrawable(drawable);
+        Drawable.ConstantState state = drawable.getConstantState();
+        Drawable drawable1 = DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
+        drawable1.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        DrawableCompat.setTint(drawable1, ContextCompat.getColor(getContext(), color));
+        imageView.setImageDrawable(drawable1);
+    }
+
+    public static void changeSVGColor(AppCompatImageView imageView, int iconResId, int color){
+        @SuppressLint("RestrictedApi") Drawable drawable =  AppCompatDrawableManager.get().getDrawable(getContext(), iconResId);
+        imageView.setImageDrawable(drawable);
+        Drawable.ConstantState state = drawable.getConstantState();
+        Drawable drawable1 = DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
+        drawable1.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        DrawableCompat.setTint(drawable1, ContextCompat.getColor(getContext(), color));
+        imageView.setImageDrawable(drawable1);
     }
 }

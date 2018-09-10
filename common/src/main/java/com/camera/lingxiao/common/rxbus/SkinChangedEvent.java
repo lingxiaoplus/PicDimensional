@@ -1,4 +1,4 @@
-package com.camera.lingxiao.common;
+package com.camera.lingxiao.common.rxbus;
 
 public class SkinChangedEvent {
     private int color;

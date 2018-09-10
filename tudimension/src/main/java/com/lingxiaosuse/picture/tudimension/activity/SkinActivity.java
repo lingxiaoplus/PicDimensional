@@ -1,29 +1,21 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
-import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import com.camera.lingxiao.common.RxBus;
-import com.camera.lingxiao.common.SkinChangedEvent;
+import com.camera.lingxiao.common.rxbus.RxBus;
+import com.camera.lingxiao.common.rxbus.SkinChangedEvent;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.SpUtils;
 import com.camera.lingxiao.common.widget.BaseHolder;
 import com.camera.lingxiao.common.widget.BaseRecyclerViewAdapter;
-import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.SkinAdapter;
-import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.RippleAnimation;
 

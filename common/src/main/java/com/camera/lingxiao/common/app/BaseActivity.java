@@ -1,6 +1,5 @@
 package com.camera.lingxiao.common.app;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -13,8 +12,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -23,18 +20,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.camera.lingxiao.common.R;
-import com.camera.lingxiao.common.RxBus;
-import com.camera.lingxiao.common.SkinChangedEvent;
+import com.camera.lingxiao.common.rxbus.RxBus;
+import com.camera.lingxiao.common.rxbus.SkinChangedEvent;
 import com.camera.lingxiao.common.listener.LifeCycleListener;
 import com.camera.lingxiao.common.utills.SpUtils;
 import com.github.zackratos.ultimatebar.UltimateBar;
-import com.trello.rxlifecycle2.components.RxActivity;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 import org.reactivestreams.Subscription;
@@ -138,6 +130,13 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
     protected void initData(){
 
     }
+
+    /**
+     * 皮肤改变调用
+     */
+    protected void onSkinChanged(int color){
+
+    }
     public void StartActivity(Class clzz,boolean isFinish){
         startActivity(new Intent(getApplicationContext(),clzz));
         if (isFinish){
@@ -160,6 +159,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
                             .build(BaseActivity.this)
                             .apply();
                 }
+                onSkinChanged(skinChangedEvent.getColor());
             }
         });
         RxBus.getInstance().addSubscription(this,regist);
@@ -186,6 +186,7 @@ public abstract class BaseActivity extends RxAppCompatActivity implements EasyPe
             return false;
         }
     }
+
 
     private void showDialog(final String url) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

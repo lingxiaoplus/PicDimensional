@@ -16,7 +16,6 @@ import com.lingxiaosuse.picture.tudimension.adapter.SpecialRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.SpecialModle;
 import com.lingxiaosuse.picture.tudimension.presenter.SpecialPresneter;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
-import com.lingxiaosuse.picture.tudimension.retrofit.SpecialInterface;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.SpecialView;

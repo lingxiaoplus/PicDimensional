@@ -1,4 +1,4 @@
-package com.camera.lingxiao.common;
+package com.camera.lingxiao.common.rxbus;
 
 import java.util.HashMap;
 import java.util.List;

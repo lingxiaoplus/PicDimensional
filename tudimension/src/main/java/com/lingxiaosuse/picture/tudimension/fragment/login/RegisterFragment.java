@@ -3,28 +3,23 @@ package com.lingxiaosuse.picture.tudimension.fragment.login;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.modle.IdentifyCodeModle;
-import com.lingxiaosuse.picture.tudimension.sendcode.JsonReqClient;
+import com.lingxiaosuse.picture.tudimension.presenter.RegisterPresenter;
+import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
-import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-
-import java.util.Random;
+import com.lingxiaosuse.picture.tudimension.view.RegisterCodeView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
-public class RegisterFragment extends BaseFragment {
+public class RegisterFragment extends BaseFragment implements RegisterCodeView {
     @BindView(R.id.tv_phone)
     TextView tvPhone;
     @BindView(R.id.et_code)
@@ -37,7 +32,7 @@ public class RegisterFragment extends BaseFragment {
     EditText etName;
     @BindView(R.id.bt_next)
     Button btNext;
-
+    private RegisterPresenter mPresenter = new RegisterPresenter(this,this);
     private CountDownTimer timer = new CountDownTimer(60 * 1000, 1000) {
         @Override
         public void onTick(long l) {
@@ -52,6 +47,7 @@ public class RegisterFragment extends BaseFragment {
         }
     };
     private String mCodeStr;
+    private String mPhone;
 
     @Override
     protected int getContentLayoutId() {
@@ -63,9 +59,9 @@ public class RegisterFragment extends BaseFragment {
         super.initWidget(root);
         Bundle bundle = getArguments();
         if (null != bundle) {
-            String phone = bundle.getString("phone");
-            if (null != phone) {
-                tvPhone.setText("手机号码："+phone);
+            mPhone = bundle.getString("phone");
+            if (null != mPhone) {
+                tvPhone.setText("手机号码："+ mPhone);
             }
             mCodeStr = bundle.getString("code");
 
@@ -91,30 +87,18 @@ public class RegisterFragment extends BaseFragment {
             return;
         }
         if (!TextUtils.equals(et_code,mCodeStr)){
+            Log.e("RegisterFragment", "onRegister: 本页面："+et_code+"   上一个页面："+mCodeStr);
             ToastUtils.show("验证码不正确");
             return;
         }
         showProgressDialog("注册中...", getActivity());
+        mPresenter.registerPerson(et_name,et_password,mPhone);
     }
 
     @OnClick(R.id.bt_send_code)
     public void sendCode(){
-        mCodeStr = createCode(4);
-        JsonReqClient client = new JsonReqClient(this);
-        String sid = "79e97a4f75301edaec354149c09c2f7e";
-        String token = "f33f9435e36610e71c924d8b480eba55";
-        String appid = "a868bbc024f24b18b90a3ea922299252";
-        String templateid = "35082";
-        String param = "图次元,"+mCodeStr+",1";
-        String mobile = "15182631360";
-        String uid = "";
-        IdentifyCodeModle result = client.sendSms(sid, token, appid, templateid, param, mobile, uid);
-        if (result.getCode() == "000000"){
-            ToastUtils.show("发送成功");
-            timer.start();
-        }
-
-
+        mCodeStr = StringUtils.createCode(4);
+        mPresenter.sendCode(mPhone,mCodeStr);
     }
 
     @Override
@@ -122,15 +106,27 @@ public class RegisterFragment extends BaseFragment {
         super.onDestroy();
         timer.cancel();
     }
-
-    private String createCode(int max){
-        String code = "";
-        Random random = new Random();
-        for (int i = 0; i < max; i++) {
-            int r = random.nextInt(10); //每次随机出一个数字（0-9）
-            code = code + r;  //把每次随机出的数字拼在一起
-
+    @Override
+    public void onCodeResult(boolean success, String msg, String phone) {
+        if (success){
+            ToastUtils.show("发送成功");
+            timer.start();
+        }else {
+            ToastUtils.show("发送失败："+msg);
         }
-        return code;
     }
+
+    @Override
+    public void onRegister(boolean success, String phone, String username, String pssword, String msg) {
+        cancleProgressDialog();
+        if (success){
+            ToastUtils.show("注册成功");
+            if (getActivity() != null){
+                getActivity().finish();
+            }
+        }else {
+            ToastUtils.show("注册失败:"+msg);
+        }
+    }
+
 }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.Context;
 import android.os.Build;
 
+import com.avos.avoscloud.AVOSCloud;
 import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.App;
 import com.raizlabs.android.dbflow.config.FlowManager;

@@ -18,6 +18,8 @@ public class ContentValue {
     //升级接口
     public static final String UPDATEURL = "https://www.lingxiaosuse.cn/tudimension/update.json";
     public static final int PERMESSION_REQUEST_CODE = 200;
+    public static final String KEY_USERNAME = "key_username";
+    public static final String KEY_PSD = "key_psd";
     //是否是第一次进入
     public static String ISFIRST_KEY = "isfirst_key";
     //服务器版本号

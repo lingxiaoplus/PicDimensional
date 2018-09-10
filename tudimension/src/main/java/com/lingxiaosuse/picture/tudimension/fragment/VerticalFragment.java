@@ -23,7 +23,6 @@ import com.lingxiaosuse.picture.tudimension.adapter.VerticalAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.VerticalModle;
 import com.lingxiaosuse.picture.tudimension.presenter.VerticalPresenter;
 import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
-import com.lingxiaosuse.picture.tudimension.retrofit.VerticalInterface;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.VerticalView;

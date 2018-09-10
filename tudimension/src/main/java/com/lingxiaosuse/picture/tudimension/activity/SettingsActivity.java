@@ -9,7 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.camera.lingxiao.common.RxBus;
+import com.camera.lingxiao.common.rxbus.RxBus;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.SpUtils;
