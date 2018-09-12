@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,46 +27,49 @@ import java.util.Map;
  * Created by lingxiao on 2017/9/30.
  */
 
-public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRecycleAdapter.BaseViewHolder>{
+public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRecycleAdapter.BaseViewHolder> {
     private List<T> mList;
     private int headCount = 0; //头布局个数
     private int footCount = 1; //尾布局个数
-    private static final int HEAD_TYPE=1;
-    private static final int BODY_TYPE=2;
-    private static final int FOOT_TYPE=3;
+    private static final int HEAD_TYPE = 1;
+    private static final int BODY_TYPE = 2;
+    private static final int FOOT_TYPE = 3;
     private boolean isFinish;   //是否加载完成
     private LayoutInflater mLayoutInflater;
     private int mLastPosition = -1;
     private View mItemView;
 
 
-    public BaseRecycleAdapter(List<T> mList,int headCount,int footCount){
+    public BaseRecycleAdapter(List<T> mList, int headCount, int footCount) {
         this.mList = mList;
         this.headCount = headCount;
         this.footCount = footCount;
+        mLayoutInflater = LayoutInflater
+                .from(UIUtils.getContext());
     }
 
     //获取总共条目数
-    public int getBodySize(){
+    public int getBodySize() {
         return mList.size();
     }
 
     //判断头布局
-    public boolean isHead(int position){
-        return headCount!=0&&position<headCount;
+    public boolean isHead(int position) {
+        return headCount != 0 && position < headCount;
     }
+
     //判断尾布局
-    public boolean isFoot(int position){
-        return footCount!=0&&(position>=getBodySize()-1);
+    public boolean isFoot(int position) {
+        return footCount != 0 && (position >= getBodySize() - 1);
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (isHead(position)){
+        if (isHead(position)) {
             return HEAD_TYPE;
-        }else if (isFoot(position)){
+        } else if (isFoot(position)) {
             return FOOT_TYPE;
-        }else {
+        } else {
             return BODY_TYPE;
         }
     }
@@ -73,36 +78,34 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
     public BaseRecycleAdapter.BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View view = null;
-        mLayoutInflater = LayoutInflater
-                .from(parent.getContext());
-        switch (viewType){
+        switch (viewType) {
             case HEAD_TYPE:
-                view = mLayoutInflater.inflate(getHeadLayoutId(),parent,false);
+                view = mLayoutInflater.inflate(getHeadLayoutId(), parent, false);
                 break;
             case FOOT_TYPE:
-                view = mLayoutInflater.inflate(R.layout.item_foot,parent,false);
+                view = mLayoutInflater.inflate(R.layout.item_foot, parent, false);
                 break;
             case BODY_TYPE:
-                view = mLayoutInflater.inflate(getLayoutId(),parent,false);
+                view = mLayoutInflater.inflate(getLayoutId(), parent, false);
                 break;
             default:
                 return null;
         }
         final BaseViewHolder holder = new BaseViewHolder(view);
 
-        if (onItemClickListener != null){
+        if (onItemClickListener != null) {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int poisition = holder.getAdapterPosition();
-                    onItemClickListener.onItemClick(holder.itemView,poisition);
+                    onItemClickListener.onItemClick(holder.itemView, poisition);
                 }
             });
             holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
                     int pos = holder.getAdapterPosition();
-                    onItemClickListener.onLongClick(holder.itemView,pos);
+                    onItemClickListener.onLongClick(holder.itemView, pos);
                     return true;
                 }
             });
@@ -112,59 +115,63 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
 
     @Override
     public void onBindViewHolder(BaseRecycleAdapter.BaseViewHolder holder, int position) {
-        if (isFoot(position)){
-            if (listener != null){
+        if (isFoot(position)) {
+            if (listener != null) {
                 //上拉加载更多
                 listener.onLoadMore();
             }
 
-            if (isFinish){
+            if (isFinish) {
                 holder.getView(R.id.ll_loading).setVisibility(View.GONE);
                 holder.getView(R.id.ll_finish).setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 holder.getView(R.id.ll_loading).setVisibility(View.VISIBLE);
                 holder.getView(R.id.ll_finish).setVisibility(View.GONE);
             }
-        }else if (isHead(position)){
+        } else if (isHead(position)) {
             //头布局
-        }else {
-            bindData(holder,position,mList);
-            if (!isFinish){
+        } else {
+            bindData(holder, position, mList);
+            if (!isFinish) {
                 //数据加载完成后不要动画，不然动画会重复
-                boolean b = Integer.compare(position,mLastPosition) < 0 ? true : false;
-                addInAnimation(mItemView,b);
+                boolean b = Integer.compare(position, mLastPosition) < 0 ? true : false;
+                addInAnimation(mItemView, b);
                 mLastPosition = position;
             }
         }
     }
 
     public abstract void bindData(BaseViewHolder holder, int position, List<T> mList);
+
     /**
-     *获取布局文件
+     * 获取布局文件
      */
     public abstract int getLayoutId();
 
     /**
-     *获取头布局文件
+     * 获取头布局文件
      */
     public abstract int getHeadLayoutId();
+
     @Override
     public int getItemCount() {
-        return mList == null?0:mList.size();
+        return mList == null ? 0 : mList.size();
     }
 
-    public class BaseViewHolder extends RecyclerView.ViewHolder{
-        private Map<Integer,View> mViewMap;
+    public class BaseViewHolder extends RecyclerView.ViewHolder {
+        private Map<Integer, View> mViewMap;
+
         public BaseViewHolder(View itemView) {
             super(itemView);
             mViewMap = new HashMap<>();
             mItemView = itemView;
         }
-        public View getView(int id){
+
+        public View getView(int id) {
             View view = mViewMap.get(id);
-            if (view == null){
+            if (view == null) {
                 view = itemView.findViewById(id);
-                mViewMap.put(id,view);
+                mViewMap.put(id, view);
             }
             return view;
         }
@@ -173,7 +180,8 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
 
     public interface OnItemClickListener {
         void onItemClick(View View, int position);
-        void onLongClick(View view,int position);
+
+        void onLongClick(View view, int position);
     }
 
     private OnItemClickListener onItemClickListener;
@@ -184,32 +192,36 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
 
     //加载更多
     private onLoadmoreListener listener;
-    public interface onLoadmoreListener{
+
+    public interface onLoadmoreListener {
         void onLoadMore();
     }
-    public void setRefreshListener(onLoadmoreListener listener){
+
+    public void setRefreshListener(onLoadmoreListener listener) {
         this.listener = listener;
     }
 
     //数据加载完成
-    public void isFinish(boolean isFinish){
+    public void isFinish(boolean isFinish) {
         this.isFinish = isFinish;
     }
+
     /**
-     *刷新数据
+     * 刷新数据
      */
-    public void onRefresh(List<T> datas){
+    public void onRefresh(List<T> datas) {
         this.mList.clear();
         this.mList = datas;
         notifyDataSetChanged();
     }
-    public void addData(List<T> datas){
+
+    public void addData(List<T> datas) {
         this.mList.addAll(datas);
         notifyDataSetChanged();
     }
 
     /**
-     *  将动画对象加入集合中  根据左右滑动加入不同
+     * 将动画对象加入集合中  根据左右滑动加入不同
      */
     private void addInAnimation(View view, boolean buttom) {
         List<Animator> list = new ArrayList<>();
@@ -227,8 +239,9 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         list.add(ObjectAnimator.ofFloat(view, "scaleY", 0.25f, 1));
         startAnimation(list);
     }
+
     /**
-     *  开启动画
+     * 开启动画
      */
     private void startAnimation(List<Animator> list) {
         AnimatorSet animatorSet = new AnimatorSet();
@@ -238,4 +251,47 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         animatorSet.start();
     }
 
+
+    //GridLayoutManager
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+        if (layoutManager instanceof GridLayoutManager) {
+            final GridLayoutManager gridLayoutManager = (GridLayoutManager) layoutManager;
+            final GridLayoutManager.SpanSizeLookup spanSizeLookup = gridLayoutManager.getSpanSizeLookup();
+
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (isHead(position)) {
+                        return gridLayoutManager.getSpanCount();
+                    } else if (isFoot(position)) {
+                        return gridLayoutManager.getSpanCount();
+                    }
+                    if (spanSizeLookup != null)
+                        return spanSizeLookup.getSpanSize(position);
+                    return 1;
+                }
+            });
+            gridLayoutManager.setSpanCount(gridLayoutManager.getSpanCount());
+        }
+    }
+
+    //StaggeredGridLayoutManager
+
+    //@Override
+    public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        int position = holder.getLayoutPosition();
+        if (isHead(position) || isFoot(position)) {
+            ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+            if (lp != null
+                    && lp instanceof StaggeredGridLayoutManager.LayoutParams) {
+                StaggeredGridLayoutManager.LayoutParams p =
+                        (StaggeredGridLayoutManager.LayoutParams) lp;
+                p.setFullSpan(true);
+            }
+        }
+    }
 }

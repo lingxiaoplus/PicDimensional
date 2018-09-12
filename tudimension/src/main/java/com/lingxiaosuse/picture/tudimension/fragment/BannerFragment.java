@@ -22,6 +22,7 @@ import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.activity.WebActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BannerRecycleAdapter;
+import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.presenter.HomePresenter;
@@ -78,12 +79,14 @@ public class BannerFragment extends BaseFragment implements HomeView{
         mLayoutManager = new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL);
         recycleView.setLayoutManager(mLayoutManager);
+        recycleView.setHasFixedSize(true);
         swipView.setRefreshing(true);
-        mAdapter = new BannerRecycleAdapter(picList,UIUtils.getContext());
+        mAdapter = new BannerRecycleAdapter(picList,0,1);
         recycleView.setAdapter(mAdapter);
-        mAdapter.setOnItemClickListener(new BannerRecycleAdapter.OnItemClickListener() {
+
+        mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position, Uri uri) {
+            public void onItemClick(View View, int position) {
                 Intent intent = new Intent(UIUtils.getContext(),
                         ImageLoadingActivity.class);
                 intent.putExtra("position", position);
@@ -93,10 +96,15 @@ public class BannerFragment extends BaseFragment implements HomeView{
                 intent.putStringArrayListExtra("picIdList", IdList);
                 startActivity(intent);
             }
-        });
-        mAdapter.setRefreshListener(new BannerRecycleAdapter.onLoadmoreListener() {
+
             @Override
-            public void onLoadMore(int position) {
+            public void onLongClick(View view, int position) {
+
+            }
+        });
+        mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
+            @Override
+            public void onLoadMore() {
                 skip += 30;
                 mHomePresenter.getBannerDetailData(id, ContentValue.limit,skip,type,order);
             }
