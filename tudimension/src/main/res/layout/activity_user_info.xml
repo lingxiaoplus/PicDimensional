@@ -47,7 +47,7 @@
         app:layout_anchorGravity="bottom|end"
         app:progressBarImageScaleType="centerInside"
         app:progressBarImage="@drawable/ic_img_default"
-        app:overlayImage="@drawable/ic_default_pic"
+        app:overlayImage="@mipmap/ic_launcher"
         app:roundAsCircle="true"
         app:roundingBorderWidth="1dp"
         android:layout_centerVertical="true"

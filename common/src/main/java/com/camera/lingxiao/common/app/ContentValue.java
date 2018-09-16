@@ -148,5 +148,9 @@ public class ContentValue {
      * 设置浏览图片的分辨率
      */
     public static final String PIC_RESOLUTION = "pic_resolution";
+    /**
+     * 设置浏览图片的分辨率
+     */
+    public static final String ANIMATOR_TYPE = "animator_type";
 
 }

@@ -1,1 +1,1 @@
-include ':tudimension', ':lang', ':common', ':common', ':skinlibrary'
+include ':tudimension', ':lang', ':common', ':common', ':skinlibrary', ':feedback'

@@ -13,12 +13,16 @@ import android.view.MenuItem;
 
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.LogUtils;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.db.MzituTabModel;
+import com.lingxiaosuse.picture.tudimension.db.MzituTabModel_Table;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.AllFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.DailyFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.MzituFragment;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SkinTabLayout;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -43,7 +47,50 @@ public class MzituActivity extends BaseActivity {
 
     private List<String> tabTitle = new ArrayList<>();
     private MzituPagerAdapter mAdapter;
+    private Runnable mTabRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Connection connection = Jsoup.connect(ContentValue.MZITU_URL)
+                    .header("Referer", ContentValue.MZITU_URL)
+                    .header("User-Agent", ContentValue.USER_AGENT)
+                    .timeout(5000)
+                    .userAgent(ContentValue.USER_AGENT);//设置urer-agent  get();;
+            Document doc = null;
+            try {
+                Connection.Response response = connection.execute();
+                response.cookies();
+                doc = connection.get();
+                //获取tab的数据
+                Element elementDiv = doc.getElementById("menu-nav");
+                //Elements elementsUl = elementDiv.getElementsByTag("ul");
+                Elements elements = elementDiv.getElementsByTag("li");
+                for (Element element : elements) {
+                    String targetTitle = element.getElementsByTag("a").attr("title");
+                    String targetUrl = element.getElementsByTag("a").attr("href");
+                    tabTitle.add(targetTitle);
+                    MzituTabModel model = new MzituTabModel();
+                    model.setTabName(targetTitle);
+                    model.setCreateTime(System.currentTimeMillis());
+                    model.save();
+                    LogUtils.e("Connection: "+targetTitle);
+                    UIUtils.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //这里调用；两次是某些奇葩机器会报异常
+                            mAdapter.notifyDataSetChanged();
+                            for (int i = 0; i < tabTitle.size(); i++) {
+                                tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
+                            }
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
 
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_mzitu;
@@ -55,7 +102,6 @@ public class MzituActivity extends BaseActivity {
         setToolbarBack(toolbarTitle);
         toolbarTitle.setTitle("mzitu");
         initTab();
-        initPager();
     }
 
     @Override
@@ -63,64 +109,31 @@ public class MzituActivity extends BaseActivity {
         super.initData();
     }
 
-    private void initPager() {
+    private void initTab() {
         mAdapter = new MzituPagerAdapter(getSupportFragmentManager());
         pagerMzitu.setAdapter(mAdapter);
-    }
-
-    private void initTab() {
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Connection connection = Jsoup.connect(ContentValue.MZITU_URL)
-                        .header("Referer", ContentValue.MZITU_URL)
-                        .header("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0")
-                        .timeout(5000)
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
-
-                Document doc = null;
-                try {
-                    Connection.Response response = connection.execute();
-                    response.cookies();
-                    doc = connection.get();
-                    //获取tab的数据
-                    Element elementDiv = doc.getElementById("menu-nav");
-                    //Elements elementsUl = elementDiv.getElementsByTag("ul");
-                    Elements elements = elementDiv.getElementsByTag("li");
-                    for (Element element : elements) {
-                        //Elements elements1 = element.children();
-                        final String targetTitle = element.getElementsByTag("a").attr("title");
-                        final String targetUrl = element.getElementsByTag("a").attr("href");
-                        //ToastUtils.show(targetUrl);
-                        tabTitle.add(targetTitle);
-                    /*String img = elements1.get(0).getElementsByTag("img").first().attr("data-src");
-                    if (img.contains(".jpg")) {
-                        int a = img.indexOf(".jpg");
-                        img = img.substring(0, a + 4);
-                    }*/
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Log.i("MzituActivity", e.getMessage());
-                } finally {
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (int i = 0; i < tabTitle.size(); i++) {
-                                tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
-                            }
-                            mAdapter.notifyDataSetChanged();
-                            tabMzitu.setupWithViewPager(pagerMzitu);
-
-                        }
-                    });
+        tabMzitu.setupWithViewPager(pagerMzitu);
+        List<MzituTabModel> tabList = SQLite.select()
+                .from(MzituTabModel.class)
+                .queryList();
+        if (tabList.size() > 0){
+            //3天缓存
+            if (System.currentTimeMillis() - tabList.get(0).getCreateTime()
+                    < 3 * 1000 * 60 * 60 * 24){
+                for (int i = 0; i < tabList.size(); i++) {
+                    tabTitle.add(tabList.get(i).getTabName());
+                    tabMzitu.addTab(tabMzitu.newTab().setText(tabList.get(i).getTabName()));
+                    LogUtils.e(tabList.get(i).getTabName());
                 }
+                mAdapter.notifyDataSetChanged();
 
+            }else {
+                SQLite.delete(MzituTabModel.class).execute();
+                new Thread(mTabRunnable).start();
             }
-
-        }).start();
-
+        }else {
+            new Thread(mTabRunnable).start();
+        }
     }
 
     @Override

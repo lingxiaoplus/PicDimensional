@@ -36,6 +36,7 @@ import android.widget.TextView;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.AVUser;
+import com.avos.avoscloud.feedback.FeedbackAgent;
 import com.camera.lingxiao.common.rxbus.RxBus;
 import com.camera.lingxiao.common.app.ActivityController;
 import com.camera.lingxiao.common.app.BaseActivity;
@@ -47,6 +48,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.activity.LoginActivity;
 import com.lingxiaosuse.picture.tudimension.activity.UserInfoActivity;
 import com.lingxiaosuse.picture.tudimension.activity.cosplay.CosplayLaActivity;
+import com.lingxiaosuse.picture.tudimension.db.UserModel;
 import com.lingxiaosuse.picture.tudimension.rxbusevent.DrawerChangeEvent;
 import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
@@ -68,6 +70,7 @@ import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.MainView;
 import com.liuguangqiang.cookie.CookieBar;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 
 import java.io.File;
 
@@ -189,14 +192,20 @@ public class MainActivity extends BaseActivity implements MainView{
         hitokoto = headerLayout.findViewById(R.id.tv_hitokoto);
         simpleDraweeView = headerLayout.findViewById(R.id.image_head_background);
         ImageView headImage = headerLayout.findViewById(R.id.image_head);
+        TextView userName = headerLayout.findViewById(R.id.tv_username);
+
+        final UserModel model = SQLite.select()
+                .from(UserModel.class)
+                .querySingle();
+        if (model != null){
+            userName.setText(model.getUsername());
+        }
         //headImage.setVisibility(View.GONE);
         headImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AVUser currentUser = AVUser.getCurrentUser();
-                if (currentUser != null) {
+                if (model != null) {
                     // 跳转到首页
-                    ToastUtils.show("已经登录了");
                     StartActivity(UserInfoActivity.class,false);
                 } else {
                     //缓存用户对象为空时，可打开用户注册界面…
@@ -411,6 +420,10 @@ public class MainActivity extends BaseActivity implements MainView{
                 break;
             case R.id.menu_search:
                 StartActivity(SearchActivity.class, false);
+                break;
+            case R.id.menu_feedback:
+                FeedbackAgent agent = new FeedbackAgent(getApplicationContext());
+                agent.startDefaultThreadActivity();
                 break;
         }
         return true;

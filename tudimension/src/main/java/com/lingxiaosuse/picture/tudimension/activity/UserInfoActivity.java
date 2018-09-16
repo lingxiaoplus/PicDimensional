@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -19,9 +21,8 @@ import com.camera.lingxiao.common.app.ContentValue;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.db.UserModel;
-import com.lingxiaosuse.picture.tudimension.db.UserModel_Table;
 import com.lingxiaosuse.picture.tudimension.utils.BitmapUtils;
+import com.lingxiaosuse.picture.tudimension.utils.FileUtil;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SettingCardView;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -59,6 +60,48 @@ public class UserInfoActivity extends BaseActivity {
     @BindView(R.id.image_header)
     SimpleDraweeView imageHeader;
     private Bitmap mBitmap;
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            try {
+                float scale = mBitmap.getWidth() / (float) mBitmap.getHeight();
+                float width = appBar.getWidth();
+                float height = width / scale;
+                CoordinatorLayout.LayoutParams params = new CoordinatorLayout
+                        .LayoutParams((int) width, (int) height);
+                appBar.setLayoutParams(params);
+                ivBack.setImageBitmap(mBitmap);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
+    private Runnable mShowBgRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                List<File> fileList = FileUtil.getFiles(ContentValue.PATH);
+                List<String> picList = new ArrayList<>();
+                if (null != fileList && fileList.size() != 0) {
+                    for (int i = 0; i < fileList.size(); i++) {
+                        String path = fileList.get(i).getAbsolutePath();
+                        if (BitmapUtils.isLandscape(path) && FileUtil.getFileSize(path) < 2L) {
+                            picList.add(path);
+                        }
+                    }
+                }
+                Random random = new Random();
+                int index = random.nextInt(picList.size());
+                FileInputStream inputStream = new FileInputStream(picList.get(index));
+                mBitmap = BitmapUtils.compressImageByResolution(BitmapFactory.decodeStream(inputStream),
+                        840f, 400f);
+                mHandler.sendEmptyMessage(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     @Override
     protected int getContentLayoutId() {
@@ -75,7 +118,6 @@ public class UserInfoActivity extends BaseActivity {
                 .build(this)
                 .apply();
         setToolbarBack(toolbar);
-        toolbar.setTitle("姓名");
     }
 
     @Override
@@ -88,85 +130,13 @@ public class UserInfoActivity extends BaseActivity {
                 .querySingle();*/
         cardName.setMessage(avUser.getUsername());
         cardPhone.setMessage(avUser.getMobilePhoneNumber());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File file = new File(ContentValue.PATH);
-                List<File> fileList = getFiles(file);
-                List<String> picList = new ArrayList<>();
-                if (null != fileList && fileList.size() != 0) {
-                    for (int i = 0; i < fileList.size(); i++) {
-                        String path = fileList.get(i).getAbsolutePath();
-                        if (BitmapUtils.isLandscape(path) && getFileSize(new File(path)) < 2L) {
-                            picList.add(path);
-                        }
-                    }
-                }
-
-                try {
-                    // TODO: 2018/7/31  虚拟机报参数不匹配？？
-                    Random random = new Random();
-                    int index = random.nextInt(picList.size());
-                    FileInputStream inputStream = new FileInputStream(picList.get(index));
-                    mBitmap = BitmapUtils.compressImageByResolution(BitmapFactory.decodeStream(inputStream),
-                            840f, 400f);
-
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            float scale = mBitmap.getWidth() / (float) mBitmap.getHeight();
-                            float width = appBar.getWidth();
-                            float height = width / scale;
-                            CoordinatorLayout.LayoutParams params = new CoordinatorLayout
-                                    .LayoutParams((int) width, (int) height);
-                            appBar.setLayoutParams(params);
-                            ivBack.setImageBitmap(mBitmap);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        toolbar.setTitle(avUser.getUsername());
+        new Thread(mShowBgRunnable).start();
     }
 
-    private List<File> getFiles(File file) {
-
-        try {
-            List<File> fileList = new ArrayList<>();
-            File[] files = file.listFiles();
-            for (File f : files) {
-                if (f.isFile()) {
-                    fileList.add(f);
-                } else {
-                    getFiles(f);
-                }
-            }
-            return fileList;
-        } catch (NullPointerException e) {
-            //ToastUtils.show("出错了："+e.getMessage());
-            Log.i("seedownloadimgact", "出错了");
-        }
-        return null;
-    }
-
-    private long getFileSize(File file) {
-        if (file == null) {
-            return 0;
-        }
-        long size = 0;
-        if (file.exists()) {
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(file);
-                size = fis.available();
-                fis.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        size = size / 1024 / 1024; //mb
-        return size;
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mHandler.removeMessages(0);
     }
 }

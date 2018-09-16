@@ -3,21 +3,9 @@ package com.lingxiaosuse.picture.tudimension.utils;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.view.View;
 
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.SpUtils;
-import com.google.gson.Gson;
-import com.lingxiaosuse.picture.tudimension.db.DrawerSelect;
-import com.lingxiaosuse.picture.tudimension.db.DrawerSelect_Table;
-import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.sql.language.Where;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.List;
 
 public class DialogUtil {
     private static AlertDialog.Builder mBuilder;

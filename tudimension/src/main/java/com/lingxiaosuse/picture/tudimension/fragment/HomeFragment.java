@@ -18,14 +18,14 @@ import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.SpaceItemDecoration;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
-import com.lingxiaosuse.picture.tudimension.adapter.MyRecycleViewAdapter;
+import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
+import com.lingxiaosuse.picture.tudimension.adapter.HomeRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.presenter.HomePresenter;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.HomeView;
-import com.lingxiaosuse.picture.tudimension.widget.WaveLoading;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ import butterknife.OnClick;
 
 public class HomeFragment extends BaseFragment implements HomeView{
 
-    private MyRecycleViewAdapter adapter;
+    private HomeRecyclerAdapter mHomeAdapter;
     private List<HomePageModle.slidePic> slideList = new ArrayList<>();
     private List<HomePageModle.Picture> picList = new ArrayList<>();
     private List<HomePageModle.HomeDes> homeDesList = new ArrayList<>();
@@ -84,22 +84,22 @@ public class HomeFragment extends BaseFragment implements HomeView{
             }
         });
         setSwipeColor(swipeLayout);
-        adapter = new MyRecycleViewAdapter(picList,slideList,UIUtils.getContext());
+        mHomeAdapter = new HomeRecyclerAdapter(picList,slideList,1,1);
         // 错列网格布局
         recycleView.setHasFixedSize(true);      //设置固定大小
         recycleView.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
-        recycleView.setAdapter(adapter);
-        adapter.setRefreshListener(new MyRecycleViewAdapter.onLoadmoreListener() {
+        recycleView.setAdapter(mHomeAdapter);
+        mHomeAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
             @Override
             public void onLoadMore() {
                 skip+=30;
                 mPresenter.getHomePageData(ContentValue.limit,skip);
             }
         });
-        adapter.setOnItemClickListener(new MyRecycleViewAdapter.OnItemClickListener() {
+        mHomeAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position, Uri uri) {
+            public void onItemClick(View View, int position) {
                 if (null == picUrlList){
                     return;
                 }
@@ -114,7 +114,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
                 Intent intent = new Intent(UIUtils.getContext(),
                         ImageLoadingActivity.class);
                 intent.putExtra("position",position);
-                intent.putExtra("itemCount",adapter.getItemCount());
+                intent.putExtra("itemCount",mHomeAdapter.getItemCount());
                 intent.putExtra("id",picList.get(position).id);
                 intent.putStringArrayListExtra("picList", (ArrayList<String>) picUrlList);
                 intent.putStringArrayListExtra("picIdList", (ArrayList<String>) picIdList);
@@ -123,9 +123,14 @@ public class HomeFragment extends BaseFragment implements HomeView{
                         +"实际大小"+picList.size());
                 startActivity(intent);
             }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
         });
 
-        adapter.setOnBannerClickListener(new MyRecycleViewAdapter.OnBannerClickListener() {
+        mHomeAdapter.setOnBannerClickListener(new HomeRecyclerAdapter.OnBannerClickListener() {
             @Override
             public void onBannerClick(int position) {
                 Intent intent = new Intent(UIUtils.getContext(),
@@ -138,6 +143,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
                 startActivity(intent);
             }
         });
+
         floatingBtnToogle(recycleView,fab);
     }
 
@@ -149,7 +155,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
     @Override
     public void onGetHomeResult(HomePageModle modle) {
         if (modle.getWallpaper().size() < 30){
-            adapter.isFinish(true);
+            mHomeAdapter.isFinish(true);
         }
         picList.addAll(modle.getWallpaper());
         //首页轮播图
@@ -164,7 +170,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
                 slideList.add(homeDesList.get(j).value);
             }
         }
-        adapter.notifyDataSetChanged();
+        mHomeAdapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
     }
 

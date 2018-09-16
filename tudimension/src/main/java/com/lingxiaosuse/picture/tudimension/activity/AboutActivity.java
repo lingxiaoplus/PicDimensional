@@ -18,7 +18,9 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -45,6 +47,7 @@ import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.BitmapUtils;
 import com.lingxiaosuse.picture.tudimension.utils.DialogUtil;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
+import com.lingxiaosuse.picture.tudimension.utils.FileUtil;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.SplashView;
@@ -99,7 +102,49 @@ public class AboutActivity extends BaseActivity implements SplashView {
     private ServiceConnection mConnect;
     private DownloadService mDownloadService;
     private CookieBar cookieBar;
-
+    private Runnable mShowBgRunnable = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                List<File> fileList = FileUtil.getFiles(ContentValue.PATH);
+                List<String> picList = new ArrayList<>();
+                if (null != fileList && fileList.size() != 0) {
+                    for (int i = 0; i < fileList.size(); i++) {
+                        String path = fileList.get(i).getAbsolutePath();
+                        if (BitmapUtils.isLandscape(path) && FileUtil.getFileSize(path) < 2L) {
+                            picList.add(path);
+                        }
+                    }
+                }
+                // TODO: 2018/7/31  虚拟机报参数不匹配？？
+                Random random = new Random();
+                int index = random.nextInt(picList.size());
+                FileInputStream inputStream = new FileInputStream(picList.get(index));
+                bitmap = BitmapUtils.compressImageByResolution(BitmapFactory.decodeStream(inputStream),
+                        840f, 400f);
+                mHandler.sendEmptyMessage(0);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            try {
+                float scale = bitmap.getWidth() / (float) bitmap.getHeight();
+                float width = appBarLayout.getWidth();
+                float height = width / scale;
+                CoordinatorLayout.LayoutParams params = new CoordinatorLayout
+                        .LayoutParams((int) width, (int) height);
+                appBarLayout.setLayoutParams(params);
+                imageAbout.setImageBitmap(bitmap);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    };
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_about;
@@ -150,69 +195,7 @@ public class AboutActivity extends BaseActivity implements SplashView {
     @Override
     protected void initData() {
         super.initData();
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                File file = new File(ContentValue.PATH);
-                List<File> fileList = getFiles(file);
-                List<String> picList = new ArrayList<>();
-                if (null != fileList && fileList.size() != 0) {
-                    for (int i = 0; i < fileList.size(); i++) {
-                        String path = fileList.get(i).getAbsolutePath();
-                        if (BitmapUtils.isLandscape(path) && getFileSize(new File(path)) < 2L) {
-                            picList.add(path);
-                        }
-                    }
-                }
-
-                try {
-                    // TODO: 2018/7/31  虚拟机报参数不匹配？？
-                    Random random = new Random();
-                    int index = random.nextInt(picList.size());
-
-                    FileInputStream inputStream = new FileInputStream(picList.get(index));
-                    bitmap = BitmapUtils.compressImageByResolution(BitmapFactory.decodeStream(inputStream),
-                            840f, 400f);
-
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            float scale = bitmap.getWidth() / (float) bitmap.getHeight();
-                            float width = appBarLayout.getWidth();
-                            float height = width / scale;
-                            CoordinatorLayout.LayoutParams params = new CoordinatorLayout
-                                    .LayoutParams((int) width, (int) height);
-                            appBarLayout.setLayoutParams(params);
-                            imageAbout.setImageBitmap(bitmap);
-                        }
-                    });
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
-    }
-
-    private List<File> getFiles(File file) {
-
-        try {
-            List<File> fileList = new ArrayList<>();
-            File[] files = file.listFiles();
-            for (File f : files) {
-                if (f.isFile()) {
-                    fileList.add(f);
-                } else {
-                    getFiles(f);
-                }
-            }
-            return fileList;
-        } catch (NullPointerException e) {
-            //ToastUtils.show("出错了："+e.getMessage());
-            Log.i("seedownloadimgact", "出错了");
-        }
-        return null;
+        new Thread(mShowBgRunnable).start();
     }
 
     private void setVersion() {
@@ -498,25 +481,6 @@ public class AboutActivity extends BaseActivity implements SplashView {
         if (null != bitmap) {
             bitmap.recycle();
         }
-    }
-
-    private long getFileSize(File file) {
-        if (file == null) {
-            return 0;
-        }
-        long size = 0;
-        if (file.exists()) {
-            FileInputStream fis = null;
-            try {
-                fis = new FileInputStream(file);
-                size = fis.available();
-                fis.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-        size = size / 1024 / 1024; //mb
-        return size;
+        mHandler.removeMessages(0);
     }
 }

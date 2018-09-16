@@ -44,7 +44,7 @@
                         android:layout_height="wrap_content"
                         app:message="WIFI情况下自动检测更新"
                         app:switchcompat="true"
-                        app:title="检查更新"></com.lingxiaosuse.picture.tudimension.widget.SettingCardView>
+                        app:title="检查更新"/>
 
                     <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
                         android:id="@+id/card_daly"
@@ -52,8 +52,7 @@
                         android:layout_height="wrap_content"
                         app:message="开启启动页每日图片"
                         app:switchcompat="true"
-                        app:title="启动页面图片">
-                    </com.lingxiaosuse.picture.tudimension.widget.SettingCardView>
+                        app:title="启动页面图片"/>
 
                     <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
                         android:id="@+id/card_cache"
@@ -98,7 +97,7 @@
                         android:layout_height="wrap_content"
                         app:message="把妹子们分享出去"
                         app:visable="false"
-                        app:title="分享给好友"></com.lingxiaosuse.picture.tudimension.widget.SettingCardView>
+                        app:title="分享给好友"/>
 
                     <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
                         android:id="@+id/card_skin"
@@ -106,8 +105,14 @@
                         android:layout_height="wrap_content"
                         app:message="更换皮肤"
                         app:visable="false"
-                        app:title="换肤">
-                    </com.lingxiaosuse.picture.tudimension.widget.SettingCardView>
+                        app:title="换肤"/>
+                    <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
+                        android:id="@+id/card_animator"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:message="切换动画"
+                        app:visable="false"
+                        app:title="切换图片加载动画"/>
                     <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
                         android:id="@+id/card_comparse"
                         android:layout_width="match_parent"

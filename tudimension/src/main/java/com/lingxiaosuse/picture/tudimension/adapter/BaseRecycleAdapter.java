@@ -3,6 +3,7 @@ package com.lingxiaosuse.picture.tudimension.adapter;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,10 +12,19 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnticipateOvershootInterpolator;
+import android.view.animation.BaseInterpolator;
+import android.view.animation.BounceInterpolator;
+import android.view.animation.CycleInterpolator;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.SpUtils;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
@@ -44,8 +54,6 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         this.mList = mList;
         this.headCount = headCount;
         this.footCount = footCount;
-        mLayoutInflater = LayoutInflater
-                .from(UIUtils.getContext());
     }
 
     //获取总共条目数
@@ -76,7 +84,8 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
 
     @Override
     public BaseRecycleAdapter.BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
+        mLayoutInflater = LayoutInflater
+                .from(parent.getContext());
         View view = null;
         switch (viewType) {
             case HEAD_TYPE:
@@ -116,7 +125,16 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
     @Override
     public void onBindViewHolder(BaseRecycleAdapter.BaseViewHolder holder, int position) {
         if (isFoot(position)) {
-            if (listener != null) {
+            ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+            if (lp != null) {
+                if (lp instanceof StaggeredGridLayoutManager.LayoutParams){
+                    StaggeredGridLayoutManager.LayoutParams p =
+                            (StaggeredGridLayoutManager.LayoutParams) lp;
+                    p.setFullSpan(true);
+                }
+            }
+
+            if (listener != null && !isFinish) {
                 //上拉加载更多
                 listener.onLoadMore();
             }
@@ -130,6 +148,7 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
             }
         } else if (isHead(position)) {
             //头布局
+            bindHeaderData(holder,position,mList);
         } else {
             bindData(holder, position, mList);
             if (!isFinish) {
@@ -143,6 +162,10 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
 
     public abstract void bindData(BaseViewHolder holder, int position, List<T> mList);
 
+    //处理头布局数据
+    protected void bindHeaderData(BaseViewHolder holder, int position, List<T> mList){
+
+    }
     /**
      * 获取布局文件
      */
@@ -234,9 +257,9 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         }
         list.add(ObjectAnimator.ofFloat(view, "translationY",
                 view.getMeasuredHeight() / 2, 0));
-        list.add(ObjectAnimator.ofFloat(view, "alpha", 0, 1));
-        list.add(ObjectAnimator.ofFloat(view, "scaleX", 0.25f, 1));
-        list.add(ObjectAnimator.ofFloat(view, "scaleY", 0.25f, 1));
+        list.add(ObjectAnimator.ofFloat(view, "alpha", 0f, 1f));
+        list.add(ObjectAnimator.ofFloat(view, "scaleX", 0f, 1f));
+        list.add(ObjectAnimator.ofFloat(view, "scaleY", 0f, 1f));
         startAnimation(list);
     }
 
@@ -244,10 +267,34 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
      * 开启动画
      */
     private void startAnimation(List<Animator> list) {
+        int checked = SpUtils.getInt(UIUtils.getContext(),
+                ContentValue.ANIMATOR_TYPE,0);
+        Interpolator interpolator = null;
+        switch (checked){
+            case 0:
+                interpolator = new BounceInterpolator();
+                break;
+            case 1:
+                interpolator = new DecelerateInterpolator();
+                break;
+            case 2:
+                interpolator = new LinearInterpolator();
+                break;
+            case 3:
+                interpolator = new OvershootInterpolator();
+                break;
+            case 4:
+                interpolator = new AnticipateOvershootInterpolator();
+                break;
+            default:
+                break;
+        }
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(list);
-        animatorSet.setInterpolator(new DecelerateInterpolator());
-        animatorSet.setDuration(800);
+        if (interpolator != null){
+            animatorSet.setInterpolator(interpolator);
+        }
+        animatorSet.setDuration(1000);
         animatorSet.start();
     }
 
@@ -278,20 +325,4 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         }
     }
 
-    //StaggeredGridLayoutManager
-
-    //@Override
-    public void onViewAttachedToWindow(@NonNull BaseViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        int position = holder.getLayoutPosition();
-        if (isHead(position) || isFoot(position)) {
-            ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
-            if (lp != null
-                    && lp instanceof StaggeredGridLayoutManager.LayoutParams) {
-                StaggeredGridLayoutManager.LayoutParams p =
-                        (StaggeredGridLayoutManager.LayoutParams) lp;
-                p.setFullSpan(true);
-            }
-        }
-    }
 }

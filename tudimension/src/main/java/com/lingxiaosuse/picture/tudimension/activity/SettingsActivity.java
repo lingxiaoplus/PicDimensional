@@ -45,10 +45,13 @@ public class SettingsActivity extends BaseActivity {
     SettingCardView cardModel;
     @BindView(R.id.card_comparse)
     SettingCardView cardComparse;
+    @BindView(R.id.card_animator)
+    SettingCardView cardAnimator;
 
     private String[] mDrawerStr;
     private boolean[] checkedItems;
     String[] resolutionItems = {"显示720p的图片","显示1080p的图片","显示原图(可能会卡顿)"};
+    String[] mAnimatorItems = {"弹性的动画","先快后慢的动画","匀速动画","甩头动画","不知名动画"};
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_settings;
@@ -115,7 +118,7 @@ public class SettingsActivity extends BaseActivity {
         return true;
     }
 
-    @OnClick({R.id.card_update, R.id.card_cache, R.id.card_share, R.id.card_skin, R.id.card_daly,R.id.card_model,R.id.card_comparse})
+    @OnClick({R.id.card_update, R.id.card_cache, R.id.card_share, R.id.card_skin, R.id.card_daly,R.id.card_model,R.id.card_comparse,R.id.card_animator})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.card_update:
@@ -153,6 +156,21 @@ public class SettingsActivity extends BaseActivity {
             case R.id.card_comparse:
                 int position = SpUtils.getInt(this,ContentValue.PIC_RESOLUTION,0);
                 showSingleChoiceDia("选择显示图片质量",position,SettingsActivity.this);
+                break;
+            case R.id.card_animator:
+                int checked = SpUtils.getInt(this,ContentValue.ANIMATOR_TYPE,0);
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingsActivity.this);
+                builder.setIcon(android.R.drawable.alert_dark_frame);
+                builder.setTitle("选择动画");
+                builder.setSingleChoiceItems(mAnimatorItems, checked, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        SpUtils.putInt(UIUtils.getContext(),ContentValue.ANIMATOR_TYPE,i);
+                        cardAnimator.setMessage(mAnimatorItems[i]);
+                        dialogInterface.dismiss();
+                    }
+                });
+                builder.show();
                 break;
         }
     }

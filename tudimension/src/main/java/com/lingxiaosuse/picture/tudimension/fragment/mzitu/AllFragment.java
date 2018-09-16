@@ -52,6 +52,7 @@ public class AllFragment extends BaseFragment {
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
+        setSwipeColor(swipMzitu);
         swipMzitu.setRefreshing(true);
         swipMzitu.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
