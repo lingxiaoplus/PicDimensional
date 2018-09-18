@@ -45,8 +45,8 @@ dependencies {
     compile "com.trello.rxlifecycle2:rxlifecycle-components:$rootProject.ext.rxlifescyleVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     implementation "pub.devrel:easypermissions:$rootProject.ext.easypermissionsVersion"
-
-
+    //七牛对象存储
+    implementation "com.qiniu:qiniu-android-sdk:$rootProject.ext.qiniuVersion"
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'

@@ -20,6 +20,11 @@ public class ContentValue {
     public static final int PERMESSION_REQUEST_CODE = 200;
     public static final String KEY_USERNAME = "key_username";
     public static final String KEY_PSD = "key_psd";
+    /**
+     *七牛桶
+     */
+    public static final String BUCKET = "smailchat";
+    public static final String QINIU_BASE_URL = "http://chat.lingxiaosuse.cn/";
     //是否是第一次进入
     public static String ISFIRST_KEY = "isfirst_key";
     //服务器版本号

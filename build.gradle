@@ -77,4 +77,5 @@ ext{
     leak = "1.5.4"
     hotfixVersion = "3.2.3"
     leancloudVersion = "v4.7.3"
+    qiniuVersion = "7.3.4"
 }
