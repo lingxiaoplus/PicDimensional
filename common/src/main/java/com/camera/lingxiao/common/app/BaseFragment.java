@@ -81,13 +81,18 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (!setLazyMode()){
+            initData();
+        }
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if (mListener != null) {
             mListener.onActivityCreated(savedInstanceState);
-        }
-        if (!setLazyMode()){
-            initData();
         }
     }
 

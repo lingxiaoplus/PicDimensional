@@ -117,9 +117,9 @@ public class MzituActivity extends BaseActivity {
                 .from(MzituTabModel.class)
                 .queryList();
         if (tabList.size() > 0){
-            //3天缓存
+            //30天缓存
             if (System.currentTimeMillis() - tabList.get(0).getCreateTime()
-                    < 3 * 1000 * 60 * 60 * 24){
+                    < 30 * 1000 * 60 * 60 * 24){
                 for (int i = 0; i < tabList.size(); i++) {
                     tabTitle.add(tabList.get(i).getTabName());
                     tabMzitu.addTab(tabMzitu.newTab().setText(tabList.get(i).getTabName()));

@@ -1,12 +1,15 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
 
+import android.app.ActivityOptions;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
@@ -155,10 +158,10 @@ public class SplashActivity extends BaseActivity implements SplashView{
 
     private void startAnim() {
         AnimationSet animationSet = new AnimationSet(true);
-        ScaleAnimation scaleAnimation = new ScaleAnimation(1f, 1.05f, 1f, 1.05f,
+        ScaleAnimation scaleAnimation = new ScaleAnimation(1.5f, 1f, 1.5f, 1f,
                 Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         //3秒完成动画
-        scaleAnimation.setDuration(3000);
+        scaleAnimation.setDuration(1500);
         //将AlphaAnimation这个已经设置好的动画添加到 AnimationSet中
         animationSet.addAnimation(scaleAnimation);
         animationSet.setFillAfter(true);
