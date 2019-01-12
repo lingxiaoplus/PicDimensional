@@ -3,6 +3,7 @@ package com.lingxiaosuse.picture.tudimension;
 import android.Manifest;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.app.Service;
@@ -15,6 +16,7 @@ import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -286,6 +288,7 @@ public class MainActivity extends BaseActivity implements MainView{
 
         //设置默认选中为首页
         navigationView.setCheckedItem(R.id.nav_home);
+
         navigationView.setNavigationItemSelectedListener(new NavigationView.
                 OnNavigationItemSelectedListener() {
             @Override

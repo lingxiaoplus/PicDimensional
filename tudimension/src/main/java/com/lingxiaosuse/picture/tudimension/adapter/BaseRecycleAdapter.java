@@ -154,7 +154,7 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
             if (!isFinish) {
                 //数据加载完成后不要动画，不然动画会重复
                 boolean b = Integer.compare(position, mLastPosition) < 0 ? true : false;
-                addInAnimation(mItemView, b);
+                //addInAnimation(mItemView, b);
                 mLastPosition = position;
             }
         }
@@ -240,7 +240,8 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
 
     public void addData(List<T> datas) {
         this.mList.addAll(datas);
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
+        notifyItemRangeInserted(mList.size() - datas.size(),mList.size());
     }
 
     /**

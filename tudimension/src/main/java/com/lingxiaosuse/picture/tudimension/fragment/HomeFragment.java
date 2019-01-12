@@ -23,6 +23,7 @@ import com.lingxiaosuse.picture.tudimension.adapter.HomeRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.BannerModle;
 import com.lingxiaosuse.picture.tudimension.modle.HomePageModle;
 import com.lingxiaosuse.picture.tudimension.presenter.HomePresenter;
+import com.lingxiaosuse.picture.tudimension.transformer.RecyclerViewAnimator;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.HomeView;
@@ -85,11 +86,19 @@ public class HomeFragment extends BaseFragment implements HomeView{
         });
         setSwipeColor(swipeLayout);
         mHomeAdapter = new HomeRecyclerAdapter(picList,slideList,1,1);
+
+
         // 错列网格布局
         recycleView.setHasFixedSize(true);      //设置固定大小
         recycleView.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
         recycleView.setAdapter(mHomeAdapter);
+
+        RecyclerViewAnimator animator = new RecyclerViewAnimator();
+        animator.setAddDuration(2000);
+        animator.setRemoveDuration(2000);
+        recycleView.setItemAnimator(animator);
+
         mHomeAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
             @Override
             public void onLoadMore() {
@@ -157,7 +166,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
         if (modle.getWallpaper().size() < 30){
             mHomeAdapter.isFinish(true);
         }
-        picList.addAll(modle.getWallpaper());
+        //picList.addAll(modle.getWallpaper());
         //首页轮播图
         List<HomePageModle.HomeImg> slidePage = modle.getHomepage();
         for (int i = 0; i < slidePage.size(); i++) {
@@ -170,7 +179,8 @@ public class HomeFragment extends BaseFragment implements HomeView{
                 slideList.add(homeDesList.get(j).value);
             }
         }
-        mHomeAdapter.notifyDataSetChanged();
+        mHomeAdapter.addData(modle.getWallpaper());
+        //mHomeAdapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
     }
 
