@@ -135,7 +135,6 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
     @Override
     public void onGetCategoryResult(CategoryModle modle) {
         categoryList.addAll(modle.getCategory());
-        mCateAdapter.notifyDataSetChanged();
         refreshLayout.setRefreshing(false);
     }
 

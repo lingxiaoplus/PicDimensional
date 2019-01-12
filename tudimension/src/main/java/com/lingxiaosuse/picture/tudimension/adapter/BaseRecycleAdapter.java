@@ -25,10 +25,13 @@ import android.widget.RelativeLayout;
 
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.SpUtils;
+import com.camera.lingxiao.common.widget.RecyclerAnimator;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,8 +40,8 @@ import java.util.Map;
  * Created by lingxiao on 2017/9/30.
  */
 
-public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRecycleAdapter.BaseViewHolder> {
-    private List<T> mList;
+public abstract class BaseRecycleAdapter<Data> extends RecyclerView.Adapter<BaseRecycleAdapter.BaseViewHolder> {
+    private List<Data> mList;
     private int headCount = 0; //头布局个数
     private int footCount = 1; //尾布局个数
     private static final int HEAD_TYPE = 1;
@@ -50,7 +53,7 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
     private View mItemView;
 
 
-    public BaseRecycleAdapter(List<T> mList, int headCount, int footCount) {
+    public BaseRecycleAdapter(List<Data> mList, int headCount, int footCount) {
         this.mList = mList;
         this.headCount = headCount;
         this.footCount = footCount;
@@ -160,10 +163,10 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
         }
     }
 
-    public abstract void bindData(BaseViewHolder holder, int position, List<T> mList);
+    public abstract void bindData(BaseViewHolder holder, int position, List<Data> mList);
 
     //处理头布局数据
-    protected void bindHeaderData(BaseViewHolder holder, int position, List<T> mList){
+    protected void bindHeaderData(BaseViewHolder holder, int position, List<Data> mList){
 
     }
     /**
@@ -232,30 +235,80 @@ public abstract class BaseRecycleAdapter<T> extends RecyclerView.Adapter<BaseRec
     /**
      * 刷新数据
      */
-    public void onRefresh(List<T> datas) {
+    public void onRefresh(List<Data> datas) {
         this.mList.clear();
         this.mList = datas;
         notifyDataSetChanged();
     }
 
-    public void addData(List<T> datas) {
-        this.mList.addAll(datas);
-        //notifyDataSetChanged();
-        notifyItemRangeInserted(mList.size() - datas.size(),mList.size());
+    /**
+     * 插入一条数据并通知插入
+     *
+     * @param data Data
+     */
+    public void add(Data data) {
+        this.mList.add(data);
+        notifyItemInserted(this.mList.size() - 1);
+
     }
+
+    /**
+     * 插入一堆数据，并通知这段集合更新
+     *
+     * @param dataList Data
+     */
+    public void add(Data... dataList) {
+        if (dataList != null && dataList.length > 0) {
+            int startPos = mList.size();
+            Collections.addAll(mList, dataList);
+            notifyItemRangeInserted(startPos, dataList.length);
+        }
+    }
+    /**
+     * 插入一堆数据，并通知这段集合更新
+     *
+     * @param dataList Data
+     */
+    public void add(Collection<Data> dataList) {
+        if (dataList != null && dataList.size() > 0) {
+            int startPos = mList.size();
+            mList.addAll(dataList);
+            notifyItemRangeInserted(startPos, dataList.size());
+        }
+    }
+    /**
+     * 移除一条数据
+     */
+    public void removeData(int... position) {
+        if (position != null && position.length > 0) {
+            int startPos = mList.size();
+            mList.remove(position);
+            notifyItemRangeRemoved(startPos,position.length);
+        }
+    }
+
+    /**
+     * 移除一堆数据
+     */
+    public void removeData(int position) {
+        mList.remove(position);
+        notifyItemRemoved(position);
+    }
+
 
     /**
      * 将动画对象加入集合中  根据左右滑动加入不同
      */
+
     private void addInAnimation(View view, boolean buttom) {
         List<Animator> list = new ArrayList<>();
-        if (buttom) {
+        /*if (buttom) {
             list.add(ObjectAnimator.ofFloat(view,
                     "translationY", -view.getMeasuredHeight() * 2, 0));
         } else {
             list.add(ObjectAnimator.ofFloat(view,
                     "translationY", view.getMeasuredHeight() * 2, 0));
-        }
+        }*/
         list.add(ObjectAnimator.ofFloat(view, "translationY",
                 view.getMeasuredHeight() / 2, 0));
         list.add(ObjectAnimator.ofFloat(view, "alpha", 0f, 1f));

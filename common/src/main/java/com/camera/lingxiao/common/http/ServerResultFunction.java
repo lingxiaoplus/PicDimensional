@@ -1,5 +1,7 @@
 package com.camera.lingxiao.common.http;
 
+import android.util.Log;
+
 import com.camera.lingxiao.common.utills.LogUtils;
 import com.camera.lingxiao.common.exception.ServerException;
 import com.camera.lingxiao.common.http.response.HttpResponse;
@@ -13,10 +15,11 @@ import io.reactivex.functions.Function;
  * 配合map操作符
  */
 public class ServerResultFunction implements Function<HttpResponse,Object> {
+    private final String TAG = ServerResultFunction.class.getSimpleName();
     @Override
     public Object apply(HttpResponse httpResponse) {
         //打印服务器回传结果
-        LogUtils.e(httpResponse.toString());
+        Log.e(TAG,"服务器回传结果: "+httpResponse.toString());
         if (!httpResponse.isSuccess()){
             throw new ServerException(httpResponse.getCode(),httpResponse.getMsg());
         }

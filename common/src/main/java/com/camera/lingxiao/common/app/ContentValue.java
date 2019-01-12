@@ -119,9 +119,10 @@ public class ContentValue {
     /**
      * cosplay.la
      */
-    public static final String COSPLAY_LA_URL = "http://api.cosplay.la/share/GetPhotoList";
+    public static final String COSPLAY_LA_URL = "http://ciyuandao.com:8088/share/GetPhotoList";
 
-    public static final String COSPLAY_LA_DETAIL_URL = "http://api.cosplay.la/share/GetById";
+    //api.cosplay.la
+    public static final String COSPLAY_LA_DETAIL_URL = "http://ciyuandao.com:8088/share/GetById";
     /**
      * cosplay requestcode
      */

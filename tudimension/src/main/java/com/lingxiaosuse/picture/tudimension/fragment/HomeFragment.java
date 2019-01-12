@@ -14,6 +14,7 @@ import android.view.View;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.LogUtils;
+import com.camera.lingxiao.common.widget.RecyclerAnimator;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.SpaceItemDecoration;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
@@ -41,6 +42,7 @@ import butterknife.OnClick;
 public class HomeFragment extends BaseFragment implements HomeView{
 
     private HomeRecyclerAdapter mHomeAdapter;
+    private final String TAG = HomeFragment.class.getSimpleName();
     private List<HomePageModle.slidePic> slideList = new ArrayList<>();
     private List<HomePageModle.Picture> picList = new ArrayList<>();
     private List<HomePageModle.HomeDes> homeDesList = new ArrayList<>();
@@ -56,6 +58,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
     private HomePresenter mPresenter;
     @Override
     protected void initData() {
+        swipeLayout.setRefreshing(true);
         mPresenter = new HomePresenter(this,this);
         picList.clear();
         homeDesList.clear();
@@ -74,7 +77,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
         //设置item之间的间隔
         SpaceItemDecoration space = new SpaceItemDecoration(10);
         recycleView.addItemDecoration(space);
-        swipeLayout.setRefreshing(true);
+
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -98,6 +101,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
         animator.setAddDuration(2000);
         animator.setRemoveDuration(2000);
         recycleView.setItemAnimator(animator);
+
 
         mHomeAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
             @Override
@@ -163,10 +167,10 @@ public class HomeFragment extends BaseFragment implements HomeView{
 
     @Override
     public void onGetHomeResult(HomePageModle modle) {
+        Log.e(TAG, "获取到返回结果了，隐藏swipeLayout");
         if (modle.getWallpaper().size() < 30){
             mHomeAdapter.isFinish(true);
         }
-        //picList.addAll(modle.getWallpaper());
         //首页轮播图
         List<HomePageModle.HomeImg> slidePage = modle.getHomepage();
         for (int i = 0; i < slidePage.size(); i++) {
@@ -179,7 +183,11 @@ public class HomeFragment extends BaseFragment implements HomeView{
                 slideList.add(homeDesList.get(j).value);
             }
         }
-        mHomeAdapter.addData(modle.getWallpaper());
+
+        //mHomeAdapter.addData(modle.getWallpaper());
+        //mHomeAdapter.notifyDataSetChanged();
+        //picList.addAll(modle.getWallpaper());
+        mHomeAdapter.add(modle.getWallpaper());
         //mHomeAdapter.notifyDataSetChanged();
         swipeLayout.setRefreshing(false);
     }
@@ -204,4 +212,6 @@ public class HomeFragment extends BaseFragment implements HomeView{
     public void showToast(String text) {
         ToastUtils.show(text);
     }
+
+
 }

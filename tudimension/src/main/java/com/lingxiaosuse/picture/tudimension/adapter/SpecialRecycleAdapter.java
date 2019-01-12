@@ -28,10 +28,6 @@ import javax.crypto.spec.PSource;
 
 public class SpecialRecycleAdapter extends BaseRecycleAdapter{
     private List<SpecialModle.AlbumBean> mAlbumList;
-    private int footCount = 1;
-    private static final int BODY_TYPE=1;
-    private static final int FOOT_TYPE=2;
-    private boolean isFinish;   //是否加载完成 -- 隐藏布局
     private SimpleDraweeView bodyImage,nameImage;
     private TextView title,message,name,time;
 

@@ -305,7 +305,6 @@ public class ImageLoadingActivity extends BaseActivity {
         ObjectAnimator animator = ObjectAnimator
                 .ofFloat(relativeLayout, "translationY", current, isHiddened ? relativeLayout.getHeight() + 100 : 0);
         ObjectAnimator alpha = ObjectAnimator.ofFloat(relativeLayout, "alpha", isHiddened ? 1.0f:0f, isHiddened ? 0f:1.0f);
-
         AnimatorSet set = new AnimatorSet();
         set.play(animator).with(alpha);
         set.setDuration(500);
