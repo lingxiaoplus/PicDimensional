@@ -24,31 +24,31 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
-    compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
-    compile "com.github.zackratos.ultimatebar:ultimatebar2:$rootProject.ext.ultimatebarVersion"
-    compile "com.android.support:design:$rootProject.ext.supportVersion"
-    compile "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjavaVersion"
-    compile "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxandroidVersion"
-    compile "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
-    compile "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
-    compile "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.rxjavaAdapterVersion"
-    compile "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.interceptorVersion"//拦截器
-    compile "com.youth.banner:banner:$rootProject.ext.bannerVersion"
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
+    implementation "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
+    implementation "com.github.zackratos.ultimatebar:ultimatebar2:$rootProject.ext.ultimatebarVersion"
+    implementation "com.android.support:design:$rootProject.ext.supportVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxandroidVersion"
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.rxjavaAdapterVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.interceptorVersion"//拦截器
+    implementation "com.youth.banner:banner:$rootProject.ext.bannerVersion"
     //implementation "io.reactivex:rxandroid:$rootProject.ext.rxandroidVersion"
 
-    compile "com.trello.rxlifecycle2:rxlifecycle:$rootProject.ext.rxlifescyleVersion"
+    api "com.trello.rxlifecycle2:rxlifecycle:$rootProject.ext.rxlifescyleVersion"
     // If you want to use Android Lifecycle for providers
-    compile "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rootProject.ext.rxlifescyleVersion"
+    api "com.trello.rxlifecycle2:rxlifecycle-android-lifecycle:$rootProject.ext.rxlifescyleVersion"
     // If you want pre-written Activities and Fragments you can subclass as providers
-    compile "com.trello.rxlifecycle2:rxlifecycle-components:$rootProject.ext.rxlifescyleVersion"
+    api "com.trello.rxlifecycle2:rxlifecycle-components:$rootProject.ext.rxlifescyleVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     implementation "pub.devrel:easypermissions:$rootProject.ext.easypermissionsVersion"
     //七牛对象存储
     implementation "com.qiniu:qiniu-android-sdk:$rootProject.ext.qiniuVersion"
-    testCompile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.2', {
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 

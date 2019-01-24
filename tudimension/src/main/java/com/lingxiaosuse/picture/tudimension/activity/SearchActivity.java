@@ -1,5 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -118,6 +120,8 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
             public boolean onQueryTextSubmit(String query) {
                 //隐藏软键盘
                 toggleSoftInput(toolbar,0,false);
+                //cardView.setVisibility(View.GONE);
+                startPropertyAnim(cardView,1f,0f,500);
                 keyword = query;
                 wallPaperList.clear();
                 refreshLayout.setRefreshing(true);
@@ -160,7 +164,8 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
                 public void onClick(View view) {
                     keyword = textViewList.get(finalI).getText().toString();
                     mPresenter.getSearchWallResult(keyword,0);
-                    cardView.setVisibility(View.GONE);
+                    //cardView.setVisibility(View.GONE);
+                    startPropertyAnim(cardView,1f,0f,500);
                     //隐藏软键盘
                     toggleSoftInput(toolbar,0,false);
                 }
@@ -282,6 +287,18 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+
+    // 动画实际执行
+    private void startPropertyAnim(View view,float oldValue,float nowValue,long time) {
+        AnimatorSet set = new AnimatorSet();
+        // 将一个TextView沿垂直方向先从原大小（1f）放大到5倍大小（5f），然后再变回原大小。
+        ObjectAnimator animY = ObjectAnimator.ofFloat(view, "scaleY", oldValue, nowValue);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(view, "scaleX", oldValue, nowValue);
+        set.play(animX).with(animY);
+        set.setDuration(time);
+        set.start();
     }
 
     @Override

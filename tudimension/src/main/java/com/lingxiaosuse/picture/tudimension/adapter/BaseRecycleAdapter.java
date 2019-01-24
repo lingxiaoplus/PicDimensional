@@ -352,6 +352,9 @@ public abstract class BaseRecycleAdapter<Data> extends RecyclerView.Adapter<Base
         animatorSet.start();
     }
 
+    public List<Data> getList() {
+        return mList;
+    }
 
     //GridLayoutManager
     @Override

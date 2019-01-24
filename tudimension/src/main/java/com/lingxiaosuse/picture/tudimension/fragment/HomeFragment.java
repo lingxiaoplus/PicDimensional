@@ -45,7 +45,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
     private final String TAG = HomeFragment.class.getSimpleName();
     private List<HomePageModle.slidePic> slideList = new ArrayList<>();
     private List<HomePageModle.Picture> picList = new ArrayList<>();
-    private List<HomePageModle.HomeDes> homeDesList = new ArrayList<>();
+    //private List<HomePageModle.HomeDes> homeDesList = new ArrayList<>();
     private List<String> picUrlList = new ArrayList<>();//取出图片地址传递给下一个activity
     private List<String> picIdList = new ArrayList<>();//取出图片id传递给下一个activity
     private int skip = 0;
@@ -61,8 +61,6 @@ public class HomeFragment extends BaseFragment implements HomeView{
         swipeLayout.setRefreshing(true);
         mPresenter = new HomePresenter(this,this);
         picList.clear();
-        homeDesList.clear();
-        slideList.clear();
         mPresenter.getHomePageData(ContentValue.limit,0);
     }
 
@@ -82,14 +80,12 @@ public class HomeFragment extends BaseFragment implements HomeView{
             @Override
             public void onRefresh() {
                 picList.clear();
-                homeDesList.clear();
-                slideList.clear();
-                mPresenter.getHomePageData(ContentValue.limit,0);
+                skip = 0;
+                mPresenter.getHomePageData(ContentValue.limit,skip);
             }
         });
         setSwipeColor(swipeLayout);
         mHomeAdapter = new HomeRecyclerAdapter(picList,slideList,1,1);
-
 
         // 错列网格布局
         recycleView.setHasFixedSize(true);      //设置固定大小
@@ -98,8 +94,8 @@ public class HomeFragment extends BaseFragment implements HomeView{
         recycleView.setAdapter(mHomeAdapter);
 
         RecyclerViewAnimator animator = new RecyclerViewAnimator();
-        animator.setAddDuration(2000);
-        animator.setRemoveDuration(2000);
+        animator.setAddDuration(1000);
+        animator.setRemoveDuration(1000);
         recycleView.setItemAnimator(animator);
 
 
@@ -116,6 +112,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
                 if (null == picUrlList){
                     return;
                 }
+                List<HomePageModle.Picture> picList = mHomeAdapter.getList();
                 picUrlList.clear();
                 picIdList.clear();
                 for (int i = 0; i < picList.size(); i++) {
@@ -146,6 +143,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
         mHomeAdapter.setOnBannerClickListener(new HomeRecyclerAdapter.OnBannerClickListener() {
             @Override
             public void onBannerClick(int position) {
+                List<HomePageModle.slidePic> slideList = mHomeAdapter.getSlideList();
                 Intent intent = new Intent(UIUtils.getContext(),
                         BannerDetailActivity.class);
                 intent.putExtra("url",slideList.get(position).lcover);
@@ -173,22 +171,27 @@ public class HomeFragment extends BaseFragment implements HomeView{
         }
         //首页轮播图
         List<HomePageModle.HomeImg> slidePage = modle.getHomepage();
-        for (int i = 0; i < slidePage.size(); i++) {
+        slideList.clear();
+        List<HomePageModle.HomeDes> homeDesList = new ArrayList<>();
+        for (int i = 0; i < modle.getHomepage().size(); i++) {
+            //循环遍历该集合，取出首页轮播图
             homeDesList.addAll(slidePage.get(i).items);
         }
-        //循环遍历该集合，取出首页轮播图
         for (int j = 0; j < homeDesList.size(); j++) {
-            if (homeDesList.get(j).isStatus()&&!TextUtils.isEmpty(homeDesList.get(j).value.cover)){
+            if (homeDesList.get(j).isStatus() && !TextUtils.isEmpty(homeDesList.get(j).value.cover)){
                 //做一个判断是否是轮播图，如果是，在建一个集合专门放图
                 slideList.add(homeDesList.get(j).value);
             }
         }
-
         //mHomeAdapter.addData(modle.getWallpaper());
         //mHomeAdapter.notifyDataSetChanged();
         //picList.addAll(modle.getWallpaper());
-        mHomeAdapter.add(modle.getWallpaper());
-        //mHomeAdapter.notifyDataSetChanged();
+        if (skip == 0){
+            mHomeAdapter.setSlideList(slideList);
+            mHomeAdapter.onRefresh(modle.getWallpaper());
+        }else {
+            mHomeAdapter.add(modle.getWallpaper());
+        }
         swipeLayout.setRefreshing(false);
     }
 

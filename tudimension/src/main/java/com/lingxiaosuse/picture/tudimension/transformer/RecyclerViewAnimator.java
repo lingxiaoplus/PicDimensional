@@ -350,6 +350,12 @@ public class RecyclerViewAnimator extends SimpleItemAnimator {
                         view.setAlpha(1);
                         view.setTranslationX(0);
                         view.setTranslationY(0);
+
+
+                        //加入
+                        view.setScaleX(1f);
+                        view.setScaleY(1f);
+
                         dispatchChangeFinished(changeInfo.oldHolder, true);
                         mChangeAnimations.remove(changeInfo.oldHolder);
                         dispatchFinishedWhenDone();
@@ -371,6 +377,7 @@ public class RecyclerViewAnimator extends SimpleItemAnimator {
                         newView.setAlpha(1);
                         newView.setTranslationX(0);
                         newView.setTranslationY(0);
+
                         dispatchChangeFinished(changeInfo.newHolder, false);
                         mChangeAnimations.remove(changeInfo.newHolder);
                         dispatchFinishedWhenDone();
