@@ -120,7 +120,7 @@ public class WaveLoading extends View{
         drawCenterText(canvas,textPaint,mText);
         //上层的字
         textPaint.setColor(Color.WHITE);
-        canvas.save(Canvas.CLIP_SAVE_FLAG);
+        //canvas.save(Canvas.CLIP_SAVE_FLAG);
         //裁剪成圆形
         Path o = new Path();
         o.addCircle(mWidth/2,mHeight/2,mWidth/2, Path.Direction.CCW);

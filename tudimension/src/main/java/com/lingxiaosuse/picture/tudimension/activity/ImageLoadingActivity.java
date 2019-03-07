@@ -161,6 +161,12 @@ public class ImageLoadingActivity extends BaseActivity {
                 showDialog();
             }
         });
+        mAdapter.setTouchListener(new ImageLoadAdapter.onItemTouchListener() {
+            @Override
+            public void onTouch(float x, float y, float destence) {
+
+            }
+        });
 
         bindDownloadService();
     }

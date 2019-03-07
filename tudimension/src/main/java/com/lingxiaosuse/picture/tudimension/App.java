@@ -9,10 +9,6 @@ import android.os.Handler;
 import android.support.multidex.MultiDex;
 
 import com.camera.lingxiao.common.utills.LogUtils;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.lingxiao.skinlibrary.SkinLib;
-import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.service.InitIalizeService;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;

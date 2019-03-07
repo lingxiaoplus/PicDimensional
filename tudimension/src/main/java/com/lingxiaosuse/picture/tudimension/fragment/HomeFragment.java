@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -15,6 +16,7 @@ import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.LogUtils;
 import com.camera.lingxiao.common.widget.RecyclerAnimator;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.SpaceItemDecoration;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
@@ -43,11 +45,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
 
     private HomeRecyclerAdapter mHomeAdapter;
     private final String TAG = HomeFragment.class.getSimpleName();
-    private List<HomePageModle.slidePic> slideList = new ArrayList<>();
-    private List<HomePageModle.Picture> picList = new ArrayList<>();
-    //private List<HomePageModle.HomeDes> homeDesList = new ArrayList<>();
-    private List<String> picUrlList = new ArrayList<>();//取出图片地址传递给下一个activity
-    private List<String> picIdList = new ArrayList<>();//取出图片id传递给下一个activity
+    private List<HomePageModle> homeList = new ArrayList<>();
     private int skip = 0;
     @BindView(R.id.rv_main)
     RecyclerView recycleView;
@@ -60,7 +58,6 @@ public class HomeFragment extends BaseFragment implements HomeView{
     protected void initData() {
         swipeLayout.setRefreshing(true);
         mPresenter = new HomePresenter(this,this);
-        picList.clear();
         mPresenter.getHomePageData(ContentValue.limit,0);
     }
 
@@ -79,46 +76,35 @@ public class HomeFragment extends BaseFragment implements HomeView{
         swipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                picList.clear();
                 skip = 0;
                 mPresenter.getHomePageData(ContentValue.limit,skip);
             }
         });
         setSwipeColor(swipeLayout);
-        mHomeAdapter = new HomeRecyclerAdapter(picList,slideList,1,1);
-
+        mHomeAdapter = new HomeRecyclerAdapter(R.layout.list_page,homeList);
+        mHomeAdapter.addHeaderView(View.inflate(getContext(),R.layout.item_head,null));
         // 错列网格布局
         recycleView.setHasFixedSize(true);      //设置固定大小
         recycleView.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
         recycleView.setAdapter(mHomeAdapter);
 
-        RecyclerViewAnimator animator = new RecyclerViewAnimator();
-        animator.setAddDuration(1000);
-        animator.setRemoveDuration(1000);
-        recycleView.setItemAnimator(animator);
-
-
-        mHomeAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
+        mHomeAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
-            public void onLoadMore() {
+            public void onLoadMoreRequested() {
                 skip+=30;
                 mPresenter.getHomePageData(ContentValue.limit,skip);
             }
         });
-        mHomeAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
+        mHomeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
-            public void onItemClick(View View, int position) {
-                if (null == picUrlList){
-                    return;
-                }
-                List<HomePageModle.Picture> picList = mHomeAdapter.getList();
-                picUrlList.clear();
-                picIdList.clear();
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                List<String> picUrlList = new ArrayList<>();//取出图片地址传递给下一个activity
+                List<String> picIdList = new ArrayList<>();//取出图片id传递给下一个activity
+                HomePageModle homeModle = (HomePageModle) adapter.getData().get(position);
+                List<HomePageModle.Picture> picList = homeModle.getWallpaper();
                 for (int i = 0; i < picList.size(); i++) {
-                    if (picUrlList != null){
-                        picUrlList.add(picList.get(i).img);
-                    }
+                    picUrlList.add(picList.get(i).img);
                     picIdList.add(picList.get(i).id);
                 }
                 Intent intent = new Intent(UIUtils.getContext(),
@@ -131,12 +117,11 @@ public class HomeFragment extends BaseFragment implements HomeView{
                 Log.i("图片浏览详情页", "传过去的数组大小picUrlList：" +
                         ""+picUrlList.size()
                         +"实际大小"+picList.size());
-                startActivity(intent);
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
+                /*Bundle bundle = ActivityOptionsCompat
+                        .makeSceneTransitionAnimation(getActivity(),view,"image").toBundle();*/
+                Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view,
+                        view.getWidth() / 2, view.getHeight() / 2, 0, 0).toBundle();
+                startActivity(intent,bundle);
             }
         });
 
@@ -167,31 +152,9 @@ public class HomeFragment extends BaseFragment implements HomeView{
     public void onGetHomeResult(HomePageModle modle) {
         Log.e(TAG, "获取到返回结果了，隐藏swipeLayout");
         if (modle.getWallpaper().size() < 30){
-            mHomeAdapter.isFinish(true);
+            mHomeAdapter.loadMoreEnd();
         }
-        //首页轮播图
-        List<HomePageModle.HomeImg> slidePage = modle.getHomepage();
-        slideList.clear();
-        List<HomePageModle.HomeDes> homeDesList = new ArrayList<>();
-        for (int i = 0; i < modle.getHomepage().size(); i++) {
-            //循环遍历该集合，取出首页轮播图
-            homeDesList.addAll(slidePage.get(i).items);
-        }
-        for (int j = 0; j < homeDesList.size(); j++) {
-            if (homeDesList.get(j).isStatus() && !TextUtils.isEmpty(homeDesList.get(j).value.cover)){
-                //做一个判断是否是轮播图，如果是，在建一个集合专门放图
-                slideList.add(homeDesList.get(j).value);
-            }
-        }
-        //mHomeAdapter.addData(modle.getWallpaper());
-        //mHomeAdapter.notifyDataSetChanged();
-        //picList.addAll(modle.getWallpaper());
-        if (skip == 0){
-            mHomeAdapter.setSlideList(slideList);
-            mHomeAdapter.onRefresh(modle.getWallpaper());
-        }else {
-            mHomeAdapter.add(modle.getWallpaper());
-        }
+        mHomeAdapter.addData(modle);
         swipeLayout.setRefreshing(false);
     }
 

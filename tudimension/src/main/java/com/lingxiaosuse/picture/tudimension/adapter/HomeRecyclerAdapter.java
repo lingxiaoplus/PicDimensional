@@ -2,13 +2,18 @@ package com.lingxiaosuse.picture.tudimension.adapter;
 
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.ContentValue;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -25,33 +30,34 @@ import com.youth.banner.listener.OnBannerListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.Inflater;
 
-public class HomeRecyclerAdapter extends BaseRecycleAdapter{
+public class HomeRecyclerAdapter extends BaseQuickAdapter<HomePageModle, BaseViewHolder> {
     private static final String TAG = HomeRecyclerAdapter.class.getSimpleName();
-    private List<HomePageModle.slidePic> mSlideList;
-    public HomeRecyclerAdapter(List list, List slideList,int headCount, int footCount) {
-        super(list, headCount, footCount);
-        this.mSlideList = slideList;
+    List<HomePageModle.slidePic> mSlideList;
+    public HomeRecyclerAdapter(int layoutResId, @Nullable List<HomePageModle> data) {
+        super(layoutResId, data);
     }
 
-    @Override
-    protected void bindHeaderData(BaseViewHolder holder, int position, List mList) {
-        super.bindHeaderData(holder, position, mList);
-        Banner banner = (Banner) holder.getView(R.id.banner_head);
+    protected void bindHeaderData(BaseViewHolder holder, List mList) {
+        List<HomePageModle.slidePic> slideList = mList;
+        this.mSlideList = mList;
+        View view = getHeaderLayout();
+        Banner banner = view.findViewById(R.id.banner_head);
         // 获取cardview的布局属性，记住这里要是布局的最外层的控件的布局属性，如果是里层的会报cast错误
-        StaggeredGridLayoutManager
+        /*StaggeredGridLayoutManager
                 .LayoutParams clp
                 = (StaggeredGridLayoutManager.LayoutParams) holder
                 .getView(R.id.ll_head).getLayoutParams();
         // 最最关键一步，设置当前view占满列数，这样就可以占据两列实现头部了
-        clp.setFullSpan(true);
+        clp.setFullSpan(true);*/
 
-        if (mSlideList.size() > 0){
+        if (slideList.size() > 0){
             List<String> urlList = new ArrayList<String>();
             List<String> titleList = new ArrayList<String>();
-            for (int i = 0; i < mSlideList.size(); i++) {
-                urlList.add(mSlideList.get(i).lcover);
-                titleList.add(mSlideList.get(i).desc);
+            for (int i = 0; i < slideList.size(); i++) {
+                urlList.add(slideList.get(i).lcover);
+                titleList.add(slideList.get(i).desc);
             }
             //设置图片加载器
             banner.setImageLoader(new GlideImageLoader())
@@ -74,9 +80,9 @@ public class HomeRecyclerAdapter extends BaseRecycleAdapter{
         }
 
     }
-    @Override
-    public void bindData(BaseViewHolder holder, int position, List mList) {
+    public void bindData(BaseViewHolder holder, List mList) {
         List<HomePageModle.Picture> picList = mList;
+        int position = holder.getAdapterPosition();
         SimpleDraweeView imageview = (SimpleDraweeView) holder.getView(R.id.iv_home_image);
         TextView textView = (TextView) holder.getView(R.id.tv_home_des);
         final Uri uri = Uri.parse(picList.get(position).img + ContentValue.imgRule);
@@ -89,26 +95,37 @@ public class HomeRecyclerAdapter extends BaseRecycleAdapter{
                 .setOldController(imageview.getController())
                 .build();
         imageview.setController(controller);
-        //((ViewHolder) viewHolder).imageview.setImageURI(uri);
         if (picList.get(position).desc.isEmpty()){
             textView.setVisibility(View.GONE);
         }else {
-           textView.setVisibility(View.VISIBLE);
+            textView.setVisibility(View.VISIBLE);
             textView.setText(picList.get(position).desc);
         }
     }
 
-    @Override
-    public int getLayoutId() {
-        return R.layout.list_page;
-    }
-
-    @Override
-    public int getHeadLayoutId() {
-        return R.layout.item_head;
-    }
-
     private OnBannerClickListener mOnBannerClickListener = null;
+
+    @Override
+    protected void convert(BaseViewHolder helper, HomePageModle modle) {
+        bindData(helper,modle.getWallpaper());
+        if (mSlideList == null){
+            //首页轮播图
+            List<HomePageModle.slidePic> slideList = new ArrayList<>();
+            List<HomePageModle.HomeDes> homeDesList = new ArrayList<>();
+            for (int i = 0; i < modle.getHomepage().size(); i++) {
+                //循环遍历该集合，取出首页轮播图
+                homeDesList.addAll(modle.getHomepage().get(i).items);
+            }
+            for (int j = 0; j < homeDesList.size(); j++) {
+                if (homeDesList.get(j).isStatus() && !TextUtils.isEmpty(homeDesList.get(j).value.cover)){
+                    //做一个判断是否是轮播图，因为这个数据里有广告，需要去除  如果是，在建一个集合专门放图
+                    slideList.add(homeDesList.get(j).value);
+                }
+            }
+            bindHeaderData(helper,slideList);
+        }
+    }
+
     //设置banner的点击事件
     public interface OnBannerClickListener {
         void onBannerClick(int position);
@@ -117,11 +134,8 @@ public class HomeRecyclerAdapter extends BaseRecycleAdapter{
         this.mOnBannerClickListener = mOnBannerClickListener;
     }
 
-    public void setSlideList(List<HomePageModle.slidePic> mSlideList) {
-        this.mSlideList = mSlideList;
-    }
 
-    public List<HomePageModle.slidePic> getSlideList() {
+    public List<HomePageModle.slidePic> getSlideList(){
         return mSlideList;
     }
 }

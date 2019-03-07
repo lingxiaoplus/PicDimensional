@@ -205,3 +205,12 @@ public static ** valueOf(java.lang.String);
 #防止inline
 -dontoptimize
 -dontwarn com.alibaba.sdk.android.utils.**
+
+-keep class com.chad.library.adapter.** {
+*;
+}
+-keep public class * extends com.chad.library.adapter.base.BaseQuickAdapter
+-keep public class * extends com.chad.library.adapter.base.BaseViewHolder
+-keepclassmembers  class **$** extends com.chad.library.adapter.base.BaseViewHolder {
+     <init>(...);
+}

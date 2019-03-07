@@ -13,6 +13,7 @@
         fresco:progressBarImageScaleType="centerInside"
         fresco:progressBarAutoRotateInterval="2000"
         fresco:progressBarImage="@drawable/ic_loading_default"
-        fresco:fadeDuration="500"/>
+        fresco:fadeDuration="500"
+        android:transitionName="image"/>
 
 </LinearLayout>

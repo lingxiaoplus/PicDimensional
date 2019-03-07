@@ -6,6 +6,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -83,13 +84,14 @@ public class ImageLoadAdapter extends PagerAdapter{
         try {
             view = UIUtils.inflate(R.layout.pager_load_hot);
             image = view.findViewById(R.id.simple_pager_load_hot);
-            Uri uri = Uri.parse(urlList.get(position)+imgRule);
-            Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
+            Uri uri = Uri.parse(urlList.get(position) + imgRule);
+            Log.i("code", "instantiateItem: 图片的地址" + urlList.get(position));
             setControll(uri,image);
             image.setPhotoUri(uri);
             container.addView(view);
             setOnclick(image);
             setOnLongClick(image);
+            setOnTouchListener(image);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -154,6 +156,14 @@ public class ImageLoadAdapter extends PagerAdapter{
     public interface onItemLongClickListener{
         void onLongClick();
     }
+
+    public onItemTouchListener touchListener;
+    public void setTouchListener(onItemTouchListener listener){
+        this.touchListener = listener;
+    }
+    public interface onItemTouchListener{
+        void onTouch(float x,float y,float destence);
+    }
     private void setOnclick(PhotoDraweeView view){
        /* view.setOnClickListener(new ZoomableDrawwView.OnClickListener() {
             @Override
@@ -171,6 +181,40 @@ public class ImageLoadAdapter extends PagerAdapter{
                 }
             }
         });
+    }
+    private void setOnTouchListener(PhotoDraweeView view){
+
+        /*view.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                float startY = 0f;
+                float destence = 0f;
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        startY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        destence = event.getY() - startY;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (event.getY() - startY > 0f){
+                            //下拉的
+                            if (touchListener != null){
+                                touchListener.onTouch(event.getX(),event.getY(),destence);
+                                return true;
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                if (listener != null){
+                    listener.onClick();
+                }
+                return false;
+            }
+        });*/
+
     }
     private void setOnLongClick(PhotoDraweeView view){
         /*view.setOnLongClickListener(new ZoomableDrawwView.OnLongClickListener() {

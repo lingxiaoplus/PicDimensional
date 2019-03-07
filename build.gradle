@@ -19,6 +19,11 @@ buildscript {
 }
 
 allprojects {
+    /*gradle.projectsEvaluated {
+        tasks.withType(JavaCompile) {
+            options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+        }
+    }*/
     repositories {
         jcenter()
         maven { url 'https://jitpack.io' }
@@ -40,10 +45,10 @@ ext{
     //版本号相关
     versionCode = 14
     versionName = '2.0.4'
-    minSdkVersion = 19
-    targetSdkVersion = 26
-    compileSdkVersion = 26
-    buildToolsVersion = "26.0.0"
+    minSdkVersion = 21
+    targetSdkVersion = 28
+    compileSdkVersion = 28
+    buildToolsVersion = "28.0.0"
     //依赖库相关
     supportVersion = '27.1.1'
     butterknifeVersion = '8.7.0'
@@ -54,12 +59,12 @@ ext{
     gsonVersion = "2.7"
     frescoVersion = "0.12.0"
     retrofitVersion = "2.1.0"
-    bannerVersion = "1.4.9"
-    rxandroidVersion = "2.0.2"
+    bannerVersion = "1.4.10"
+    rxandroidVersion = "2.0.1"
     rxjavaVersion = "2.1.1"
     rxjavaAdapterVersion = "2.3.0"
     rxlifescyleVersion = "2.2.1"
-    photoViewVersion = "2.1.4"
+    photoViewVersion = "2.3.0"
     //拦截器
     interceptorVersion = "3.10.0"
     easypermissionsVersion = "1.2.0"
@@ -70,4 +75,6 @@ ext{
     hotfixVersion = "3.2.3"
     leancloudVersion = "v4.7.3"
     qiniuVersion = "7.3.4"
+    BaseRecyclerHelperVersion = "2.9.30"
 }
+

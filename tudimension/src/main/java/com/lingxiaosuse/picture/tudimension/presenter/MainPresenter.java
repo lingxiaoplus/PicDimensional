@@ -63,18 +63,23 @@ public class MainPresenter extends BasePresenter<MainView,MainActivity>{
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-                String result = response.body().string();
-                Gson gson = new Gson();
-                final HitokotoModle hotModle =
-                        gson.fromJson(result,HitokotoModle.class);
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (getView() != null){
-                            getView().onGetHeadText(hotModle.getHitokoto());
+                try {
+                    String result = response.body().string();
+                    Gson gson = new Gson();
+                    final HitokotoModle hotModle =
+                            gson.fromJson(result,HitokotoModle.class);
+                    UIUtils.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (getView() != null){
+                                getView().onGetHeadText(hotModle.getHitokoto());
+                            }
                         }
-                    }
-                });
+                    });
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
             }
         });
     }
