@@ -1,13 +1,15 @@
 package com.lingxiaosuse.picture.tudimension.adapter;
 
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
-import com.lingxiaosuse.picture.tudimension.modle.CategoryVerticalModle;
 
 import java.util.List;
 
@@ -15,52 +17,39 @@ import java.util.List;
  * Created by lingxiao on 2017/8/28.
  */
 
-public class CategoryAdapter extends BaseRecycleAdapter{
+public class CategoryAdapter extends BaseQuickAdapter<CategoryModle.CategoryBean,BaseViewHolder> {
 
     private SimpleDraweeView pic;
     private TextView textView;
     private List<CategoryModle.CategoryBean> mCateList;
-    private List<CategoryVerticalModle.CategoryBean> mVerticalList;
     private boolean isVertical = false; //判断是否为手机壁纸
 
-    public CategoryAdapter(List list,int headCont,int footCount,boolean isVertical){
-        super(list,headCont,footCount);
+    public CategoryAdapter(int layoutResId, @Nullable List<CategoryModle.CategoryBean> data,boolean isVertical) {
+        super(layoutResId, data);
         this.isVertical = isVertical;
     }
+
     @Override
-    public void bindData(BaseViewHolder holder, int position, List mList) {
+    protected void convert(BaseViewHolder holder, CategoryModle.CategoryBean item) {
         pic = (SimpleDraweeView) holder.getView(R.id.pic_grid_item);
         textView = (TextView) holder.getView(R.id.tv_grid_item);
 
         if (isVertical){
-            mVerticalList = mList;
-            if (mVerticalList.get(position).getCover()!=null){
-                Uri uri = Uri.parse(mVerticalList.get(position).getCover());
+            if (item.getCover()!=null){
+                Uri uri = Uri.parse(item.getCover());
                 pic.setImageURI(uri);
             }
-            if (mVerticalList.get(position).getName()!=null){
-                textView.setText(mVerticalList.get(position).getName());
+            if (item.getName()!=null){
+                textView.setText(item.getName());
             }
         }else {
-            mCateList = mList;
-            if (mCateList.get(position).getCover()!=null){
-                Uri uri = Uri.parse(mCateList.get(position).getCover());
+            if (item.getCover()!=null){
+                Uri uri = Uri.parse(item.getCover());
                 pic.setImageURI(uri);
             }
-            if (mCateList.get(position).getName()!=null){
-                textView.setText(mCateList.get(position).getName());
+            if (item.getName()!=null){
+                textView.setText(item.getName());
             }
         }
-
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.category_item;
-    }
-
-    @Override
-    public int getHeadLayoutId() {
-        return 0;
     }
 }

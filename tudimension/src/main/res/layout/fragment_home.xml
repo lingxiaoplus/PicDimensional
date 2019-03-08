@@ -6,17 +6,29 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/sl_main"
+    <com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout
+        android:id="@+id/home_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        app:srlPrimaryColor="@color/colorPrimary"
+        app:srlAccentColor="@color/whiteNor"
+        app:srlEnablePreviewInEditMode="true"
+        >
+        <com.scwang.smartrefresh.header.BezierCircleHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+
+        <com.scwang.smartrefresh.layout.footer.BallPulseFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout>
 
     <com.lingxiaosuse.picture.tudimension.widget.WaveLoading
         android:id="@+id/pb_main"

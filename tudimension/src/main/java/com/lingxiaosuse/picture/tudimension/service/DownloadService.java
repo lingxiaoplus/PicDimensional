@@ -6,6 +6,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -77,7 +78,24 @@ public class DownloadService extends Service {
     public void onCreate() {
         super.onCreate();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(1,new Notification());
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                String CHANNEL_ONE_ID = this.getPackageName();
+                NotificationChannel channel = new NotificationChannel(CHANNEL_ONE_ID, "xxx", NotificationManager.IMPORTANCE_LOW);
+                NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                if (manager == null)
+                    return;
+                manager.createNotificationChannel(channel);
+                Notification notification = new NotificationCompat.Builder(this, CHANNEL_ONE_ID)
+                        .setChannelId(CHANNEL_ONE_ID)
+                        .setAutoCancel(true)
+                        .setCategory(Notification.CATEGORY_SERVICE)
+                        .setOngoing(true)
+                        .setPriority(NotificationManager.IMPORTANCE_LOW)
+                        .build();
+                startForeground(101, notification);
+                //startForeground(1,new Notification());
+            }
         }
 
     }

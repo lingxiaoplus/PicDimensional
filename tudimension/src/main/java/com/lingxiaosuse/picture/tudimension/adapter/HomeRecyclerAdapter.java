@@ -32,10 +32,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.Inflater;
 
-public class HomeRecyclerAdapter extends BaseQuickAdapter<HomePageModle, BaseViewHolder> {
+public class HomeRecyclerAdapter extends BaseQuickAdapter<HomePageModle.Picture, BaseViewHolder> {
     private static final String TAG = HomeRecyclerAdapter.class.getSimpleName();
     List<HomePageModle.slidePic> mSlideList;
-    public HomeRecyclerAdapter(int layoutResId, @Nullable List<HomePageModle> data) {
+    public HomeRecyclerAdapter(int layoutResId, @Nullable List<HomePageModle.Picture> data) {
         super(layoutResId, data);
     }
 
@@ -80,12 +80,10 @@ public class HomeRecyclerAdapter extends BaseQuickAdapter<HomePageModle, BaseVie
         }
 
     }
-    public void bindData(BaseViewHolder holder, List mList) {
-        List<HomePageModle.Picture> picList = mList;
-        int position = holder.getAdapterPosition();
+    public void bindData(BaseViewHolder holder, HomePageModle.Picture modle) {
         SimpleDraweeView imageview = (SimpleDraweeView) holder.getView(R.id.iv_home_image);
         TextView textView = (TextView) holder.getView(R.id.tv_home_des);
-        final Uri uri = Uri.parse(picList.get(position).img + ContentValue.imgRule);
+        final Uri uri = Uri.parse(modle.img + ContentValue.imgRule);
         //如果本地JPEG图，有EXIF的缩略图，image pipeline 可以立刻返回它作为一个缩略图
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setLocalThumbnailPreviewsEnabled(true)
@@ -95,20 +93,20 @@ public class HomeRecyclerAdapter extends BaseQuickAdapter<HomePageModle, BaseVie
                 .setOldController(imageview.getController())
                 .build();
         imageview.setController(controller);
-        if (picList.get(position).desc.isEmpty()){
+        if (modle.desc.isEmpty()){
             textView.setVisibility(View.GONE);
         }else {
             textView.setVisibility(View.VISIBLE);
-            textView.setText(picList.get(position).desc);
+            textView.setText(modle.desc);
         }
     }
 
     private OnBannerClickListener mOnBannerClickListener = null;
 
     @Override
-    protected void convert(BaseViewHolder helper, HomePageModle modle) {
-        bindData(helper,modle.getWallpaper());
-        if (mSlideList == null){
+    protected void convert(BaseViewHolder helper, HomePageModle.Picture modle) {
+        bindData(helper,modle);
+        /*if (mSlideList == null){
             //首页轮播图
             List<HomePageModle.slidePic> slideList = new ArrayList<>();
             List<HomePageModle.HomeDes> homeDesList = new ArrayList<>();
@@ -123,7 +121,7 @@ public class HomeRecyclerAdapter extends BaseQuickAdapter<HomePageModle, BaseVie
                 }
             }
             bindHeaderData(helper,slideList);
-        }
+        }*/
     }
 
     //设置banner的点击事件

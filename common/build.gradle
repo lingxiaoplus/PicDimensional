@@ -34,10 +34,10 @@ dependencies {
     implementation "com.android.support:design:$rootProject.ext.supportVersion"
     implementation "io.reactivex.rxjava2:rxjava:$rootProject.ext.rxjavaVersion"
     implementation "io.reactivex.rxjava2:rxandroid:$rootProject.ext.rxandroidVersion"
-    implementation "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
-    implementation "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.rxjavaAdapterVersion"
-    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.interceptorVersion"//拦截器
+    api "com.squareup.retrofit2:retrofit:$rootProject.ext.retrofitVersion"
+    api "com.squareup.retrofit2:converter-gson:$rootProject.ext.retrofitVersion"
+    api "com.squareup.retrofit2:adapter-rxjava2:$rootProject.ext.rxjavaAdapterVersion"
+    api "com.squareup.okhttp3:logging-interceptor:$rootProject.ext.interceptorVersion"//拦截器
     implementation "com.youth.banner:banner:$rootProject.ext.bannerVersion"
     //implementation "io.reactivex:rxandroid:$rootProject.ext.rxandroidVersion"
 

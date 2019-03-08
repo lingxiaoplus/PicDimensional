@@ -2,17 +2,24 @@ package com.lingxiaosuse.picture.tudimension.service;
 
 import android.app.IntentService;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.App;
+import com.lingxiaosuse.picture.tudimension.R;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.Map;
+
+import androidx.annotation.RequiresApi;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -34,8 +41,31 @@ public class InitIalizeService extends IntentService {
     public void onCreate() {
         super.onCreate();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(1,new Notification());
+            //startForeground(1,new Notification());
+            startMyOwnForeground();
         }
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void startMyOwnForeground(){
+        String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
+        String channelName = "My Background Service";
+        NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
+        chan.setLightColor(Color.BLUE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        assert manager != null;
+        manager.createNotificationChannel(chan);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
+        Notification notification = notificationBuilder.setOngoing(true)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("App is running in background")
+                .setPriority(NotificationManager.IMPORTANCE_MIN)
+                .setCategory(Notification.CATEGORY_SERVICE)
+                .build();
+        startForeground(2, notification);
     }
 
     public static void startInit(Context context) {
@@ -67,18 +97,18 @@ public class InitIalizeService extends IntentService {
         //初始化dbflow
         FlowManager.init(mContext);
         //bugly初始化 建议在测试阶段建议设置成true，发布时设置为false。
-        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
+        /*CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
         strategy.setCrashHandleCallback(new CrashReport.CrashHandleCallback(){
             @Override
             public synchronized Map<String, String> onCrashHandleStart(int crashType, String errorType, String errorMessage, String errorStack) {
-                /*Intent intent  =new Intent(getApplicationContext(), CrashActivity.class);
+                *//*Intent intent  =new Intent(getApplicationContext(), CrashActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("msg",errorStack);
-                startActivity(intent);*/
+                startActivity(intent);*//*
                 return super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack);
             }
         });
-        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", true,strategy);
+        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", true,strategy);*/
         SkinLib.init((App) mContext);
     }
 

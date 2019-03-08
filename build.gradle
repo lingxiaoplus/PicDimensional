@@ -2,9 +2,9 @@
 
 buildscript {
     repositories {
+        google()
         jcenter()
         maven { url "https://www.jitpack.io" }
-        google()
         //这里是 LeanCloud 的包仓库
         maven {
             url "http://mvn.leancloud.cn/nexus/content/repositories/public"
@@ -25,8 +25,9 @@ allprojects {
         }
     }*/
     repositories {
+        google()
         jcenter()
-        maven { url 'https://jitpack.io' }
+        maven { url 'https://www.jitpack.io' }
         maven {
             url "http://maven.aliyun.com/nexus/content/repositories/releases"
         }
@@ -34,7 +35,7 @@ allprojects {
         maven {
             url "http://mvn.leancloud.cn/nexus/content/repositories/public"
         }
-        google()
+
     }
 }
 

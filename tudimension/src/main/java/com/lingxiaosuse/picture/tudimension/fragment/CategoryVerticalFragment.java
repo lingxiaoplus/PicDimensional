@@ -1,5 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -8,16 +10,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.camera.lingxiao.common.app.BaseFragment;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.BannerDetailActivity;
 import com.lingxiaosuse.picture.tudimension.activity.CategoryDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.CategoryAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
-import com.lingxiaosuse.picture.tudimension.modle.CategoryVerticalModle;
 import com.lingxiaosuse.picture.tudimension.presenter.CategoryPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.CategoryView;
+import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +39,11 @@ public class CategoryVerticalFragment extends BaseFragment implements CategoryVi
     @BindView(R.id.rv_category)
     RecyclerView recyclerView;
     @BindView(R.id.swip_category)
-    SwipeRefreshLayout refreshLayout;
+    SmartSkinRefreshLayout refreshLayout;
 
     private CategoryAdapter mCateAdapter;
     private GridLayoutManager mLayoutManager;
-    private List<CategoryVerticalModle.CategoryBean> categoryList = new ArrayList<>();
+    private List<CategoryModle.CategoryBean> categoryList = new ArrayList<>();
     private CategoryPresenter mCategoryPresenter;
 
     @Override
@@ -57,51 +60,40 @@ public class CategoryVerticalFragment extends BaseFragment implements CategoryVi
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        setSwipeColor(refreshLayout);
-        refreshLayout.setRefreshing(true);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                categoryList.clear();
-                mCategoryPresenter.getCategoryVertical();
-            }
+        refreshLayout.autoRefresh();
+        refreshLayout.setOnRefreshListener((refreshLayout)->{
+            categoryList.clear();
+            mCategoryPresenter.getCategoryVertical();
         });
 
-        mCateAdapter = new CategoryAdapter(categoryList,0,0,true);
+        mCateAdapter = new CategoryAdapter(R.layout.category_item,categoryList,true);
         recyclerView.setAdapter(mCateAdapter);
         mLayoutManager = new GridLayoutManager(getActivity(),2,
                 LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(mLayoutManager);
-        mCateAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View View, int position) {
-                Intent intent = new Intent(UIUtils.getContext(),
-                        CategoryDetailActivity.class);
-                intent.putExtra("url",categoryList.get(position).getCover());
-                intent.putExtra("desc",categoryList.get(position).getName());
-                intent.putExtra("id",categoryList.get(position).getId());
-                intent.putExtra("title",categoryList.get(position).getName());
-                intent.putExtra("type","category");  //说明类型是轮播图
-                startActivity(intent);
-            }
 
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
+        mCateAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Intent intent = new Intent(UIUtils.getContext(),
+                    CategoryDetailActivity.class);
+            intent.putExtra("url",categoryList.get(position).getCover());
+            intent.putExtra("desc",categoryList.get(position).getName());
+            intent.putExtra("id",categoryList.get(position).getId());
+            intent.putExtra("title",categoryList.get(position).getName());
+            intent.putExtra("type","category");  //说明类型是轮播图
+            startActivity(intent);
         });
-    }
+        mCateAdapter.setDuration(800);
+        mCateAdapter.openLoadAnimation(view -> new Animator[]{
+                ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
+        });
 
-    @Override
-    public void onGetCategoryVerticalResult(CategoryVerticalModle modle) {
-        categoryList.addAll(modle.getCategory());
-        mCateAdapter.notifyDataSetChanged();
-        refreshLayout.setRefreshing(false);
     }
 
     @Override
     public void onGetCategoryResult(CategoryModle modle) {
-
+        mCateAdapter.addData(modle.getCategory());
+        refreshLayout.finishRefresh();
     }
 
     @Override

@@ -31,6 +31,9 @@ android {
         exclude 'META-INF/rxjava.properties'
 
     }
+    /*dexOptions {
+        incremental true
+    }*/
     /*lintOptions {
         checkReleaseBuilds false
         abortOnError false
@@ -44,6 +47,14 @@ android {
         }
     }
     buildToolsVersion '27.0.3'
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+    subprojects {
+        //Note: 打印项目所有依赖项 ./gradlew allDependencies > dependencies.log
+        task allDependencies(type: DependencyReportTask) {}
+    }
 }
 
 dependencies {
@@ -62,6 +73,7 @@ dependencies {
     implementation "com.github.zackratos.ultimatebar:ultimatebar2:$rootProject.ext.ultimatebarVersion"
     implementation 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
     implementation "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
+
     implementation "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     implementation "com.facebook.fresco:fresco:$rootProject.ext.frescoVersion"
@@ -112,6 +124,9 @@ dependencies {
     implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:$rootProject.ext.BaseRecyclerHelperVersion"
     //debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.ext.leak"
     //releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.ext.leak"
+
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'//没有使用特殊Header，可以不加这行
     testImplementation 'junit:junit:4.12'
     implementation project(':lang')
     implementation project(':common')

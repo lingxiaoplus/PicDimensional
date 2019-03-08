@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.multidex.MultiDex;
 
 import com.camera.lingxiao.common.utills.LogUtils;
+import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.service.InitIalizeService;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
@@ -51,7 +52,6 @@ public class App extends Application{
         mainThreadId = android.os.Process.myPid();
         //LeakCanary.install(this);
         InitIalizeService.startInit(this);
-
     }
     public static Context getContext(){
         return mContext;

@@ -1,5 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -14,6 +16,7 @@ import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
@@ -25,6 +28,7 @@ import com.lingxiaosuse.picture.tudimension.presenter.HotPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.HotView;
+import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -40,7 +44,7 @@ import butterknife.OnClick;
 
 public class HotFragment extends BaseFragment implements HotView{
     @BindView(R.id.swip_hot)
-    SwipeRefreshLayout refreshLayout;
+    SmartSkinRefreshLayout refreshLayout;
     @BindView(R.id.rv_hot)
     RecyclerView recyclerView;
     @BindView(R.id.fab_fragment)
@@ -61,60 +65,51 @@ public class HotFragment extends BaseFragment implements HotView{
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        setSwipeColor(refreshLayout);
-        refreshLayout.setRefreshing(true);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                previsList.clear();
-                picUrlList.clear();
-                mPresenter.getHotResult(ContentValue.limit,1);
-            }
+        refreshLayout.autoRefresh();
+        refreshLayout.setOnRefreshListener((refreshLayout)-> {
+            previsList.clear();
+            picUrlList.clear();
+            mPresenter.getHotResult(ContentValue.limit,1);
         });
         mLayoutManager = new GridLayoutManager(getContext(),2,
                 LinearLayoutManager.VERTICAL,false);
-        mAdapter = new HotRecycleAdapter(previsList,0,1);
+        mAdapter = new HotRecycleAdapter(R.layout.hot_item,previsList);
         recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(mLayoutManager);
-        mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
-            @Override
-            public void onLoadMore() {
-                index++;
-                mPresenter.getHotResult(ContentValue.limit,index);
+
+        refreshLayout.setOnLoadMoreListener((refreshLayout)->{
+            index++;
+            mPresenter.getHotResult(ContentValue.limit,index);
+        });
+        mAdapter.setDuration(800);
+        mAdapter.openLoadAnimation(view -> new Animator[]{
+                ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
+        });
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            if (null == picUrlList){
+                return;
+            }
+            picUrlList.clear();
+            for (int i = 0; i < previsList.size(); i++) {
+                if (picUrlList != null){
+                    picUrlList.add(previsList.get(i).getUrl());
+                }
+            }
+            try {
+                Intent intent = new Intent(UIUtils.getContext(),
+                        ImageLoadingActivity.class);
+                intent.putExtra("position",position);
+                intent.putExtra("itemCount",mAdapter.getItemCount());
+                intent.putExtra("id",previsList.get(position).get_id());
+                intent.putStringArrayListExtra("picList",picUrlList);
+                intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
+                startActivity(intent);
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
             }
         });
-        mAdapter.setOnItemClickListener(new HotRecycleAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View View, int position) {
-                if (null == picUrlList){
-                    return;
-                }
-                picUrlList.clear();
-                for (int i = 0; i < previsList.size(); i++) {
-                    if (picUrlList != null){
-                        picUrlList.add(previsList.get(i).getUrl());
-                    }
-                }
-                try {
-                    Intent intent = new Intent(UIUtils.getContext(),
-                            ImageLoadingActivity.class);
-                    intent.putExtra("position",position);
-                    intent.putExtra("itemCount",mAdapter.getItemCount());
-                    intent.putExtra("id",previsList.get(position).get_id());
-                    intent.putStringArrayListExtra("picList",picUrlList);
-                    intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
-                    startActivity(intent);
-                }catch (IndexOutOfBoundsException e){
-                    e.printStackTrace();
-                }
 
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        });
         floatingBtnToogle(recyclerView,fab);
     }
 
@@ -130,11 +125,11 @@ public class HotFragment extends BaseFragment implements HotView{
     public void onGetHotResult(HotModle modle) {
         List<HotModle.ResultsBean> resultList = modle.getResults();
         if (resultList.size() < ContentValue.limit){
-            mAdapter.isFinish(true);
+            mAdapter.loadMoreEnd();
         }
-        previsList.addAll(resultList);
-        mAdapter.notifyDataSetChanged();
-        refreshLayout.setRefreshing(false);
+        mAdapter.addData( modle.getResults());
+        refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
     }
 
     @Override
@@ -150,6 +145,7 @@ public class HotFragment extends BaseFragment implements HotView{
     @Override
     public void showToast(String text) {
         ToastUtils.show(text);
-        refreshLayout.setRefreshing(false);
+        refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
     }
 }

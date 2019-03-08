@@ -8,7 +8,6 @@ import com.camera.lingxiao.common.retrofit.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
-import com.lingxiaosuse.picture.tudimension.modle.CategoryVerticalModle;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
 public class CategoryTrans extends BaseTransation{
@@ -21,7 +20,7 @@ public class CategoryTrans extends BaseTransation{
         callback.setParseHelper(new ParseHelper() {
             @Override
             public Object[] parse(JsonElement jsonElement) {
-                CategoryVerticalModle bean = new Gson().fromJson(jsonElement, CategoryVerticalModle.class);
+                CategoryModle bean = new Gson().fromJson(jsonElement, CategoryModle.class);
                 Object[] obj = new Object[1];
                 obj[0] = bean;
                 return obj;

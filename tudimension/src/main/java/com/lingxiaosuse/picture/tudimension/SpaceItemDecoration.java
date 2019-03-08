@@ -7,6 +7,7 @@ import android.view.View;
 
 /**
  * Created by lingxiao on 2017/8/3.
+ * 用于设置recyclerview之间的间隙
  */
 
 public class SpaceItemDecoration extends RecyclerView.ItemDecoration{

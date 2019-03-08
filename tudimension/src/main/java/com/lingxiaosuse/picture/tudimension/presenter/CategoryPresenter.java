@@ -4,7 +4,6 @@ import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.BasePresenter;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
 import com.lingxiaosuse.picture.tudimension.modle.CategoryModle;
-import com.lingxiaosuse.picture.tudimension.modle.CategoryVerticalModle;
 import com.lingxiaosuse.picture.tudimension.transation.CategoryTrans;
 import com.lingxiaosuse.picture.tudimension.view.CategoryView;
 
@@ -20,8 +19,8 @@ public class CategoryPresenter extends BasePresenter<CategoryView,BaseFragment>{
         mCategoryTrans.getCategoryVertical(new HttpRxCallback() {
             @Override
             public void onSuccess(Object... object) {
-                CategoryVerticalModle modle = (CategoryVerticalModle) object[0];
-                getView().onGetCategoryVerticalResult(modle);
+                CategoryModle modle = (CategoryModle) object[0];
+                getView().onGetCategoryResult(modle);
             }
 
             @Override

@@ -152,6 +152,10 @@ public static ** valueOf(java.lang.String);
 -dontwarn com.android.volley.toolbox.**
 -dontwarn com.facebook.infer.**
 
+
+
+
+
 # Retrofit
 -dontnote retrofit2.Platform
 -dontnote retrofit2.Platform$IOS$MainThreadExecutor
@@ -214,3 +218,8 @@ public static ** valueOf(java.lang.String);
 -keepclassmembers  class **$** extends com.chad.library.adapter.base.BaseViewHolder {
      <init>(...);
 }
+# FastJson 混淆代码
+-dontwarn com.alibaba.fastjson.**
+-keep class com.alibaba.fastjson.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*

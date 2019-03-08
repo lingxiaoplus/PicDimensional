@@ -1,7 +1,10 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.activity.VerticalActivity;
@@ -26,6 +30,9 @@ import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.VerticalView;
+import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +54,6 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
 
 
     private StaggeredGridLayoutManager manager;
-    private List<VerticalModle.VerticalBean> verticalBeanList;
     private ArrayList<String> picIdList = new ArrayList<>();
     private ArrayList<String> picUrlList = new ArrayList<>();
     private VerticalPresenter mPresenter;
@@ -55,7 +61,7 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
     @BindView(R.id.recycle_vertical_item)
     RecyclerView mRecyclerView;
     @BindView(R.id.swip_vertical_item)
-    SwipeRefreshLayout refreshLayout;
+    SmartSkinRefreshLayout refreshLayout;
     @BindView(R.id.fab_vertical_fragment)
     FloatingActionButton floatingActionButton;
     private String order;
@@ -68,49 +74,39 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        setSwipeColor(refreshLayout);
         floatingBtnToogle(mRecyclerView,floatingActionButton);
         manager = new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
-        refreshLayout.setRefreshing(true);
+        refreshLayout.autoRefresh();
 
-        mAdapter = new VerticalAdapter(mPicList,0,1,false);
+        mAdapter = new VerticalAdapter(R.layout.list_vertical,mPicList);
         mRecyclerView.setAdapter(mAdapter);
-        mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
-            @Override
-            public void onLoadMore() {
-                skip+=30;
-                mPresenter.getVerticalData(ContentValue.limit,skip,order);
-            }
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
+            mPicList.clear();
+            mPresenter.getVerticalData(ContentValue.limit,0,order);
         });
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPicList.clear();
-                mPresenter.getVerticalData(ContentValue.limit,0,order);
-            }
+        refreshLayout.setOnLoadMoreListener((refreshLayout)->{
+            skip+=30;
+            mPresenter.getVerticalData(ContentValue.limit,skip,order);
         });
 
-        mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View View, int position) {
-                Intent intent = new Intent(UIUtils.getContext(),
-                        ImageLoadingActivity.class);
-                intent.putExtra("position",position);
-                intent.putExtra("itemCount",mAdapter.getItemCount());
-                intent.putExtra("id",mPicList.get(position).getId());
-                intent.putExtra("isHot",true);
-                intent.putExtra("isVertical",true);
-                intent.putStringArrayListExtra("picList",picUrlList);
-                intent.putStringArrayListExtra("picIdList",picIdList);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Intent intent = new Intent(UIUtils.getContext(),
+                    ImageLoadingActivity.class);
+            intent.putExtra("position",position);
+            intent.putExtra("itemCount",mAdapter.getItemCount());
+            intent.putExtra("id",mPicList.get(position).getId());
+            intent.putExtra("isHot",true);
+            intent.putExtra("isVertical",true);
+            intent.putStringArrayListExtra("picList",picUrlList);
+            intent.putStringArrayListExtra("picIdList",picIdList);
+            startActivity(intent);
+        });
+        mAdapter.setDuration(800);
+        mAdapter.openLoadAnimation(view -> new Animator[]{
+                ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
         });
     }
 
@@ -126,12 +122,9 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
     @Override
     public void onGetVerticalResult(VerticalModle modle) {
         if (modle.getVertical().size() < 30){
-            mAdapter.isFinish(true);
+            mAdapter.loadMoreEnd();
         }
-        verticalBeanList = modle.getVertical();
-        mPicList.addAll(verticalBeanList);
-        mAdapter.notifyDataSetChanged();
-
+        mAdapter.addData(modle.getVertical());
         picUrlList.clear();
         picIdList.clear();
         for (int i = 0; i < mPicList.size(); i++) {
@@ -139,8 +132,8 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
             //获取url，getimg无法获取文件名，所以用getwp
             picUrlList.add(mPicList.get(i).getWp());
         }
-
-        refreshLayout.setRefreshing(false);
+        refreshLayout.finishLoadMore();
+        refreshLayout.finishRefresh();
     }
 
     @Override
@@ -156,6 +149,7 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
     @Override
     public void showToast(String text) {
         ToastUtils.show(text);
-        refreshLayout.setRefreshing(false);
+        refreshLayout.finishLoadMore();
+        refreshLayout.finishRefresh();
     }
 }

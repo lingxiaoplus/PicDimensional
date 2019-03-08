@@ -2,6 +2,7 @@ package com.lingxiaosuse.picture.tudimension.adapter;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -12,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.ContentValue;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -26,21 +29,16 @@ import java.util.List;
  * Created by lingxiao on 2017/9/1.
  */
 
-public class BannerRecycleAdapter extends BaseRecycleAdapter{
-    private List<BannerModle.WallpaperBean> picList;
-    private int footCount = 1; //尾布局个数
-    private static final int BODY_TYPE=1;
-    private static final int FOOT_TYPE=2;
-    private boolean isFinish;
-    public BannerRecycleAdapter(List list,int headCont,int footCount){
-        super(list,headCont,footCount);
+public class BannerRecycleAdapter extends BaseQuickAdapter<BannerModle.WallpaperBean,BaseViewHolder> {
+
+    public BannerRecycleAdapter(int layoutResId, @Nullable List<BannerModle.WallpaperBean> data) {
+        super(layoutResId, data);
     }
 
     @Override
-    public void bindData(BaseViewHolder holder, int position, List mList) {
-        this.picList = mList;
+    protected void convert(BaseViewHolder holder, BannerModle.WallpaperBean item) {
         SimpleDraweeView imageview = (SimpleDraweeView) holder.getView(R.id.iv_banner_image);
-        Uri uri = Uri.parse(picList.get(position).getImg()
+        Uri uri = Uri.parse(item.getImg()
                 + ContentValue.imgRule);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setLocalThumbnailPreviewsEnabled(true)
@@ -50,16 +48,5 @@ public class BannerRecycleAdapter extends BaseRecycleAdapter{
                 .setOldController(imageview.getController())
                 .build();
         imageview.setController(controller);
-        //Uri.parse(picList.get(position).getImg();
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.list_banner;
-    }
-
-    @Override
-    public int getHeadLayoutId() {
-        return 0;
     }
 }
