@@ -2,16 +2,19 @@ package com.lingxiaosuse.picture.tudimension.activity.cosplay;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.widget.BaseHolder;
 import com.camera.lingxiao.common.widget.BaseRecyclerViewAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.CosplayDetailAdapter;
@@ -22,6 +25,9 @@ import com.lingxiaosuse.picture.tudimension.presenter.CosplayDetailPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.CosplayView;
+import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +44,7 @@ public class CosplayDetailActivity extends BaseActivity implements CosplayView {
     @BindView(R.id.rv_mzitu_detail)
     RecyclerView rvDetail;
     @BindView(R.id.swip_mzitu_detail)
-    SwipeRefreshLayout swipDetail;
+    SmartSkinRefreshLayout refreshLayout;
 
     private int mShareId;
     private String mTitle;
@@ -67,32 +73,22 @@ public class CosplayDetailActivity extends BaseActivity implements CosplayView {
         super.initWidget();
         setToolbarBack(toolbarDetail);
         toolbarDetail.setTitle(mTitle);
-        swipDetail.setRefreshing(true);
-        setSwipeColor(swipDetail);
-        swipDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                photoList.clear();
-                mPresenter.getCosplayDetailResult(mShareId);
-            }
+        refreshLayout.autoRefresh();
+        refreshLayout.setOnRefreshListener((refreshLayout)-> {
+            photoList.clear();
+            mPresenter.getCosplayDetailResult(mShareId);
         });
-        mAdapter = new CosplayDetailAdapter(photoList, new BaseRecyclerViewAdapter.AdapterListener() {
-            @Override
-            public void onItemClick(BaseHolder holder, Object o, int position) {
-                Intent intent = new Intent(UIUtils.getContext(),
-                        ImageLoadingActivity.class);
-                intent.putExtra("position",position);
-                intent.putExtra("itemCount",mAdapter.getItemCount());
-                intent.putExtra("id",photoList.get(position).getId()+"");
-                intent.putStringArrayListExtra("picList", (ArrayList<String>) mImageList);
-                intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
-                startActivity(intent);
-            }
 
-            @Override
-            public void onItemLongClick(BaseHolder holder, Object o, int position) {
-
-            }
+        mAdapter = new CosplayDetailAdapter(R.layout.list_mzitu,photoList);
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Intent intent = new Intent(UIUtils.getContext(),
+                    ImageLoadingActivity.class);
+            intent.putExtra("position",position);
+            intent.putExtra("itemCount",mAdapter.getItemCount());
+            intent.putExtra("id",photoList.get(position).getId()+"");
+            intent.putStringArrayListExtra("picList", (ArrayList<String>) mImageList);
+            intent.putExtra("isHot",true); // 判断是否为最新界面传递过来的
+            startActivity(intent);
         });
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL);
@@ -115,12 +111,12 @@ public class CosplayDetailActivity extends BaseActivity implements CosplayView {
 
     @Override
     public void onGetCosplayDetail(CosplayDetailModel model) {
-        photoList.addAll(model.getData().getShare().getPhotoLists());
-        swipDetail.setRefreshing(false);
-        for (int i = 0; i < photoList.size(); i++) {
-            mImageList.add(photoList.get(i).getPicPath());
+        mAdapter.addData(model.getData().getShare().getPhotoLists());
+        refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
+        for (int i = 0; i < model.getData().getShare().getPhotoLists().size(); i++) {
+            mImageList.add(model.getData().getShare().getPhotoLists().get(i).getPicPath());
         }
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override

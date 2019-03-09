@@ -22,15 +22,24 @@
             app:layout_scrollFlags="scroll|enterAlways|snap">
         </android.support.v7.widget.Toolbar>
     </android.support.design.widget.AppBarLayout>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout
         android:id="@+id/swip_sousiba_detail"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:srlPrimaryColor="@color/colorPrimary"
+        app:srlAccentColor="@color/whiteNor"
+        app:srlEnablePreviewInEditMode="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <com.scwang.smartrefresh.header.BezierCircleHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_sousiba_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+        <com.scwang.smartrefresh.layout.footer.BallPulseFooter
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>

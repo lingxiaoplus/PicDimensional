@@ -8,18 +8,18 @@ import android.content.Intent;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import com.avos.avoscloud.AVOSCloud;
 import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.App;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.activity.CrashActivity;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.Map;
-
-import androidx.annotation.RequiresApi;
 
 /**
  * An {@link IntentService} subclass for handling asynchronous task requests in
@@ -94,21 +94,20 @@ public class InitIalizeService extends IntentService {
      * 初始化操作
      */
     private void performInit() {
-        //初始化dbflow
-        FlowManager.init(mContext);
+
         //bugly初始化 建议在测试阶段建议设置成true，发布时设置为false。
-        /*CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
         strategy.setCrashHandleCallback(new CrashReport.CrashHandleCallback(){
             @Override
             public synchronized Map<String, String> onCrashHandleStart(int crashType, String errorType, String errorMessage, String errorStack) {
-                *//*Intent intent  =new Intent(getApplicationContext(), CrashActivity.class);
+                Intent intent  =new Intent(getApplicationContext(), CrashActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("msg",errorStack);
-                startActivity(intent);*//*
+                startActivity(intent);
                 return super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack);
             }
         });
-        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", true,strategy);*/
+        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", true,strategy);
         SkinLib.init((App) mContext);
     }
 

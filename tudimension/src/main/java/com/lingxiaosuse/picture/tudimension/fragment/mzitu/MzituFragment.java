@@ -1,7 +1,10 @@
 package com.lingxiaosuse.picture.tudimension.fragment.mzitu;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -10,11 +13,17 @@ import android.view.View;
 
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.MzituDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
+import com.lingxiaosuse.picture.tudimension.modle.MzituModle;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -36,11 +45,11 @@ public class MzituFragment extends BaseFragment {
     @BindView(R.id.rv_mzitu)
     RecyclerView rvMzitu;
     @BindView(R.id.swip_mzitu)
-    SwipeRefreshLayout swipMzitu;
+    SmartSkinRefreshLayout refreshLayout;
 
     private List<String> mImgList = new ArrayList<>();  //存放图片地址
-    private List<String> mTitleList = new ArrayList<>();  //存放标题
-    private List<String> mTabList = new ArrayList<>();  //存放tab标题
+
+    private List<MzituModle> mImageDataList = new ArrayList<>();  //存放标题 图片地址
     private List<String> mImgDetailList = new ArrayList<>();  //存放专辑图片具体的
     private StaggeredGridLayoutManager manager;
     private MzituRecyclerAdapter mAdapter;
@@ -57,48 +66,35 @@ public class MzituFragment extends BaseFragment {
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        setSwipeColor(swipMzitu);
-        swipMzitu.setRefreshing(true);
-        swipMzitu.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                initJsoup(mPage);
-            }
+        refreshLayout.autoRefresh();
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
+            mPage = 1;
+            initJsoup(mPage);
         });
-        mAdapter = new MzituRecyclerAdapter(mImgList,0,1);
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
+            mPage++;
+            initJsoup(mPage);
+        });
+
+        mAdapter = new MzituRecyclerAdapter(R.layout.list_mzitu,mImageDataList);
+        mAdapter.setDuration(800);
+        mAdapter.openLoadAnimation(view -> new Animator[]{
+                ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
+        });
         manager = new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL);
         rvMzitu.setHasFixedSize(true);
         rvMzitu.setLayoutManager(manager);
         rvMzitu.setAdapter(mAdapter);
-        mAdapter.setTitle(mTitleList);
-        mAdapter.setRefreshListener(new BaseRecycleAdapter.onLoadmoreListener() {
-            @Override
-            public void onLoadMore() {
-                if (mPage<150){
-                    mPage++;
-                    initJsoup(mPage);
-                }else {
-                    mAdapter.isFinish(true);
-                }
 
-            }
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            Intent intent = new Intent(getContext(), MzituDetailActivity.class);
+            intent.putExtra("title",mImageDataList.get(position).getTitle());
+            intent.putExtra("imgurl",mImgDetailList.get(position));
+            startActivity(intent);
         });
 
-        mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View View, int position) {
-                Intent intent = new Intent(getContext(), MzituDetailActivity.class);
-                intent.putExtra("title",mTitleList.get(position));
-                intent.putExtra("imgurl",mImgDetailList.get(position));
-                startActivity(intent);
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
-        });
     }
 
     @Override
@@ -109,53 +105,48 @@ public class MzituFragment extends BaseFragment {
     }
 
     private void initJsoup(final int page){
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Connection connection = Jsoup.connect(ContentValue.MZITU_URL+type+"/page/"+page)
-                        .header("Referer","http://www.mzitu.com")
-                        .header("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0")
-                        .timeout(5000)
-                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
+        new Thread(() -> {
+            Connection connection = Jsoup.connect(ContentValue.MZITU_URL+type+"/page/"+page)
+                    .header("Referer","http://www.mzitu.com")
+                    .header("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0")
+                    .timeout(5000)
+                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
 
-                Document doc = null;
-                try {
-                    Connection.Response response = connection.execute();
-                    response.cookies();
-                    doc = connection.get();
-                } catch (IOException e) {
-                    e.printStackTrace();
+            Document doc = null;
+            //获取首页详细数据
+            try {
+
+                Connection.Response response = connection.execute();
+                response.cookies();
+                doc = connection.get();
+
+                Element elementHome = doc.getElementById("pins");
+                Elements elementImgs = elementHome.getElementsByTag("li");
+                for (Element elementImg:elementImgs) {
+                    final String imgUrl = elementImg.getElementsByTag("a").attr("href");
+                    //专辑图片
+                    final String imgSrc = elementImg.select("img").attr("data-original");
+                    //专辑名字
+                    final String imgAlt = elementImg.select("img").attr("alt");
+                    MzituModle imageData = new MzituModle();
+                    imageData.setTitle(imgAlt);
+                    imageData.setImgUrl(imgSrc);
+                    mImageDataList.add(imageData);
+                    mImgDetailList.add(imgUrl);
                 }
-                //获取首页详细数据
-                try {
-                    Element elementHome = doc.getElementById("pins");
-                    Elements elementImgs = elementHome.getElementsByTag("li");
-                    for (Element elementImg:elementImgs) {
-                        final String imgUrl = elementImg.getElementsByTag("a").attr("href");
-                        //专辑图片
-                        final String imgSrc = elementImg.select("img").attr("data-original");
-                        //专辑名字
-                        final String imgAlt = elementImg.select("img").attr("alt");
-                        mImgList.add(imgSrc);
-                        mTitleList.add(imgAlt);
-                        mImgDetailList.add(imgUrl);
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                UIUtils.runOnUIThread(() -> {
+                    if (MzituFragment.this.getActivity().isDestroyed()){
+                        return;
                     }
-                }catch (Exception e){
-                    e.printStackTrace();
-                }finally {
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.notifyDataSetChanged();
-                            if (swipMzitu != null && swipMzitu.isRefreshing()){
-                                swipMzitu.setRefreshing(false);
-                            }
-
-                        }
-                    });
-                }
-
+                    mAdapter.notifyDataSetChanged();
+                    refreshLayout.finishLoadMore();
+                    refreshLayout.finishRefresh();
+                });
             }
+
         }).start();
     }
 

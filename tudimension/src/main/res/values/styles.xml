@@ -16,7 +16,7 @@
         <item name="android:windowContentTransitions">true</item>
         <!-- 设置activity切换动画 -->
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
-        <item name="android:alertDialogTheme">@android:style/Theme.Holo.Light.Dialog</item>
+        <item name="android:alertDialogTheme">@android:style/Theme.Material.Light.Dialog</item>
 
     </style>
 
@@ -112,6 +112,7 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
         <item name="android:windowContentTransitions">true</item>
+
     </style>
 
 </resources>

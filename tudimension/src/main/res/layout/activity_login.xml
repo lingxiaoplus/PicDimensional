@@ -32,7 +32,7 @@
     <ImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@mipmap/ic_launcher"
+        android:src="@mipmap/ic_launcher_foreground"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/login_header_margin_top"
         android:layout_marginBottom="@dimen/login_header_margin_top"/>

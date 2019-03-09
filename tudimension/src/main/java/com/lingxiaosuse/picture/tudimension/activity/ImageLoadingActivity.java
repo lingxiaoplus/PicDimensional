@@ -22,6 +22,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import me.relex.photodraweeview.PhotoDraweeView;
 
 public class ImageLoadingActivity extends BaseActivity {
 
@@ -128,6 +130,11 @@ public class ImageLoadingActivity extends BaseActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                //首先通过inflate得到各个子view的对象
+                /*View pager = LayoutInflater.from(viewPager.getContext()).inflate(R.layout.pager_load_hot, null);
+                PhotoDraweeView image = pager.findViewById(R.id.simple_pager_load_hot);
+                viewPager.setCurrentShowView(image);*/
+
             }
 
             @Override
@@ -144,29 +151,12 @@ public class ImageLoadingActivity extends BaseActivity {
 
             }
         });
-
+        viewPager.setFinishScreenListener(() -> finishAfterTransition());
         //给viewpager设置动画
         viewPager.setPageTransformer(true, new DepthPageTransformer());
-
         //设置viewpager的点击事件
-        mAdapter.setOnItemclick(new ImageLoadAdapter.OnItemClickListener() {
-            @Override
-            public void onClick() {
-                toggleButtomView();
-            }
-        });
-        mAdapter.setLongClickListener(new ImageLoadAdapter.onItemLongClickListener() {
-            @Override
-            public void onLongClick() {
-                showDialog();
-            }
-        });
-        mAdapter.setTouchListener(new ImageLoadAdapter.onItemTouchListener() {
-            @Override
-            public void onTouch(float x, float y, float destence) {
-
-            }
-        });
+        mAdapter.setOnItemclick(() -> toggleButtomView());
+        mAdapter.setLongClickListener(() -> showDialog());
 
         bindDownloadService();
     }
@@ -191,7 +181,7 @@ public class ImageLoadingActivity extends BaseActivity {
 
     @OnClick(R.id.iv_image_back)
     public void imageBack() {
-        finish();
+        finishAfterTransition();
     }
 
     @OnClick(R.id.iv_image_save)
@@ -290,6 +280,12 @@ public class ImageLoadingActivity extends BaseActivity {
         if (null != mConnect){
             unbindService(mConnect);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        finishAfterTransition();
+        super.onBackPressed();
     }
 
     /**

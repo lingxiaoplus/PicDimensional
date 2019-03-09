@@ -65,7 +65,7 @@ ext{
     rxjavaVersion = "2.1.1"
     rxjavaAdapterVersion = "2.3.0"
     rxlifescyleVersion = "2.2.1"
-    photoViewVersion = "2.3.0"
+    photoViewVersion = "2.0.0"
     //拦截器
     interceptorVersion = "3.10.0"
     easypermissionsVersion = "1.2.0"

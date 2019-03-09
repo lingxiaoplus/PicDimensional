@@ -106,6 +106,7 @@ public class BannerFragment extends BaseFragment implements HomeView{
                 ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
                 ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
         });
+
         refreshLayout.setOnRefreshListener((refreshLayout)-> {
             picUrlList.clear();
             IdList.clear();
@@ -150,6 +151,12 @@ public class BannerFragment extends BaseFragment implements HomeView{
             IdList.add(picList.get(i).getId());
         }
 
+        if (mAdapter.getEmptyView() == null){
+            // 没有数据的时候默认显示该布局
+            View view = View.inflate(getActivity(),R.layout.empty_data_layout,null);
+            mAdapter.setEmptyView(view);
+        }
+
         if (picList.size() < 1){
 
             int color = SpUtils.getInt(UIUtils.getContext(),
@@ -158,16 +165,14 @@ public class BannerFragment extends BaseFragment implements HomeView{
                     .setTitle("ERROR")
                     .setMessage("图片数据解析失败了")
                     .setBackgroundColor(color)
-                    .setAction("跳转到网页版", new OnActionClickListener() {
-                        @Override
-                        public void onClick() {
-                            Intent intent = new Intent(UIUtils.getContext(), WebActivity.class);
-                            intent.putExtra("title","");
-                            intent.putExtra("url","http://adesk.com/p/album/"+id);
-                            startActivity(intent);
-                        }
+                    .setAction("跳转到网页版", () -> {
+                        Intent intent = new Intent(UIUtils.getContext(), WebActivity.class);
+                        intent.putExtra("title","");
+                        intent.putExtra("url","http://adesk.com/p/album/"+id);
+                        startActivity(intent);
                     })
                     .show();
+
            /* new Thread(new Runnable() {
                 @Override
                 public void run() {

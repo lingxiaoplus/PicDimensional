@@ -69,6 +69,7 @@ public class SpecialFragment extends BaseFragment implements SpecialView{
         });
         floatingBtnToogle(recyclerView,fab);
         mAdapter = new SpecialRecycleAdapter(R.layout.list_special,albumBeanList);
+
         manager = new LinearLayoutManager(root.getContext());
         recyclerView.setLayoutManager(manager);
         recyclerView.setAdapter(mAdapter);
@@ -115,6 +116,7 @@ public class SpecialFragment extends BaseFragment implements SpecialView{
         mAdapter.addData(modle.getAlbum());
         swipeRefreshLayout.finishRefresh();
         swipeRefreshLayout.finishLoadMore();
+
     }
 
     @Override

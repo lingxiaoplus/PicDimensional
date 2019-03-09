@@ -23,13 +23,19 @@
             app:layout_scrollFlags="scroll|enterAlways|snap" />
     </android.support.design.widget.AppBarLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout
         android:id="@+id/swip_comment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
+        app:srlPrimaryColor="@color/colorPrimary"
+        app:srlAccentColor="@color/whiteNor"
+        app:srlEnablePreviewInEditMode="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintTop_toBottomOf="@+id/appBarLayout">
-
+        <com.scwang.smartrefresh.header.BezierCircleHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -100,5 +106,5 @@
                 </LinearLayout>
             </android.support.v7.widget.CardView>
         </FrameLayout>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>

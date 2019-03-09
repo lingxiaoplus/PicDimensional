@@ -127,18 +127,16 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         }
     };
-    private Runnable mLoadingRunnable = new Runnable() {
-        @Override
-        public void run() {
-            //初始化leancloud的sdk  只能在主线程初始化
-            // 初始化参数依次为 this, AppId, AppKey
-            // 初始化参数依次为 this, AppId, AppKey
-            AVOSCloud.initialize(UIUtils.getContext(),
-                    "NeAGyi58wfImRBFUcGrPRdxx-gzGzoHsz",
-                    "On3B4dFI9RH0XNTFWK4kdCUS");
-            // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可     开启调试日志
-            AVOSCloud.setDebugLogEnabled(true);
-        }
+    private Runnable mLoadingRunnable = () -> {
+        //初始化leancloud的sdk  只能在主线程初始化
+        // 初始化参数依次为 this, AppId, AppKey
+        // 初始化参数依次为 this, AppId, AppKey
+        AVOSCloud.initialize(UIUtils.getContext(),
+                "NeAGyi58wfImRBFUcGrPRdxx-gzGzoHsz",
+                "On3B4dFI9RH0XNTFWK4kdCUS");
+        // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可     开启调试日志
+        AVOSCloud.setDebugLogEnabled(true);
+
     };
     private Handler mInitHandler = new Handler();
     private NetworkReceiver mNetworkChangeListener;
@@ -199,25 +197,25 @@ public class MainActivity extends BaseActivity implements MainView{
         ImageView headImage = headerLayout.findViewById(R.id.image_head);
         TextView userName = headerLayout.findViewById(R.id.tv_username);
 
-        final UserModel model = SQLite.select()
+        /*final UserModel model = SQLite.select()
                 .from(UserModel.class)
                 .querySingle();
         if (model != null){
             userName.setText(model.getUsername());
-        }
+        }*/
         //headImage.setVisibility(View.GONE);
-        headImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (model != null) {
-                    // 跳转到首页
-                    StartActivity(UserInfoActivity.class,false);
-                } else {
-                    //缓存用户对象为空时，可打开用户注册界面…
-                    StartActivity(LoginActivity.class,false);
-                }
+        headImage.setOnClickListener(view -> {
+            /*if (model != null) {
+                // 跳转到首页
+                StartActivity(UserInfoActivity.class,false);
+            } else {
+                //缓存用户对象为空时，可打开用户注册界面…
+                StartActivity(LoginActivity.class,false);
+            }*/
 
-            }
+            //缓存用户对象为空时，可打开用户注册界面…
+            StartActivity(LoginActivity.class,false);
+
         });
         mPresenter.getHeadImg();
         mPresenter.getHeadText();

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.CardView;
@@ -33,7 +34,10 @@ import com.lingxiaosuse.picture.tudimension.modle.SearchResultModle;
 import com.lingxiaosuse.picture.tudimension.presenter.SearchPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
 import com.lingxiaosuse.picture.tudimension.widget.WaveLoading;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +64,7 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
     @BindView(R.id.cardView)
     CardView cardView;
     @BindView(R.id.swip_comment)
-    SwipeRefreshLayout refreshLayout;
+    SmartSkinRefreshLayout refreshLayout;
     private List<String> keyWords = new ArrayList<>();
     private String keyword;
 
@@ -87,8 +91,7 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
     @Override
     protected void initWidget() {
         super.initWidget();
-        refreshLayout.setRefreshing(true);
-        setSwipeColor(refreshLayout);
+        refreshLayout.autoRefresh();
         setToolbarBack(toolbar);
 
         // show keyboard
@@ -96,18 +99,15 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
                 | WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
         //从服务器上获取关键字
         mPresenter.getSearchKey();
-
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (cardView.getVisibility() == View.VISIBLE){
-                    mPresenter.getSearchKey();
-                }else {
-                    wallPaperList.clear();
-                    mPresenter.getSearchWallResult(keyword,0);
-                }
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
+            if (cardView.getVisibility() == View.VISIBLE){
+                mPresenter.getSearchKey();
+            }else {
+                wallPaperList.clear();
+                mPresenter.getSearchWallResult(keyword,0);
             }
         });
+
     }
 
     /**
@@ -124,7 +124,7 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
                 startPropertyAnim(cardView,1f,0f,500);
                 keyword = query;
                 wallPaperList.clear();
-                refreshLayout.setRefreshing(true);
+                refreshLayout.autoRefresh();
                 mPresenter.getSearchWallResult(keyword,0);
                 return true;
             }
@@ -270,7 +270,7 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
         }
         mAdapter.notifyDataSetChanged();
         recyclerView.setVisibility(View.VISIBLE);
-        refreshLayout.setRefreshing(false);
+        refreshLayout.finishRefresh();
     }
 
     @Override
@@ -283,7 +283,7 @@ public class SearchActivity extends BaseActivity implements com.lingxiaosuse.pic
             for (int i = 0; i < textViewList.size(); i++) {
                 textViewList.get(i).setText(keyWords.get(i));
             }
-            refreshLayout.setRefreshing(false);
+            refreshLayout.finishRefresh();
         }catch (Exception e){
             e.printStackTrace();
         }

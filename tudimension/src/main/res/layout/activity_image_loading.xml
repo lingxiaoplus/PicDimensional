@@ -16,6 +16,7 @@
             android:id="@+id/vp_image_load"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#000000"
             >
         </com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager>
         <RelativeLayout

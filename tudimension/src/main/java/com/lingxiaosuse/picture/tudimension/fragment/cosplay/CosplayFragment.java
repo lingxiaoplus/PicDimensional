@@ -1,5 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.fragment.cosplay;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -64,6 +66,11 @@ public class CosplayFragment extends BaseFragment implements CosplayView{
             mCosplayPresenter.getCosplayer(16,order);
         });
         mAdapter = new CosplayAdapter(R.layout.cosplay_item,mCosplayerList);
+        mAdapter.setDuration(800);
+        mAdapter.openLoadAnimation(view -> new Animator[]{
+                ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
+        });
         recyclerView.setAdapter(mAdapter);
         mLayoutManager = new GridLayoutManager(getActivity(),2,
                 LinearLayoutManager.VERTICAL,false);
@@ -75,9 +82,10 @@ public class CosplayFragment extends BaseFragment implements CosplayView{
         });
 
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            List<CosplayModel.DataBean> cosplayerList = adapter.getData();
             Intent intent = new Intent(getActivity(), CosplayDetailActivity.class);
-            intent.putExtra("shareid",mCosplayerList.get(position).getId());
-            intent.putExtra("title",mCosplayerList.get(position).getTitle());
+            intent.putExtra("shareid",cosplayerList.get(position).getId());
+            intent.putExtra("title",cosplayerList.get(position).getTitle());
             startActivity(intent);
         });
 

@@ -2,6 +2,7 @@ package com.lingxiaosuse.picture.tudimension.fragment.mzitu;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,9 @@ import com.lingxiaosuse.picture.tudimension.activity.MzituDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.AllMzituAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -37,7 +41,7 @@ public class AllFragment extends BaseFragment {
     @BindView(R.id.rv_mzitu)
     RecyclerView rvMzitu;
     @BindView(R.id.swip_mzitu)
-    SwipeRefreshLayout swipMzitu;
+    SmartSkinRefreshLayout refreshLayout;
 
     private List<String> mImgList = new ArrayList<>();  //存放图片地址
     private List<String> mTitleList = new ArrayList<>();
@@ -52,19 +56,18 @@ public class AllFragment extends BaseFragment {
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        setSwipeColor(swipMzitu);
-        swipMzitu.setRefreshing(true);
-        swipMzitu.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getDataFromJsoup();
-            }
+        refreshLayout.autoRefresh();
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
+            getDataFromJsoup();
         });
+
+
         mAdapter = new AllMzituAdapter(mTitleList,0,1);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvMzitu.setHasFixedSize(true);
         rvMzitu.setLayoutManager(manager);
         rvMzitu.setAdapter(mAdapter);
+
         mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View View, int position) {
@@ -115,28 +118,23 @@ public class AllFragment extends BaseFragment {
                             mImgList.add(imgUrl);
                             mTitleList.add(imgTitle);
                         }
-                        UIUtils.runOnUIThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mAdapter.notifyDataSetChanged();
-                                if (swipMzitu.isRefreshing()){
-                                    swipMzitu.setRefreshing(false);
-                                }
+                        UIUtils.runOnUIThread(() -> {
+                            if (AllFragment.this.getActivity().isDestroyed()){
+                                return;
                             }
+                            mAdapter.notifyDataSetChanged();
+                            refreshLayout.finishLoadMore();
+                            refreshLayout.finishRefresh();
                         });
                     }
 
                 }catch (Exception e){
                     Log.i("AllFragment", e.getMessage());
                 }finally {
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (swipMzitu.isRefreshing()){
-                                swipMzitu.setRefreshing(false);
-                            }
-                            mAdapter.isFinish(true);
-                        }
+                    UIUtils.runOnUIThread(() -> {
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                        mAdapter.isFinish(true);
                     });
                 }
             }

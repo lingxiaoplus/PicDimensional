@@ -235,6 +235,9 @@ public class HomeFragment extends BaseFragment implements HomeView{
     @Override
     public void showToast(String text) {
         ToastUtils.show(text);
+        smartRefreshLayout.finishRefresh();
+        smartRefreshLayout.finishLoadMore();
+        mHomeAdapter.loadMoreFail();
     }
 
 

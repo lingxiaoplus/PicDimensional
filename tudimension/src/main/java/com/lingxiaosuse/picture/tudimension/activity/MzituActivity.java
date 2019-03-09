@@ -73,19 +73,21 @@ public class MzituActivity extends BaseActivity {
                     model.setCreateTime(System.currentTimeMillis());
                     model.save();
                     LogUtils.e("Connection: "+targetTitle);
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //这里调用；两次是某些奇葩机器会报异常
-                            mAdapter.notifyDataSetChanged();
-                            for (int i = 0; i < tabTitle.size(); i++) {
-                                tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
-                            }
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    });
-
                 }
+
+                if (MzituActivity.this.isDestroyed()){
+                    return;
+                }
+                UIUtils.runOnUIThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < tabTitle.size(); i++) {
+                            mAdapter.notifyDataSetChanged();
+                            tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
+                        }
+                    }
+                });
+
             }catch (Exception e){
                 e.printStackTrace();
             }

@@ -24,7 +24,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-import com.lingxiaosuse.picture.tudimension.widget.ZoomableDrawwView;
+import com.lingxiaosuse.picture.tudimension.widget.ScrollPhotoDraweeView;
 import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ import static android.provider.CalendarContract.CalendarCache.URI;
 
 public class ImageLoadAdapter extends PagerAdapter{
     private ArrayList<String> urlList;
-    private PhotoDraweeView image;
+    private ScrollPhotoDraweeView image;
     private boolean isHot;
     private String imgRule ="";
     private ZoomableViewpager viewpager;
@@ -91,7 +91,6 @@ public class ImageLoadAdapter extends PagerAdapter{
             container.addView(view);
             setOnclick(image);
             setOnLongClick(image);
-            setOnTouchListener(image);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -157,10 +156,6 @@ public class ImageLoadAdapter extends PagerAdapter{
         void onLongClick();
     }
 
-    public onItemTouchListener touchListener;
-    public void setTouchListener(onItemTouchListener listener){
-        this.touchListener = listener;
-    }
     public interface onItemTouchListener{
         void onTouch(float x,float y,float destence);
     }
@@ -181,40 +176,6 @@ public class ImageLoadAdapter extends PagerAdapter{
                 }
             }
         });
-    }
-    private void setOnTouchListener(PhotoDraweeView view){
-
-        /*view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                float startY = 0f;
-                float destence = 0f;
-                switch (event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        startY = event.getY();
-                        break;
-                    case MotionEvent.ACTION_UP:
-                        destence = event.getY() - startY;
-                        break;
-                    case MotionEvent.ACTION_MOVE:
-                        if (event.getY() - startY > 0f){
-                            //下拉的
-                            if (touchListener != null){
-                                touchListener.onTouch(event.getX(),event.getY(),destence);
-                                return true;
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                if (listener != null){
-                    listener.onClick();
-                }
-                return false;
-            }
-        });*/
-
     }
     private void setOnLongClick(PhotoDraweeView view){
         /*view.setOnLongClickListener(new ZoomableDrawwView.OnLongClickListener() {

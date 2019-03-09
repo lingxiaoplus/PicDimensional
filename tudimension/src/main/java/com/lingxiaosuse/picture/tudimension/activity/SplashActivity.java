@@ -68,51 +68,43 @@ public class SplashActivity extends BaseActivity implements SplashView{
         super.initWidget();
         isFirst = SpUtils.getBoolean(this, ContentValue.ISFIRST_KEY, true);
 
-        tvNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                StartActivity(MainActivity.class, true);
-            }
-        });
-        draweeView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                mLongClickEnable = true;
-                final PopwindowUtil popwindowUtil = new PopwindowUtil
-                        .PopupWindowBuilder(SplashActivity.this)
-                        .setView(R.layout.pop_long_click)
-                        .setFocusable(true)
-                        .setTouchable(true)
-                        .setOutsideTouchable(true)
-                        .create();
-                popwindowUtil.showAtLocation(draweeView);
-                popwindowUtil.getView(R.id.pop_download).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (null != mDownloadService && !mUrl.isEmpty()){
-                            mDownloadService.startDownload(mUrl);
-                        }
-                        popwindowUtil.dissmiss();
-                        if (isFirst) {
-                            StartActivity(IndicatorActivity.class, true);
-                        } else {
-                            StartActivity(MainActivity.class, true);
-                        }
+        tvNext.setOnClickListener(view -> StartActivity(MainActivity.class, true));
+        draweeView.setOnLongClickListener(v -> {
+            mLongClickEnable = true;
+            final PopwindowUtil popwindowUtil = new PopwindowUtil
+                    .PopupWindowBuilder(SplashActivity.this)
+                    .setView(R.layout.pop_long_click)
+                    .setFocusable(true)
+                    .setTouchable(true)
+                    .setOutsideTouchable(true)
+                    .create();
+            popwindowUtil.showAtLocation(draweeView);
+            popwindowUtil.getView(R.id.pop_download).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (null != mDownloadService && !mUrl.isEmpty()){
+                        mDownloadService.startDownload(mUrl);
                     }
-                });
-                popwindowUtil.getView(R.id.pop_cancel).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        popwindowUtil.dissmiss();
-                        if (isFirst) {
-                            StartActivity(IndicatorActivity.class, true);
-                        } else {
-                            StartActivity(MainActivity.class, true);
-                        }
+                    popwindowUtil.dissmiss();
+                    if (isFirst) {
+                        StartActivity(IndicatorActivity.class, true);
+                    } else {
+                        StartActivity(MainActivity.class, true);
                     }
-                });
-                return true;
-            }
+                }
+            });
+            popwindowUtil.getView(R.id.pop_cancel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    popwindowUtil.dissmiss();
+                    if (isFirst) {
+                        StartActivity(IndicatorActivity.class, true);
+                    } else {
+                        StartActivity(MainActivity.class, true);
+                    }
+                }
+            });
+            return true;
         });
     }
 
@@ -193,7 +185,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
 
     @Override
     public void showImgUrl(Uri uri,String error) {
-        if (null == error){
+        if (null == error && !mUrl.isEmpty()){
             mUrl = uri.toString();
             draweeView.setImageURI(uri);
             startAnim();

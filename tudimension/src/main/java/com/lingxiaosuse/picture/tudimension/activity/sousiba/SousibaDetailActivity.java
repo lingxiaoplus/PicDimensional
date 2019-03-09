@@ -18,11 +18,14 @@ import android.view.View;
 
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
+import com.lingxiaosuse.picture.tudimension.modle.MzituModle;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -44,12 +47,11 @@ public class SousibaDetailActivity extends BaseActivity {
     @BindView(R.id.rv_sousiba_detail)
     RecyclerView rvSousibaDetail;
     @BindView(R.id.swip_sousiba_detail)
-    SwipeRefreshLayout swipSousibaDetail;
+    SmartSkinRefreshLayout refreshLayout;
     private Intent intent;
     private String imgUrl;
 
-    private List<String> mImgList = new ArrayList<>();  //存放图片地址
-    private List<String> mTitleList = new ArrayList<>();  //存放标题
+    private List<MzituModle> mImgList = new ArrayList<>();
     private MzituRecyclerAdapter mAdapter;
     private String downloadUrl;
 
@@ -69,30 +71,22 @@ public class SousibaDetailActivity extends BaseActivity {
     }
 
     private void initRecycler() {
-        swipSousibaDetail.setRefreshing(true);
-        setSwipeColor(swipSousibaDetail);
-        swipSousibaDetail.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mImgList.clear();
-                mTitleList.clear();
-                getDataFromJsoup();
-            }
+        refreshLayout.autoRefresh();
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
+            mImgList.clear();
+            getDataFromJsoup();
+        });
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
+
+            getDataFromJsoup();
         });
 
-        mAdapter = new MzituRecyclerAdapter(mImgList,0,1);
-        mAdapter.setOnItemClickListener(new BaseRecycleAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(View View, int position) {
-                /*Intent intent = new Intent(UIUtils.getContext(),SousibaDetailActivity.class);
+
+        mAdapter = new MzituRecyclerAdapter(R.layout.list_mzitu,mImgList);
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+             /*Intent intent = new Intent(UIUtils.getContext(),SousibaDetailActivity.class);
                 intent.putExtra("imgurl",mImgList.get(position));
                 startActivity(intent);*/
-            }
-
-            @Override
-            public void onLongClick(View view, int position) {
-
-            }
         });
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(1,
                 StaggeredGridLayoutManager.VERTICAL);
@@ -108,15 +102,13 @@ public class SousibaDetailActivity extends BaseActivity {
                 Connection connection = Jsoup.connect(imgUrl)
                         .timeout(10000);
                 Document doc = null;
+
+                //获取首页详细数据
                 try {
+
                     Connection.Response response = connection.execute();
                     response.cookies();
                     doc = connection.get();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                //获取首页详细数据
-                try {
 
                     //Elements elementImgs = doc.getElementsByClass("content");
                     Element elementHome = doc.getElementById("mbtxfont");
@@ -127,11 +119,10 @@ public class SousibaDetailActivity extends BaseActivity {
                         final String imgUrl = ContentValue.SOUSIBA_URL + elementImg.attr("src");
                         //标题
                         final String imgAlt = ContentValue.SOUSIBA_URL + elementImg.attr("alt");
-                        /*mImgList.add(imgSrc);
-                        mTitleList.add(imgAlt);
-                        mImgDetailList.add(imgUrl);*/
-                        mImgList.add(imgUrl);
-                        mTitleList.add(imgAlt);
+                        MzituModle modle = new MzituModle();
+                        modle.setTitle(imgAlt);
+                        modle.setImgUrl(imgUrl);
+                        mImgList.add(modle);
                         Log.i("sousibaActivity", "图片链接: " + imgUrl + "  标题：" + imgAlt);
 
                     }
@@ -144,13 +135,12 @@ public class SousibaDetailActivity extends BaseActivity {
                     UIUtils.runOnUIThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (swipSousibaDetail.isRefreshing()){
-                                swipSousibaDetail.setRefreshing(false);
-                            }
+                            refreshLayout.finishRefresh();
+                            refreshLayout.finishLoadMore();
                             mAdapter.notifyDataSetChanged();
 
-                            if (mTitleList.size()>0){
-                                toolbarSousibaDetail.setTitle(mTitleList.get(0));
+                            if (mImgList.size()>0){
+                                toolbarSousibaDetail.setTitle(mImgList.get(0).getTitle());
                             }
 
                             ToastUtils.show("下载地址："+downloadUrl);
