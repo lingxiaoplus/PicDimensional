@@ -3,6 +3,7 @@ package com.lingxiaosuse.picture.tudimension.adapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeController;
 import com.facebook.drawee.controller.BaseControllerListener;
@@ -31,19 +34,17 @@ import java.util.List;
  * Created by lingxiao on 2017/9/18.
  */
 
-public class LocalImgAdapter extends BaseRecycleAdapter {
-    private List<String> picList;
+public class LocalImgAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
     private SimpleDraweeView simpleDraweeView;
 
-    public LocalImgAdapter(List mList, int headCount, int footCount) {
-        super(mList, headCount, footCount);
+    public LocalImgAdapter(int layoutResId, @Nullable List<String> data) {
+        super(layoutResId, data);
     }
 
     @Override
-    public void bindData(BaseViewHolder holder, int position, List mList) {
-        picList = mList;
-        Uri uri = Uri.parse(picList.get(position));
-        simpleDraweeView = (SimpleDraweeView) holder.getView(R.id.simple_download);
+    protected void convert(BaseViewHolder helper, String item) {
+        Uri uri = Uri.parse(item);
+        simpleDraweeView = (SimpleDraweeView) helper.getView(R.id.simple_download);
         ImageRequest request = ImageRequestBuilder.newBuilderWithSource(uri)
                 .setResizeOptions(new ResizeOptions(UIUtils.dip2px(144),
                         UIUtils.dip2px(144)))
@@ -55,19 +56,7 @@ public class LocalImgAdapter extends BaseRecycleAdapter {
                 .setControllerListener(new BaseControllerListener<ImageInfo>())
                 .build();
         simpleDraweeView.setController(controller);
-
         //用下面的加载大图卡顿
         //simpleDraweeView.setImageURI(uri);
-
-    }
-
-    @Override
-    public int getLayoutId() {
-        return R.layout.local_img_item;
-    }
-
-    @Override
-    public int getHeadLayoutId() {
-        return 0;
     }
 }

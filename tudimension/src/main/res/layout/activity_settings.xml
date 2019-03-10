@@ -112,7 +112,8 @@
                         android:layout_height="wrap_content"
                         app:message="切换动画"
                         app:visable="false"
-                        app:title="切换图片加载动画"/>
+                        app:title="切换图片加载动画"
+                        android:visibility="gone"/>
                     <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
                         android:id="@+id/card_comparse"
                         android:layout_width="match_parent"

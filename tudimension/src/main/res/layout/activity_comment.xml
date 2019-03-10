@@ -18,12 +18,12 @@
             android:layout_height="?attr/actionBarSize"
             app:layout_scrollFlags="scroll|enterAlways|snap"/>
     </android.support.design.widget.AppBarLayout>
-    <android.support.v4.widget.SwipeRefreshLayout
+    <com.lingxiaosuse.picture.tudimension.widget.BezierRefreshLayout
         android:id="@+id/swip_comment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <FrameLayout
+    <!--<FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <LinearLayout
@@ -55,6 +55,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </android.support.v7.widget.RecyclerView>
-    </FrameLayout>
-</android.support.v4.widget.SwipeRefreshLayout>
+    </FrameLayout>-->
+</com.lingxiaosuse.picture.tudimension.widget.BezierRefreshLayout>
 </android.support.design.widget.CoordinatorLayout>

@@ -127,7 +127,7 @@
                     app:iconSrc="@mipmap/ic_blog"
                     app:iconVisvble="true"
                     app:title="个人博客"
-                    app:message="http://www.lingxiaosuse.cn"
+                    app:message="https://www.lingxiaomz.top"
                     app:visable="false"/>
                 <com.lingxiaosuse.picture.tudimension.widget.SettingCardView
                     android:id="@+id/card_from"

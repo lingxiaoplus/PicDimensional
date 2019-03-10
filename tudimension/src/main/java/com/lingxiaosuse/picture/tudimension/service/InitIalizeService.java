@@ -94,7 +94,8 @@ public class InitIalizeService extends IntentService {
      * 初始化操作
      */
     private void performInit() {
-
+        //初始化dbflow
+        FlowManager.init(this);
         //bugly初始化 建议在测试阶段建议设置成true，发布时设置为false。
         CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(this);
         strategy.setCrashHandleCallback(new CrashReport.CrashHandleCallback(){

@@ -24,7 +24,6 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-import com.lingxiaosuse.picture.tudimension.widget.ScrollPhotoDraweeView;
 import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 
 import java.util.ArrayList;
@@ -40,7 +39,7 @@ import static android.provider.CalendarContract.CalendarCache.URI;
 
 public class ImageLoadAdapter extends PagerAdapter{
     private ArrayList<String> urlList;
-    private ScrollPhotoDraweeView image;
+    private PhotoDraweeView image;
     private boolean isHot;
     private String imgRule ="";
     private ZoomableViewpager viewpager;

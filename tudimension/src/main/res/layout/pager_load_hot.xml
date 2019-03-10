@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center">
-    <com.lingxiaosuse.picture.tudimension.widget.ScrollPhotoDraweeView
+    <me.relex.photodraweeview.PhotoDraweeView
         android:id="@+id/simple_pager_load_hot"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

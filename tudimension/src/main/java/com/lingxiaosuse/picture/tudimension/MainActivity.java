@@ -197,24 +197,24 @@ public class MainActivity extends BaseActivity implements MainView{
         ImageView headImage = headerLayout.findViewById(R.id.image_head);
         TextView userName = headerLayout.findViewById(R.id.tv_username);
 
-        /*final UserModel model = SQLite.select()
+        headImage.setVisibility(View.GONE);
+        userName.setVisibility(View.GONE);
+        final UserModel model = SQLite.select()
                 .from(UserModel.class)
                 .querySingle();
         if (model != null){
             userName.setText(model.getUsername());
-        }*/
+        }
         //headImage.setVisibility(View.GONE);
         headImage.setOnClickListener(view -> {
-            /*if (model != null) {
+            if (model != null) {
                 // 跳转到首页
                 StartActivity(UserInfoActivity.class,false);
             } else {
                 //缓存用户对象为空时，可打开用户注册界面…
                 StartActivity(LoginActivity.class,false);
-            }*/
+            }
 
-            //缓存用户对象为空时，可打开用户注册界面…
-            StartActivity(LoginActivity.class,false);
 
         });
         mPresenter.getHeadImg();

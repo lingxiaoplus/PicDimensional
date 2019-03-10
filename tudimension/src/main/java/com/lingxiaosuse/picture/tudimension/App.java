@@ -47,8 +47,7 @@ public class App extends Application{
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
-        //初始化dbflow
-        FlowManager.init(this);
+
         FrescoHelper.initFresco(this);
         //Fresco.initialize(this);
         mContext = getApplicationContext();

@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
@@ -124,8 +126,19 @@ public class LocalImgActivity extends BaseActivity {
 
                 Intent shareImgIntent = new Intent(Intent.ACTION_SEND);
                 shareImgIntent.setType("image/*");
-                Uri u = Uri.fromFile(file);
-                shareImgIntent.putExtra(Intent.EXTRA_STREAM, u);
+                Uri uri;
+                //android7.0
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    shareImgIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    uri = FileProvider.getUriForFile(UIUtils.getContext(),
+                            UIUtils.getContext().getApplicationContext().getPackageName() + ".fileprovider",
+                            file);
+                } else {
+                    uri = Uri.fromFile(file);
+                    shareImgIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                }
+
+                shareImgIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 startActivity(shareImgIntent);
                 file = null;
                 break;
@@ -136,12 +149,7 @@ public class LocalImgActivity extends BaseActivity {
                         .setView(R.layout.pop_image_info)
                         .setAnimationStyle(R.style.contextMenuAnim)
                         .setBackgroundDrawable(new BitmapDrawable())
-                        .setOnDissmissListener(new PopupWindow.OnDismissListener() {
-                            @Override
-                            public void onDismiss() {
-                                backgroundAlpha(1f);
-                            }
-                        })
+                        .setOnDissmissListener(() -> backgroundAlpha(1f))
                         .setFocusable(true)
                         .setTouchable(true)
                         .setOutsideTouchable(true)
@@ -156,12 +164,7 @@ public class LocalImgActivity extends BaseActivity {
                 popwindowUtil.setText(R.id.tv_pop_path, "路径：" + file.getAbsolutePath());
 
                 popwindowUtil.getView(R.id.tv_pop_close)
-                        .setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                popwindowUtil.dissmiss();
-                            }
-                        });
+                        .setOnClickListener(v -> popwindowUtil.dissmiss());
                 //showInfoDialog();
                 break;
         }
@@ -326,8 +329,13 @@ public class LocalImgActivity extends BaseActivity {
         list.remove(mPosition);
         File file = new File(localUrl);
         file.delete();
-        mAdapter.notifyDataSetChanged();
-        viewPager.setCurrentItem(mPosition);
+        if (list.size() == 0){
+            finish();
+        }else {
+            mAdapter.notifyDataSetChanged();
+            viewPager.setCurrentItem(mPosition);
+
+        }
 
         //通过rxbus发送消息通知订阅者更新数据
         RxBus.getInstance().post(new DeleteEvent(mPosition));

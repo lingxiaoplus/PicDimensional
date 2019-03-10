@@ -78,7 +78,7 @@ public class SplashPresenter extends BasePresenter<SplashView,BaseActivity>{
             public void onError(int code, String desc) {
                 if (getView() != null){
                     getView().showToast(desc);
-                    getView().showImgUrl(null,null);
+                    getView().showImgUrl(null,desc);
                 }
 
             }

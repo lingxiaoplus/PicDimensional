@@ -16,7 +16,6 @@ import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.utills.LogUtils;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.db.MzituTabModel;
-import com.lingxiaosuse.picture.tudimension.db.MzituTabModel_Table;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.AllFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.DailyFragment;
 import com.lingxiaosuse.picture.tudimension.fragment.mzitu.MzituFragment;
@@ -78,14 +77,12 @@ public class MzituActivity extends BaseActivity {
                 if (MzituActivity.this.isDestroyed()){
                     return;
                 }
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        for (int i = 0; i < tabTitle.size(); i++) {
-                            mAdapter.notifyDataSetChanged();
-                            tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
-                        }
+                UIUtils.runOnUIThread(() -> {
+                    for (int i = 0; i < tabTitle.size(); i++) {
+                        mAdapter.notifyDataSetChanged();
+                        tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
                     }
+                    cancleProgressDialog();
                 });
 
             }catch (Exception e){
@@ -112,6 +109,7 @@ public class MzituActivity extends BaseActivity {
     }
 
     private void initTab() {
+        showProgressDialog("加载数据中...");
         mAdapter = new MzituPagerAdapter(getSupportFragmentManager());
         pagerMzitu.setAdapter(mAdapter);
         tabMzitu.setupWithViewPager(pagerMzitu);
@@ -133,6 +131,7 @@ public class MzituActivity extends BaseActivity {
                 SQLite.delete(MzituTabModel.class).execute();
                 new Thread(mTabRunnable).start();
             }
+            cancleProgressDialog();
         }else {
             new Thread(mTabRunnable).start();
         }

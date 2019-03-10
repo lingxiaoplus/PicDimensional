@@ -223,3 +223,5 @@ public static ** valueOf(java.lang.String);
 -keep class com.alibaba.fastjson.** { *; }
 -keepattributes Signature
 -keepattributes *Annotation*
+
+-keep class * extends com.raizlabs.android.dbflow.config.DatabaseHolder { *; }

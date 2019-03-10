@@ -29,39 +29,36 @@ public class IndicatorActivity extends MaterialIntroActivity {
                 .backgroundColor(R.color.lightblue4)
                 .buttonsColor(R.color.lightbluelast)
                 .image(R.drawable.first)
-                .title("在这里")
-                .description("每天可以撸猫(=・ω・=)")
+                .title("优质图源")
+                .description("定时刷新图片")
                 .build());
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.lightblue3)
                 .buttonsColor(R.color.lightbluelast)
                 .image(R.drawable.second)
-                .title("在这里")
-                .description("还可以发现一些唯美的装逼图--")
+                .title("定制专题")
+                .description("创作自己的图片专题")
                 .build());
-        addSlide(new SlideFragmentBuilder()
+        /*addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.lightblue2)
                 .buttonsColor(R.color.lightbluelast)
                 .image(R.drawable.thred)
                 .title("在这里")
-                .description("可以看一些汉子喜欢的东西")
-                .build());
+                .description("可以看一些喜欢的东西")
+                .build());*/
         //addSlide(new CustomSlide());
         addSlide(new SlideFragmentBuilder()
                 .backgroundColor(R.color.lightblue1)
                 .buttonsColor(R.color.lightbluelast)
                 .image(R.drawable.last)
                 .title("图次元")
-                .description("妹子们都在等着你呢")
+                .description("做一个简单的图片浏览器")
                 .build(),
-                new MessageButtonBehaviour(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(intent);
-                        SpUtils.putBoolean(getApplicationContext(), ContentValue.ISFIRST_KEY,false);
-                        finish();
-                    }
+                new MessageButtonBehaviour(view -> {
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+                    SpUtils.putBoolean(getApplicationContext(), ContentValue.ISFIRST_KEY,false);
+                    finish();
                 },"准备开车"));
     }
 

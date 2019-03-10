@@ -48,7 +48,6 @@ public class ZoomableViewpager extends ViewPager{
     private static final int STATUS_BACK = 2;
     public static int BACK_DURATION = 500;
     private static final float MIN_SCALE_WEIGHT = 0.25f;
-    private static final String TAG = ScrollPhotoDraweeView.class.getSimpleName();
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         switch (ev.getActionMasked()) {
@@ -141,7 +140,7 @@ public class ZoomableViewpager extends ViewPager{
         float alphaPercent = 1f;
         if (deltaY > 0) {
             scale = 1 - Math.abs(deltaY) / screenHeight;
-            alphaPercent = 1 - Math.abs(deltaY) / (screenHeight / 4);//这里是设置背景的透明度，我这是设置移动屏幕一半高度的距离就全透明了。
+            alphaPercent = 1 - Math.abs(deltaY) / (screenHeight / 5);//这里是设置背景的透明度，我这是设置移动屏幕一半高度的距离就全透明了。
         }
 
         ViewHelper.setTranslationX(currentShowView, deltaX);

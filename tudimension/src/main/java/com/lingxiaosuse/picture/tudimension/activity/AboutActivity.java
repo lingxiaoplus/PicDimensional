@@ -160,27 +160,19 @@ public class AboutActivity extends BaseActivity implements SplashView {
                 .build(this)
                 .apply();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (null == cookieBar){
-                    int color = SpUtils.getInt(UIUtils.getContext(),
-                            ContentValue.SKIN_ID,R.color.colorPrimary);
-                    cookieBar = new CookieBar.Builder(AboutActivity.this)
-                            .setTitle("恭喜")
-                            .setMessage("妹子向你发来一条消息")
-                            .setBackgroundColor(color)
-                            .setIcon(R.drawable.ic_default_about)
-                            .setAction("点击回复", new OnActionClickListener() {
-                                @Override
-                                public void onClick() {
-                                    ToastUtils.show("骗你的，你哪来的妹子");
-                                }
-                            })
-                            .show();
-                }
-
+        fab.setOnClickListener(view -> {
+            if (null == cookieBar){
+                int color = SpUtils.getInt(UIUtils.getContext(),
+                        ContentValue.SKIN_ID,R.color.colorPrimary);
+                cookieBar = new CookieBar.Builder(AboutActivity.this)
+                        .setTitle("恭喜")
+                        .setMessage("妹子向你发来一条消息")
+                        .setBackgroundColor(color)
+                        .setIcon(R.drawable.ic_default_about)
+                        .setAction("点击回复", () -> ToastUtils.show("骗你的，你哪来的妹子"))
+                        .show();
             }
+
         });
 
         setToolbarBack(toolbar);
@@ -230,19 +222,11 @@ public class AboutActivity extends BaseActivity implements SplashView {
                         .setNormalDialog("跳转到应用市场",
                                 "是否跳转到应用市场给好评?",
                                 AboutActivity.this)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                goToMarket(AboutActivity.this, getPackageName());
-                                dialog.dismiss();
-                            }
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            goToMarket(AboutActivity.this, getPackageName());
+                            dialog.dismiss();
                         })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
+                        .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
                         .show();
 
                 break;
@@ -287,19 +271,11 @@ public class AboutActivity extends BaseActivity implements SplashView {
                         .setNormalDialog("跳转到博客",
                         "是否跳转到作者博客?",
                         AboutActivity.this)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                goToInternet(AboutActivity.this, "https://www.lingxiaosuse.cn");
-                                dialog.dismiss();
-                            }
+                        .setPositiveButton("确定", (dialog, which) -> {
+                            goToInternet(AboutActivity.this, "https://www.lingxiaomz.top");
+                            dialog.dismiss();
                         })
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
+                        .setNegativeButton("取消", (dialog, which) -> dialog.dismiss())
                         .show();
                 break;
             case R.id.card_from:
