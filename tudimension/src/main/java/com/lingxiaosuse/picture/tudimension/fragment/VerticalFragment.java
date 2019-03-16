@@ -97,7 +97,6 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
             intent.putExtra("position",position);
             intent.putExtra("itemCount",mAdapter.getItemCount());
             intent.putExtra("id",mPicList.get(position).getId());
-            intent.putExtra("isHot",true);
             intent.putExtra("isVertical",true);
             intent.putStringArrayListExtra("picList",picUrlList);
             intent.putStringArrayListExtra("picIdList",picIdList);

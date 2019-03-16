@@ -130,9 +130,10 @@ public class ZoomableViewpager extends ViewPager{
 
     private View currentShowView = null;
     private void setupMoving(float movingX, float movingY) {
-        currentShowView = this;
-        if (currentShowView == null)
-            return;
+        currentShowView = this.getRootView();
+        if (currentShowView == null){
+            currentShowView = this;
+        }
         currentStatus = STATUS_MOVING;
         float deltaX = movingX - mDownX;
         float deltaY = movingY - mDownY;
@@ -146,6 +147,7 @@ public class ZoomableViewpager extends ViewPager{
         ViewHelper.setTranslationX(currentShowView, deltaX);
         ViewHelper.setTranslationY(currentShowView, deltaY);
         setupScale(scale);
+
         setupBackground(alphaPercent);
     }
 

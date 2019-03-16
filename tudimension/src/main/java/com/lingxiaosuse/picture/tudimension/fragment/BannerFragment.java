@@ -89,6 +89,12 @@ public class BannerFragment extends BaseFragment implements HomeView{
         recycleView.setHasFixedSize(true);
         refreshLayout.autoRefresh();
         mAdapter = new BannerRecycleAdapter(R.layout.list_banner,picList);
+        mAdapter.setDuration(800);
+        mAdapter.openLoadAnimation(view -> new Animator[]{
+                ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
+        });
+        mAdapter.isFirstOnly(false);
         recycleView.setAdapter(mAdapter);
 
         mAdapter.setOnItemClickListener((adapter, view, position) -> {
@@ -106,6 +112,7 @@ public class BannerFragment extends BaseFragment implements HomeView{
                 ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
                 ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
         });
+        mAdapter.isFirstOnly(false);
 
         refreshLayout.setOnRefreshListener((refreshLayout)-> {
             picUrlList.clear();

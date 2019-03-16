@@ -1,10 +1,6 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -15,34 +11,37 @@ import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.camera.lingxiao.common.exception.ApiException;
+import com.camera.lingxiao.common.http.RxJavaHelper;
+import com.camera.lingxiao.common.observer.HttpRxCallback;
+import com.camera.lingxiao.common.observer.HttpRxObserver;
 import com.lingxiaosuse.picture.tudimension.R;
-import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.MzituModle;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class MzituDetailActivity extends BaseActivity {
 
@@ -128,56 +127,59 @@ public class MzituDetailActivity extends BaseActivity {
     }
 
     private void getDataFromJsoup(final int page) {
-        new Thread(() -> {
-            Connection connection = Jsoup.connect(imgUrl + "/" + page)
-                    .header("Referer", "http://www.mzitu.com")
-                    .header("User-Agent", ContentValue.USER_AGENT)
-                    .timeout(5000)
-                    .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
+        RxJavaHelper.workWithLifecycle(this, new ObservableOnSubscribe<MzituModle>() {
+            @Override
+            public void subscribe(ObservableEmitter<MzituModle> e) throws Exception {
+                Connection connection = Jsoup.connect(imgUrl + "/" + page)
+                        .header("Referer", "http://www.mzitu.com")
+                        .header("User-Agent", ContentValue.USER_AGENT)
+                        .timeout(5000)
+                        .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
 
-            Document doc = null;
-            MzituModle modle = new MzituModle();
-            try {
+                Document doc = null;
+                MzituModle modle = new MzituModle();
                 Connection.Response response = connection.execute();
                 response.cookies();
                 doc = connection.get();
 
-            if (page == 1){
-                Elements elementPage = doc.getElementsByClass("pagenavi");
-                String page1 = checkPageNum(elementPage.select("span").text());
-                int n =2;
-                String b = page1.substring(page1.length()-n, page1.length());
-                mMaxPage = Integer.valueOf(b);
-                Log.i("图片页数：", "run: "+b);
+                if (page == 1) {
+                    Elements elementPage = doc.getElementsByClass("pagenavi");
+                    String page1 = checkPageNum(elementPage.select("span").text());
+                    int n = 2;
+                    String b = page1.substring(page1.length() - n, page1.length());
+                    mMaxPage = Integer.valueOf(b);
+                    Log.i("图片页数：", "run: " + b);
+                }
+                Elements elementDiv = doc.getElementsByClass("main-image");
+                String srcUrl = elementDiv.select("img").attr("src");
+                Log.i("图片地址：", "run: " + srcUrl);
+                modle.setTitle("");
+                modle.setImgUrl(srcUrl);
+                //请求次数
+                mPage++;
+                e.onNext(modle);
+            }
+        }, new HttpRxObserver() {
+            @Override
+            protected void onStart(Disposable d) {
+
             }
 
-            Elements elementDiv = doc.getElementsByClass("main-image");
+            @Override
+            protected void onError(ApiException e) {
 
-            String srcUrl = elementDiv.select("img").attr("src");
-            Log.i("图片地址：", "run: "+srcUrl);
-            modle.setTitle("");
-            modle.setImgUrl(srcUrl);
-            //请求次数
-            mPage++;
-            if (MzituDetailActivity.this.isDestroyed()){
-                return;
             }
-            UIUtils.runOnUIThread(() -> {
+
+            @Override
+            protected void onSuccess(Object response) {
+                MzituModle modle = (MzituModle) response;
                 mAdapter.addData(modle);
                 mAdapter.notifyDataSetChanged();
-                // TODO: 2018/7/31 部分机型报空指针
                 refreshLayout.finishRefresh();
                 refreshLayout.finishLoadMore();
-            });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }finally {
-                UIUtils.runOnUIThread(() -> {
-                    refreshLayout.finishRefresh();
-                    refreshLayout.finishLoadMore();
-                });
             }
-        }).start();
+        });
+
     }
 
     @Override

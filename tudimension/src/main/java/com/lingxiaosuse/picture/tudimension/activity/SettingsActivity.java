@@ -180,13 +180,10 @@ public class SettingsActivity extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setIcon(android.R.drawable.alert_dark_frame);
         builder.setTitle(title);
-        builder.setSingleChoiceItems(resolutionItems, checked, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                SpUtils.putInt(UIUtils.getContext(),ContentValue.PIC_RESOLUTION,i);
-                cardComparse.setMessage(resolutionItems[i]);
-                dialogInterface.dismiss();
-            }
+        builder.setSingleChoiceItems(resolutionItems, checked, (dialogInterface, i) -> {
+            SpUtils.putInt(UIUtils.getContext(),ContentValue.PIC_RESOLUTION,i);
+            cardComparse.setMessage(resolutionItems[i]);
+            dialogInterface.dismiss();
         });
         builder.show();
     }

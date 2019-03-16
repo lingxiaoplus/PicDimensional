@@ -1,12 +1,9 @@
 package com.lingxiaosuse.picture.tudimension.transation;
 
-import android.util.Log;
-
 import com.camera.lingxiao.common.app.BaseTransation;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.http.ParseHelper;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
-import com.camera.lingxiao.common.retrofit.HttpRequest;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.lingxiaosuse.picture.tudimension.modle.HotModle;

@@ -36,6 +36,8 @@ public class MyWidgetProvider extends AppWidgetProvider {
         for (int appWidgetId : appWidgetIds) {
             appWidgetManager.updateAppWidget(appWidgetId, remoteViews);
         }
+
+        remoteViews.setTextViewText(R.id.tv_name,"hello");
     }
 
     /**

@@ -1,19 +1,13 @@
 package com.lingxiaosuse.picture.tudimension.sendcode;
 
-import android.util.Log;
-
 import com.camera.lingxiao.common.api.UserApi;
-import com.camera.lingxiao.common.app.ContentValue;
 import com.camera.lingxiao.common.http.ParseHelper;
 import com.camera.lingxiao.common.observable.HttpRxObservable;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
-import com.camera.lingxiao.common.retrofit.HttpRequest;
 import com.camera.lingxiao.common.utills.RetrofitUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.lingxiaosuse.picture.tudimension.modle.IdentifyCodeModle;
-import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
-import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.trello.rxlifecycle2.LifecycleProvider;
 
 import java.util.HashMap;

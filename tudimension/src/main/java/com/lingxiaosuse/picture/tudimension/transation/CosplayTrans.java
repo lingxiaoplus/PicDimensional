@@ -3,12 +3,9 @@ package com.lingxiaosuse.picture.tudimension.transation;
 import com.camera.lingxiao.common.api.UserApi;
 import com.camera.lingxiao.common.app.BaseTransation;
 import com.camera.lingxiao.common.app.ContentValue;
-import com.camera.lingxiao.common.body.CosplayBody;
 import com.camera.lingxiao.common.http.ParseHelper;
 import com.camera.lingxiao.common.observable.HttpRxObservable;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
-import com.camera.lingxiao.common.retrofit.HttpRequest;
-import com.camera.lingxiao.common.utills.LogUtils;
 import com.camera.lingxiao.common.utills.RetrofitUtil;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
@@ -20,8 +17,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.reactivex.Observable;
-import okhttp3.RequestBody;
-import retrofit2.http.Body;
 
 public class CosplayTrans extends BaseTransation{
     private Map<String,String> headerMap;

@@ -34,6 +34,7 @@ import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.SplashView;
+import com.lingxiaosuse.picture.tudimension.widget.ProgressDrawable;
 
 import java.util.List;
 
@@ -188,6 +189,7 @@ public class SplashActivity extends BaseActivity implements SplashView{
         if (null == error){
             mUrl = uri.toString();
             draweeView.setImageURI(uri);
+            draweeView.getHierarchy().setProgressBarImage(new ProgressDrawable());
             startAnim();
         }else {
             if (isFirst) {

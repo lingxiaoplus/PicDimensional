@@ -58,7 +58,7 @@ public class DownloadService extends Service {
         public void onFailed(String msg) {
             downloadTask = null;
             stopForeground(true);
-            ToastUtils.show("下载失败:"+msg);
+            ToastUtils.show("下载失败:" + msg);
             getNotificationManager().notify(1,getNotfifcation("下载失败，请重试",-1));
         }
 

@@ -34,11 +34,6 @@ public class MzituRecyclerAdapter extends BaseQuickAdapter<MzituModle, BaseViewH
         this.mTitleList = mTitleList;
     }
 
-    public int getLayoutId() {
-        return R.layout.list_mzitu;
-    }
-
-
     @Override
     protected void convert(BaseViewHolder holder, MzituModle item) {
         try{

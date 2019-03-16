@@ -8,11 +8,11 @@
     android:fitsSystemWindows="true"
     android:id="@+id/conslayout_root">
 
-    <com.lingxiaosuse.picture.tudimension.widget.PhotoViewPager
+    <com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager
         android:id="@+id/viewpager_local"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-       ></com.lingxiaosuse.picture.tudimension.widget.PhotoViewPager>
+       ></com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager>
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_local"
         android:layout_width="match_parent"

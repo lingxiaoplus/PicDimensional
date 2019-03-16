@@ -3,10 +3,13 @@ package com.lingxiaosuse.picture.tudimension.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
@@ -15,8 +18,12 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.utills.SpUtils;
 import com.lingxiaosuse.picture.tudimension.App;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.ref.Reference;
 
 /**
@@ -149,5 +156,39 @@ public class UIUtils {
         drawable1.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
         DrawableCompat.setTint(drawable1, ContextCompat.getColor(getContext(), color));
         imageView.setImageDrawable(drawable1);
+    }
+
+
+    /**
+     * 更新系统图库  下载的图片可以在相册中查看
+     * @param file
+     */
+    public static void updateImageDb(File file){
+        // 其次把文件插入到系统图库
+        try {
+            MediaStore.Images.Media.insertImage(getContext().getContentResolver(),
+                    file.getAbsolutePath(), file.getName(), null);
+            // 最后通知图库更新
+            getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
+                    Uri.fromFile(new File(file.getPath()))));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 获取图片分辨率
+     * @param isVertical 横屏还是竖屏
+     */
+    public static String getImageRule(boolean isVertical){
+        String imgRule = "";
+        int type = SpUtils.getInt(getContext(), ContentValue.PIC_RESOLUTION,ContentValue.PIC_2K);
+        if (type == ContentValue.PIC_720P){
+            imgRule = isVertical?ContentValue.ImgRule_vertical_720:ContentValue.ImgRule_720;
+        }else if (type == ContentValue.PIC_1080P){
+            imgRule = isVertical?ContentValue.ImgRule_vertical_1080:ContentValue.ImgRule_1080;
+        }
+        return imgRule;
     }
 }

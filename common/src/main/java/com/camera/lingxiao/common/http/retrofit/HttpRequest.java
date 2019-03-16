@@ -1,4 +1,4 @@
-package com.camera.lingxiao.common.retrofit;
+package com.camera.lingxiao.common.http.retrofit;
 
 import com.camera.lingxiao.common.api.UserApi;
 import com.camera.lingxiao.common.http.response.HttpResponse;
@@ -36,7 +36,6 @@ public class HttpRequest {
      */
     public void request(Method method, TreeMap<String,Object> prams, HttpRxCallback callback){
         Observable<HttpResponse> apiObservable = handleRequest(method, prams);
-
         HttpRxObservable.getObservable(apiObservable, callback).subscribe(callback);
     }
 

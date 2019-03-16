@@ -37,6 +37,7 @@ import com.lingxiaosuse.picture.tudimension.rxbusevent.DeleteEvent;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.PhotoViewPager;
+import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,7 +50,7 @@ import butterknife.BindView;
 
 public class LocalImgActivity extends BaseActivity {
     @BindView(R.id.viewpager_local)
-    PhotoViewPager viewPager;
+    ZoomableViewpager viewPager;
     @BindView(R.id.toolbar_local)
     Toolbar toolbar;
     //@BindView(R.id.conslayout_root)
@@ -100,6 +101,8 @@ public class LocalImgActivity extends BaseActivity {
 
             }
         });
+
+        viewPager.setFinishScreenListener(() -> finish());
     }
 
     @Override

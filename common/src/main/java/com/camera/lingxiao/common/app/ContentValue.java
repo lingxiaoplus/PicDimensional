@@ -13,8 +13,13 @@ public class ContentValue {
     public static final String bigImgRule ="?imageView2/3/h/1080";
     public static final String hor_720ImgRule ="?imageView2/3/h/720";
 
-    public static final String vertical720_ImgRule ="?imageView16/9/h/1080";
-    public static final String vertical1080_ImgRule ="?imageView16/9/h/1080";
+
+
+    public static final String ImgRule_720 ="?imageMogr2/thumbnail/!1280x720r/gravity/Center/crop/1280x720";
+    public static final String ImgRule_1080 ="?imageMogr2/thumbnail/!1920x1080r/gravity/Center/crop/1920x1080";
+
+    public static final String ImgRule_vertical_720 ="?imageMogr2/thumbnail/!720x1280r/gravity/Center/crop/720x1280";
+    public static final String ImgRule_vertical_1080 ="?imageMogr2/thumbnail/!1080x1920r/gravity/Center/crop/1080x1920";
     //升级接口
     public static final String UPDATEURL = "http://www.lingxiaomz.top/tudimension/update.json";
     public static final int PERMESSION_REQUEST_CODE = 200;
@@ -135,7 +140,7 @@ public class ContentValue {
     public static final String COLLECT_URL = "collect_url";
 
     //搜丝吧
-    public static final String SOUSIBA_URL = "http://www.sousi88.cc";
+    public static final String SOUSIBA_URL = "http://www.sousi99.com";
 
     /**
      * 当前皮肤的id
@@ -154,9 +159,15 @@ public class ContentValue {
      * 设置浏览图片的分辨率
      */
     public static final String PIC_RESOLUTION = "pic_resolution";
+    public static final int PIC_720P = 0;
+    public static final int PIC_1080P = 1;
+    public static final int PIC_2K = 2;
     /**
      * 设置浏览图片的分辨率
      */
     public static final String ANIMATOR_TYPE = "animator_type";
+
+
+    public static final String TUWAN = "https://tudimension-1252348761.cos.ap-chengdu.myqcloud.com/update/tuwan_images.json";
 
 }

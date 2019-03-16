@@ -31,7 +31,13 @@ import android.widget.TextView;
 
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.ContentValue;
+import com.camera.lingxiao.common.exception.ApiException;
+import com.camera.lingxiao.common.http.RxJavaHelper;
+import com.camera.lingxiao.common.observer.HttpRxObserver;
 import com.camera.lingxiao.common.utills.SpUtils;
+import com.facebook.binaryresource.FileBinaryResource;
+import com.facebook.cache.common.SimpleCacheKey;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.R;
@@ -40,6 +46,8 @@ import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.transformer.DepthPageTransformer;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadImgUtils;
 import com.lingxiaosuse.picture.tudimension.utils.DownloadUtils;
+import com.lingxiaosuse.picture.tudimension.utils.FileUtil;
+import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
@@ -56,6 +64,9 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.disposables.Disposable;
 import me.relex.photodraweeview.PhotoDraweeView;
 
 public class ImageLoadingActivity extends BaseActivity {
@@ -112,17 +123,18 @@ public class ImageLoadingActivity extends BaseActivity {
         picList = intent.getStringArrayListExtra("picList");
 
         if (!isHot) {
-            //linearLayout.setBackgroundColor(Color.BLACK);
             IdList = intent.getStringArrayListExtra("picIdList");
             commentImg.setVisibility(View.VISIBLE);
-            //headView.setImageURI();
+            String imageRule = UIUtils.getImageRule(isVertical);
+            Log.i("code", "instantiateItem: 图片规则  " + imageRule);
+            for (int i = 0; i < picList.size(); i++) {
+                String url = picList.get(i) + imageRule;
+                picList.set(i,url);
+            }
+
         }
-        if (isVertical) {
-            IdList = intent.getStringArrayListExtra("picIdList");
-            commentImg.setVisibility(View.VISIBLE);
-        }
-        int imageRule = SpUtils.getInt(this, ContentValue.PIC_RESOLUTION,0);
-        mAdapter = new ImageLoadAdapter(picList, isHot,isVertical,imageRule);
+
+        mAdapter = new ImageLoadAdapter(picList);
         mAdapter.setMoveListener(viewPager);
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(mPosition);
@@ -130,10 +142,6 @@ public class ImageLoadingActivity extends BaseActivity {
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                //首先通过inflate得到各个子view的对象
-                /*View pager = LayoutInflater.from(viewPager.getContext()).inflate(R.layout.pager_load_hot, null);
-                PhotoDraweeView image = pager.findViewById(R.id.simple_pager_load_hot);
-                viewPager.setCurrentShowView(image);*/
 
             }
 
@@ -157,7 +165,6 @@ public class ImageLoadingActivity extends BaseActivity {
         //设置viewpager的点击事件
         mAdapter.setOnItemclick(() -> toggleButtomView());
         mAdapter.setLongClickListener(() -> showDialog());
-
         bindDownloadService();
     }
 
@@ -207,11 +214,25 @@ public class ImageLoadingActivity extends BaseActivity {
     //分享图片
     @OnClick(R.id.iv_img_share)
     public void shareImg() {
-        DownloadImgUtils.downLoadImg(Uri.parse(picList.get(mPosition)), new DownloadImgUtils.OnDownloadListener() {
+        showProgressDialog("请稍后...");
+        RxJavaHelper.workWithLifecycle(ImageLoadingActivity.this, (ObservableOnSubscribe<File>) e -> {
+            File file = FrescoHelper.saveImageByFresco(picList.get(mPosition));
+            e.onNext(file);
+        }, new HttpRxObserver() {
+            @Override
+            protected void onStart(Disposable d) {
+            }
 
             @Override
-            public void onDownloadSuccess(Bitmap bitmap) {
-                saveBitmapFile(bitmap);
+            protected void onError(ApiException e) {
+                ToastUtils.show("下载失败：" + e.getMsg());
+                cancleProgressDialog();
+            }
+
+            @Override
+            protected void onSuccess(Object response) {
+                cancleProgressDialog();
+                File file = (File) response;
                 Intent shareImgIntent = new Intent(Intent.ACTION_SEND);
                 shareImgIntent.setType("image/*");
                 Uri uri;
@@ -228,55 +249,12 @@ public class ImageLoadingActivity extends BaseActivity {
                 shareImgIntent.putExtra(Intent.EXTRA_STREAM, uri);
                 startActivity(shareImgIntent);
             }
-
-            @Override
-            public void onDownloadFailed(String errormsg) {
-
-            }
         });
-    }
-
-    public String saveBitmapFile(Bitmap bitmap) {
-        String path = ContentValue.PATH;
-        String msg = "保存成功";
-        File fileDir = new File(path);//将要保存图片的文件夹
-        if (!fileDir.exists() || fileDir.isFile()) {
-            fileDir.mkdirs();
-        }
-        file = new File(path + "/" + id + mPosition + ".jpg");
-        if (file.exists()) {
-            msg = "图片已经保存了！";
-            return msg;
-        }
-        BufferedOutputStream bos = null;
-        try {
-            bos = new BufferedOutputStream(new FileOutputStream(file));
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
-            bos.flush();
-            bos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            msg = "保存失败";
-            return msg;
-        }
-        // 其次把文件插入到系统图库
-        try {
-            MediaStore.Images.Media.insertImage(this.getContentResolver(),
-                    file.getAbsolutePath(), file.getName(), null);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        // 最后通知图库更新
-        UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                Uri.fromFile(new File(file.getPath()))));
-        return msg;
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //stopService(mDownloadIntent);
-        //unbindService(connection);
         if (null != mConnect){
             unbindService(mConnect);
         }
@@ -291,7 +269,6 @@ public class ImageLoadingActivity extends BaseActivity {
     /**
      * 隐藏底部导航栏
      */
-    private boolean isHiddened;
     private void toggleButtomView() {
         // TODO: 2018/7/31  可能会为空，原因不明
         if (null == relativeLayout){
@@ -299,11 +276,7 @@ public class ImageLoadingActivity extends BaseActivity {
             return;
         }
         float current = relativeLayout.getTranslationY();
-        if (current == 0){
-            isHiddened = true;
-        }else {
-            isHiddened = false;
-        }
+        boolean isHiddened = current == 0;
         ObjectAnimator animator = ObjectAnimator
                 .ofFloat(relativeLayout, "translationY", current, isHiddened ? relativeLayout.getHeight() + 100 : 0);
         ObjectAnimator alpha = ObjectAnimator.ofFloat(relativeLayout, "alpha", isHiddened ? 1.0f:0f, isHiddened ? 0f:1.0f);
@@ -314,86 +287,42 @@ public class ImageLoadingActivity extends BaseActivity {
         Log.d("ImageLoading", "toggleButtomView: "+current);
     }
 
-    private void downloadImg() {
-        DownloadUtils.get().download(true, picList.get(mPosition), "tudimension", new DownloadUtils.OnDownloadListener() {
-            @Override
-            public void onDownloadSuccess(File file) {
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        int mBarcolor = SpUtils.getInt(getApplicationContext(), ContentValue.SKIN_ID, com.camera.lingxiao.common.R.color.colorPrimary);
-                        new CookieBar.Builder(ImageLoadingActivity.this)
-                                .setTitle("提示")
-                                .setMessage("下载成功")
-                                .setBackgroundColor(mBarcolor)
-                                .setAction("查看", new OnActionClickListener() {
-                                    @Override
-                                    public void onClick() {
-                                        //跳转到本地图片浏览界面
-                                        Intent intent = new Intent(UIUtils.getContext(),SeeDownLoadImgActivity.class);
-                                        startActivity(intent);
-                                    }
-                                })
-                                .show();
-                        ToastUtils.show("下载完成");
-                    }
-                });
-                //下载大图会发生oom
-                /*try {
-                    MediaStore.Images.Media.insertImage(UIUtils.getContext()
-                                    .getContentResolver(),
-                            file.getAbsolutePath(), file.getName(), null);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }*/
-                // 最后通知图库更新
-                UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                        Uri.fromFile(new File(file.getPath()))));
-            }
-
-            @Override
-            public void onDownloading(final int progress) {
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtils.show("正在下载" + progress + "%");
-                    }
-                });
-            }
-
-            @Override
-            public void onDownloadFailed(final String error) {
-                UIUtils.runOnUIThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        new CookieBar.Builder(ImageLoadingActivity.this)
-                                .setTitle("下载失败")
-                                .setMessage(error)
-                                .setBackgroundColor(R.color.colorPrimary)
-                                .show();
-                    }
-                });
-            }
-        });
-    }
 
     private void showDialog() {
         String[] items = {"下载", "复制下载链接", "取消"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setItems(items, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if (i == 0) {
-                    //downloadImg();
-                    if (mDownloadService != null){
+        builder.setItems(items, (dialogInterface, i) -> {
+            if (i == 0) {
+                //downloadImg();
+                if (mDownloadService != null){
+                    if (isHot){
+                        RxJavaHelper.workWithLifecycle(ImageLoadingActivity.this, (ObservableOnSubscribe<File>) e -> {
+                            File file = FrescoHelper.saveImageByFresco(picList.get(mPosition));
+                            e.onNext(file);
+                        }, new HttpRxObserver() {
+                            @Override
+                            protected void onStart(Disposable d) {
+
+                            }
+
+                            @Override
+                            protected void onError(ApiException e) {
+                                ToastUtils.show("下载失败：" + e.getMsg());
+                            }
+
+                            @Override
+                            protected void onSuccess(Object response) {
+                                ToastUtils.show("下载成功");
+                            }
+                        });
+                    }else {
                         ToastUtils.show("正在下载");
                         mDownloadService.startDownload(picList.get(mPosition));
                     }
-                } else if (i == 1) {
-                    copyImgUrl();
-                } else {
 
                 }
+            } else if (i == 1) {
+                copyImgUrl();
             }
         });
         builder.show();

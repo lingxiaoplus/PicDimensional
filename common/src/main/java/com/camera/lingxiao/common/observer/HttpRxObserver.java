@@ -5,8 +5,8 @@ import android.text.TextUtils;
 
 import com.camera.lingxiao.common.exception.ApiException;
 import com.camera.lingxiao.common.exception.ExceptionEngine;
-import com.camera.lingxiao.common.retrofit.HttpRequestListener;
-import com.camera.lingxiao.common.retrofit.RxActionManagerImpl;
+import com.camera.lingxiao.common.http.retrofit.HttpRequestListener;
+import com.camera.lingxiao.common.http.retrofit.RxActionManagerImpl;
 
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
@@ -14,6 +14,10 @@ import io.reactivex.disposables.Disposable;
 public abstract class HttpRxObserver<T> implements Observer<T>,HttpRequestListener{
     private String mTag;//请求标识
 
+
+    public HttpRxObserver(){
+        this.mTag = String.valueOf(System.currentTimeMillis());
+    }
     public HttpRxObserver(String s) {
         this.mTag = s;
     }

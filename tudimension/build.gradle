@@ -120,7 +120,7 @@ dependencies {
     // LeanCloud 基础包
     implementation "cn.leancloud.android:avoscloud-sdk:$rootProject.ext.leancloudVersion"
     // LeanCloud 用户反馈包
-    implementation ('cn.leancloud.android:avoscloud-feedback:v4.7.3@aar')
+    implementation('cn.leancloud.android:avoscloud-feedback:v4.7.3@aar')
     implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:$rootProject.ext.BaseRecyclerHelperVersion"
     //debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.ext.leak"
     //releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.ext.leak"

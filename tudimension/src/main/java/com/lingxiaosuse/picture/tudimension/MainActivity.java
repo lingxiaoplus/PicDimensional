@@ -52,6 +52,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.lingxiaosuse.picture.tudimension.activity.LoginActivity;
 import com.lingxiaosuse.picture.tudimension.activity.UserInfoActivity;
 import com.lingxiaosuse.picture.tudimension.activity.cosplay.CosplayLaActivity;
+import com.lingxiaosuse.picture.tudimension.activity.tuwan.TuWanActivity;
 import com.lingxiaosuse.picture.tudimension.db.UserModel;
 import com.lingxiaosuse.picture.tudimension.rxbusevent.DrawerChangeEvent;
 import com.lingxiaosuse.picture.tudimension.service.DownloadService;
@@ -323,6 +324,9 @@ public class MainActivity extends BaseActivity implements MainView{
                         break;
                     case R.id.nav_cosplayla:
                         StartActivity(CosplayLaActivity.class,false);
+                        break;
+                    case R.id.nav_tuwan:
+                        StartActivity(TuWanActivity.class,false);
                         break;
                     default:
                         break;

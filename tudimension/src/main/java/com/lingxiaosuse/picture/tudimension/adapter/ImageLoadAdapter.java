@@ -16,6 +16,7 @@ import com.camera.lingxiao.common.utills.SpUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
 import com.facebook.drawee.controller.BaseControllerListener;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.image.ImageInfo;
@@ -24,6 +25,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.ProgressDrawable;
 import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 
 import java.util.ArrayList;
@@ -40,28 +42,9 @@ import static android.provider.CalendarContract.CalendarCache.URI;
 public class ImageLoadAdapter extends PagerAdapter{
     private ArrayList<String> urlList;
     private PhotoDraweeView image;
-    private boolean isHot;
-    private String imgRule ="";
     private ZoomableViewpager viewpager;
-    public ImageLoadAdapter(ArrayList<String> urlList,boolean isHot,boolean isVertical,int rule){
+    public ImageLoadAdapter(ArrayList<String> urlList){
         this.urlList = urlList;
-        this.isHot = isHot;
-        if (isVertical){
-            if (rule == 0){
-                imgRule = ContentValue.vertical720_ImgRule;
-            }else if (rule == 1){
-                imgRule = ContentValue.vertical1080_ImgRule;
-            }
-        }else {
-            if (rule == 0){
-                imgRule = ContentValue.hor_720ImgRule;
-            }else if (rule == 1){
-                imgRule = ContentValue.bigImgRule;
-            }
-        }
-        if (isHot){
-            imgRule = "";
-        }
     }
 
     public void setMoveListener(ZoomableViewpager viewpager){
@@ -83,53 +66,19 @@ public class ImageLoadAdapter extends PagerAdapter{
         try {
             view = UIUtils.inflate(R.layout.pager_load_hot);
             image = view.findViewById(R.id.simple_pager_load_hot);
-            Uri uri = Uri.parse(urlList.get(position) + imgRule);
+            Uri uri = Uri.parse(urlList.get(position));
             Log.i("code", "instantiateItem: 图片的地址" + urlList.get(position));
-            setControll(uri,image);
+            //setControll(uri,image);
             image.setPhotoUri(uri);
+
+            //image.setHierarchy(FrescoHelper.getHierarchy(container.getContext()));
+            image.getHierarchy().setProgressBarImage(new ProgressDrawable());
             container.addView(view);
             setOnclick(image);
             setOnLongClick(image);
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        /*try {
-            if (isHot){
-                view = UIUtils.inflate(R.layout.pager_load_hot);
-                image = view.findViewById(R.id.simple_pager_load_hot);
-                Uri uri = Uri.parse(urlList.get(position));
-
-                Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position));
-                setControll(uri,image);
-                image.setPhotoUri(uri);
-                container.addView(view);
-                setOnclick(image);
-                setOnLongClick(image);
-                //image.setOnMovingListener(viewpager);
-                //设置宽高自适应
-                *//*FrescoHelper.setControllerListener(image,
-                        uri,
-                        FrescoHelper.getScreenWidth(UIUtils.getContext()));*//*
-            }else {
-                view = UIUtils.inflate(R.layout.pager_load);
-                image = view.findViewById(R.id.simple_pager_load);
-                Uri uri = Uri.parse(urlList.get(position)+imgRule);
-                Log.i("code", "instantiateItem: 图片的地址"+urlList.get(position)+imgRule);
-                setControll(uri,image);
-                image.setPhotoUri(uri);
-                container.addView(view);
-                setOnclick(image);
-                setOnLongClick(image);
-                //设置宽高自适应
-                *//*FrescoHelper.setControllerListener(image,
-                        uri,
-                        FrescoHelper.getScreenWidth(UIUtils.getContext()));*//*
-            }
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }*/
 
         return view;
     }

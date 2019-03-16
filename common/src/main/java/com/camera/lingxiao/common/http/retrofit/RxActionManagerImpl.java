@@ -1,4 +1,4 @@
-package com.camera.lingxiao.common.retrofit;
+package com.camera.lingxiao.common.http.retrofit;
 
 import android.util.ArrayMap;
 

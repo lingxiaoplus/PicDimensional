@@ -97,6 +97,7 @@ public class CategoryDetailFragment extends BaseFragment{
                 getDataFromServer(id,30,0,order);
             });
             refreshLayout.setOnLoadMoreListener(refreshLayout -> {
+                skip+=30;
                 getDataFromServer(id,30,skip,order);
             });
 
@@ -107,7 +108,6 @@ public class CategoryDetailFragment extends BaseFragment{
                     intent.putExtra("position",position);
                     intent.putExtra("itemCount",mAdapter.getItemCount());
                     intent.putExtra("id",mPicList.get(position).getId());
-                    intent.putExtra("isHot",true);
                     intent.putExtra("isVertical",true);
                     intent.putStringArrayListExtra("picList",picUrlList);
                     intent.putStringArrayListExtra("picIdList",picIdList);

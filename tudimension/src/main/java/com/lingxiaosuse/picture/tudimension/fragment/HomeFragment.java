@@ -47,6 +47,7 @@ import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnBannerListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -239,6 +240,5 @@ public class HomeFragment extends BaseFragment implements HomeView{
         smartRefreshLayout.finishLoadMore();
         mHomeAdapter.loadMoreFail();
     }
-
 
 }
