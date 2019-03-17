@@ -70,8 +70,27 @@ public class UIUtils {
         return (int) (dip * density + 0.5f);
     }
     public static float px2dip(int px){
-        float denstty  =getContext().getResources().getDisplayMetrics().density;
+        float denstty = getContext().getResources().getDisplayMetrics().density;
         return px/denstty;
+    }
+
+    /**
+     * 将px值转换为sp值，保证文字大小不变
+     */
+    public static int px2sp(float pxValue) {
+        final float fontScale = getContext().getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
+    /**
+     * 将sp值转换为px值，保证文字大小不变
+     *
+     * @param spValue
+     *            （DisplayMetrics类中属性scaledDensity）
+     * @return
+     */
+    public static int sp2px(float spValue) {
+        final float fontScale = getContext().getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
     }
     // /////////////////加载布局文件//////////////////////////
     public static View inflate(int id){
@@ -98,17 +117,7 @@ public class UIUtils {
         }
     }
 
-    /**
-     * 将sp值转换为px值，保证文字大小不变
-     *
-     * @param spValue
-     *            （DisplayMetrics类中属性scaledDensity）
-     * @return
-     */
-    public static int sp2px(Context context, float spValue) {
-        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
-        return (int) (spValue * fontScale + 0.5f);
-    }
+
 
     /**
      * 获取最小宽度限定

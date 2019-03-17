@@ -22,6 +22,7 @@
         <item android:id="@+id/nav_tuwan"
             android:icon="@drawable/ic_img_tu_wan"
             android:title="兔玩君(tuwanjun.com)"
+            android:visible="false"
             />
         <item android:id="@+id/nav_cosplayla"
             android:icon="@drawable/ic_img_cosplay"

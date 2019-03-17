@@ -35,20 +35,14 @@ import com.lingxiaosuse.picture.tudimension.presenter.SearchPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
-import com.lingxiaosuse.picture.tudimension.widget.WaveLoading;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.BindViews;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 public class SearchActivity extends BaseActivity implements com.lingxiaosuse.picture.tudimension.view.SearchView{
     /*@BindView(R.id.searchview)
     SearchView searchView;*/

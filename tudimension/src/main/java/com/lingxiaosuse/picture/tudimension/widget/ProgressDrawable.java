@@ -11,6 +11,9 @@ import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+
 public class ProgressDrawable extends Drawable {
     private static final String TAG = ProgressDrawable.class.getSimpleName();
     private Paint mPaint,mColorFullPaint;
@@ -18,12 +21,33 @@ public class ProgressDrawable extends Drawable {
     private Paint mTextPaint;
     private int mCircleColor;
     private int mWidth,mHeight;
-    private int mRadius = 80;
+    private float mRadius;
     private int mSpeed = 2;
     private int mProgress = 0;
 
     public ProgressDrawable() {
         init();
+    }
+
+    private void init() {
+        mRadius =  UIUtils.dip2px(30);
+        mPaint = new Paint();
+        mPaint.setColor(Color.WHITE);
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setAntiAlias(true);
+        //setBackgroundColor(Color.BLUE);
+
+        mColorFullPaint = new Paint();
+        mColorFullPaint.setColor(UIUtils.getColor(R.color.pink_a200));
+        mColorFullPaint.setStyle(Paint.Style.FILL);
+        mColorFullPaint.setAntiAlias(true);
+
+        mTextPaint = new Paint();
+        mTextPaint.setColor(Color.GRAY);
+        mTextPaint.setStyle(Paint.Style.FILL);
+        mTextPaint.setStrokeWidth(UIUtils.sp2px(2f));
+        mTextPaint.setTextSize(UIUtils.sp2px(16f));
+        mTextPaint.setTextAlign(Paint.Align.CENTER); //文字水平居中
     }
 
     @Override
@@ -73,43 +97,25 @@ public class ProgressDrawable extends Drawable {
         return super.onLevelChange(level);
     }
 
-    private void init() {
-        mPaint = new Paint();
-        mPaint.setColor(Color.WHITE);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setAntiAlias(true);
-        //setBackgroundColor(Color.BLUE);
-
-        mColorFullPaint = new Paint();
-        mColorFullPaint.setColor(Color.parseColor("#FF4081"));
-        mColorFullPaint.setStyle(Paint.Style.FILL);
-        mColorFullPaint.setAntiAlias(true);
-
-        mTextPaint = new Paint();
-        mTextPaint.setColor(Color.GRAY);
-        mTextPaint.setStyle(Paint.Style.FILL);
-        mTextPaint.setStrokeWidth(5);
-        mTextPaint.setTextSize(30f);
-        mTextPaint.setTextAlign(Paint.Align.CENTER); //文字水平居中
-    }
-
 
     private int progress = 0;
     private int style = 0;
     private void drawInCiracle(Canvas canvas, Path defPath) {
         Path path = new Path();
-        if (progress < 2*mRadius){
+        if (progress < 2 * mRadius){
             if (style == 0){
                 path.addCircle(0,mRadius,progress, Path.Direction.CW);
+                mColorFullPaint.setColor(UIUtils.getColor(R.color.pink_a200));
             }else if (style == 1){
                 path.addCircle(0,-mRadius,progress, Path.Direction.CW);
-                mColorFullPaint.setColor(Color.parseColor("#AB47BC"));
+                mColorFullPaint.setColor(UIUtils.getColor(R.color.green_200));
             }else if (style == 2){
                 path.addCircle(mRadius,0,progress, Path.Direction.CW);
-                mColorFullPaint.setColor(Color.parseColor("#673AB7"));
+                mColorFullPaint.setColor(UIUtils.getColor(R.color.teal_400));
             }else if (style == 3){
                 path.addCircle(-mRadius,0,progress, Path.Direction.CW);
-                mColorFullPaint.setColor(Color.parseColor("#2196F3"));
+                mColorFullPaint.setColor(UIUtils.getColor(R.color.blue400));
+                style = 0;
             }
             path.op(defPath, Path.Op.INTERSECT);
             canvas.drawPath(path,mColorFullPaint);

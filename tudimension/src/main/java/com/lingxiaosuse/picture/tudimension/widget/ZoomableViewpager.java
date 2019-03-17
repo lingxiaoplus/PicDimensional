@@ -16,6 +16,13 @@ import me.relex.photodraweeview.PhotoDraweeView;
 
 /**
  * Created by lingxiao on 2018/1/21.
+ *
+ *
+ *当PhotoView 和 ViewPager 组合时 ，
+ *用双指进行放大时 是没有问题的，但是用双指进行缩小的时候，程序就会崩掉
+ *只需要自定义一个类去继承ViewPager ，然后重写Viewpager的 onInterceptTouchEvent()的方法
+ *
+ * 后续拓展 -- 添加下拉手势响应
  */
 
 public class ZoomableViewpager extends ViewPager{

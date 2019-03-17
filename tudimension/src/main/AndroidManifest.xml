@@ -29,7 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyMainTheme">
-        <activity android:name=".activity.tuwan.TuWanActivity"></activity>
+
+        <activity android:name=".activity.tuwan.TuWanActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -89,14 +90,17 @@
         <activity android:name=".activity.CommentActivity" />
         <activity android:name=".activity.WebActivity" />
 
-        <receiver android:name=".widget.MyWidgetProvider">
+        <receiver android:name=".widget.MyWidgetProvider"
+            android:exported="true"
+            android:enabled="true">
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
 
+
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="com.seewo.homewidgets.action.CLICK" />
+                <action android:name="com.lingxiaosuse.picture.tudimension.action.CLICK" />
             </intent-filter>
         </receiver>
         <receiver android:name=".receiver.NotificationReceiver">
@@ -122,7 +126,7 @@
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.UserInfoActivity" />
-        <activity android:name="com.avos.avoscloud.feedback.ThreadActivity"></activity>
+        <activity android:name="com.avos.avoscloud.feedback.ThreadActivity" />
     </application>
 
 </manifest>

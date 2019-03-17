@@ -36,7 +36,6 @@ import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.rxbusevent.DeleteEvent;
 import com.lingxiaosuse.picture.tudimension.utils.StringUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-import com.lingxiaosuse.picture.tudimension.widget.PhotoViewPager;
 import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 
 import java.io.File;

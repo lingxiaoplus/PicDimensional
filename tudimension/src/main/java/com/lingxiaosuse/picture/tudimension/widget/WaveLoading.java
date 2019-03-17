@@ -40,7 +40,7 @@ public class WaveLoading extends View{
     private int mWidth = UIUtils.dip2px(50);
     private int mHeight = UIUtils.dip2px(50);
     private float currentPersent;
-    private int textSize = UIUtils.sp2px(getContext(), 25);
+    private int textSize = UIUtils.sp2px(25);
 
     public WaveLoading(Context context) {
         this(context,null);
