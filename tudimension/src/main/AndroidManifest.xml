@@ -29,7 +29,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyMainTheme">
-
+        <activity android:name=".activity.tuwan.TuWanDetailActivity"></activity>
         <activity android:name=".activity.tuwan.TuWanActivity" />
 
         <uses-library
@@ -90,13 +90,13 @@
         <activity android:name=".activity.CommentActivity" />
         <activity android:name=".activity.WebActivity" />
 
-        <receiver android:name=".widget.MyWidgetProvider"
-            android:exported="true"
-            android:enabled="true">
+        <receiver
+            android:name=".widget.MyWidgetProvider"
+            android:enabled="true"
+            android:exported="true">
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_info" />
-
 
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -127,6 +127,12 @@
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.UserInfoActivity" />
         <activity android:name="com.avos.avoscloud.feedback.ThreadActivity" />
+
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent" />
+
     </application>
 
 </manifest>

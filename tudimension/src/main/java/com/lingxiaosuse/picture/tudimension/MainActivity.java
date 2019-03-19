@@ -133,8 +133,8 @@ public class MainActivity extends BaseActivity implements MainView{
         // 初始化参数依次为 this, AppId, AppKey
         // 初始化参数依次为 this, AppId, AppKey
         AVOSCloud.initialize(UIUtils.getContext(),
-                "NeAGyi58wfImRBFUcGrPRdxx-gzGzoHsz",
-                "On3B4dFI9RH0XNTFWK4kdCUS");
+                "LIAOQVeY4ChL2XLqKkRRNIHC-gzGzoHsz",
+                "hYedbdnzfufqTy2iCz0uECkc");
         // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可     开启调试日志
         AVOSCloud.setDebugLogEnabled(true);
 

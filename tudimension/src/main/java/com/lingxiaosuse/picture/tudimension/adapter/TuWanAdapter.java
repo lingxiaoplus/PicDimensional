@@ -14,14 +14,14 @@ import com.lingxiaosuse.picture.tudimension.modle.TuWanModle;
 
 import java.util.List;
 
-public class TuWanAdapter extends BaseQuickAdapter<TuWanModle.ImageData, BaseViewHolder> {
-    public TuWanAdapter(int layoutResId, @Nullable List<TuWanModle.ImageData> data) {
+public class TuWanAdapter extends BaseQuickAdapter<TuWanModle, BaseViewHolder> {
+    public TuWanAdapter(int layoutResId, @Nullable List<TuWanModle> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder holder, TuWanModle.ImageData item) {
-        Uri uri = Uri.parse(item.getHeader());
+    protected void convert(BaseViewHolder holder, TuWanModle item) {
+        Uri uri = Uri.parse(item.getUrl());
         TextView title = holder.getView(R.id.tv_mzitu_title);
         title.setText(item.getTitle());
         SimpleDraweeView simpleDraweeView = holder.getView(R.id.iv_mzitu_image);

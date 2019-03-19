@@ -54,6 +54,7 @@ import com.lingxiaosuse.picture.tudimension.view.SplashView;
 import com.lingxiaosuse.picture.tudimension.widget.SettingCardView;
 import com.liuguangqiang.cookie.CookieBar;
 import com.liuguangqiang.cookie.OnActionClickListener;
+import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.File;
@@ -262,8 +263,9 @@ public class AboutActivity extends BaseActivity implements SplashView {
                         .show();
                 break;
             case R.id.card_version:
-                showProgressDialog("正在检测更新...");
-                mPresenter.getVersion();
+                //showProgressDialog("正在检测更新...");
+                //mPresenter.getVersion();
+                Beta.checkUpgrade(true,false);
                 break;
             case R.id.card_blog:
                 DialogUtil

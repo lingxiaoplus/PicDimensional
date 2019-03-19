@@ -1,5 +1,11 @@
 package com.lingxiaosuse.picture.tudimension.presenter;
 
+import android.util.Log;
+
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 import com.camera.lingxiao.common.app.BaseActivity;
 import com.camera.lingxiao.common.app.BasePresenter;
 import com.camera.lingxiao.common.app.BaseView;
@@ -8,29 +14,70 @@ import com.lingxiaosuse.picture.tudimension.modle.TuWanModle;
 import com.lingxiaosuse.picture.tudimension.transation.GeneralTrans;
 import com.lingxiaosuse.picture.tudimension.view.GeneralView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GeneralPresenter extends BasePresenter<GeneralView, BaseActivity> {
-    private GeneralTrans trans;
+    private static final String TAG = GeneralPresenter.class.getSimpleName();
     public GeneralPresenter(GeneralView view, BaseActivity activity) {
         super(view, activity);
-        trans = new GeneralTrans(getActivity());
     }
 
-    public void getData(String url){
-        trans.getData(url, new HttpRxCallback() {
+    /**
+     * 查询封面信息
+     * @param limit
+     * @param skip
+     */
+    public void getCoverData(int limit ,int skip){
+        List<TuWanModle> imageList = new ArrayList<>();
+        AVQuery<AVObject> avQuery = new AVQuery<>("tuwan_main");
+        avQuery.limit(limit)
+                .skip(skip*10)
+                .findInBackground(new FindCallback<AVObject>() {
             @Override
-            public void onSuccess(Object... object) {
-                TuWanModle modle = (TuWanModle) object[0];
-                getView().onGetData(modle);
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null){
+                    for (int i = 0; i < list.size(); i++) {
+                        AVObject avObject = list.get(i);
+                        String type = avObject.getString("album_index");
+                        String title = avObject.getString("title");
+                        String url = avObject.getString("url");
+                        TuWanModle modle = new TuWanModle();
+                        modle.setId(type);
+                        modle.setTitle(title);
+                        modle.setUrl(url);
+                        imageList.add(modle);
+                        Log.d(TAG,"获取到的type：" + type +"  获取到的title：" + title);
+                    }
+                    getView().onGetCoverData(imageList);
+                }else {
+                    getView().showToast(e.getMessage());
+                }
             }
+        });
+    }
 
+    public void getDetailData(String typeId){
+        List<TuWanModle> imageList = new ArrayList<>();
+        AVQuery<AVObject> detailQuery = new AVQuery<>("tuwan");
+        detailQuery.whereEqualTo("type",typeId)
+                .findInBackground(new FindCallback<AVObject>() {
             @Override
-            public void onError(int code, String desc) {
-                getView().showToast(desc);
-            }
-
-            @Override
-            public void onCancel() {
-
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null){
+                    for (int i = 0; i < list.size(); i++) {
+                        AVObject avObject = list.get(i);
+                        String id = avObject.getObjectId();
+                        String url = avObject.getString("url");
+                        TuWanModle modle = new TuWanModle();
+                        modle.setId(id);
+                        modle.setUrl(url);
+                        imageList.add(modle);
+                    }
+                    getView().onGetDetailData(imageList);
+                }else {
+                    getView().showToast(e.getMessage());
+                }
             }
         });
     }

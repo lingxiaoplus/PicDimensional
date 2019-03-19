@@ -50,7 +50,10 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer>{
             String directory = ContentValue.PATH;
             FileUtil.isExistDir(directory);
             //这里下载的图片
-            mFile = new File(directory +fileName+".jpg");
+            if (!fileName.endsWith(".jpg") && !fileName.endsWith(".apk")){
+                fileName+=".jpg";
+            }
+            mFile = new File(directory +fileName);
             if (mFile.exists()){
                 downloadLength = mFile.length();
             }

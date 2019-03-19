@@ -194,9 +194,13 @@ public class ImageLoadingActivity extends BaseActivity {
     @OnClick(R.id.iv_image_save)
     public void imageSave(final View view) {
         //downloadImg();
-        if (mDownloadService != null){
-            ToastUtils.show("正在下载");
-            mDownloadService.startDownload(picList.get(mPosition));
+        if (isHot){
+            downloadImgByFresco();
+        }else {
+            if (mDownloadService != null){
+                ToastUtils.show("正在下载");
+                mDownloadService.startDownload(picList.get(mPosition));
+            }
         }
     }
 
@@ -296,30 +300,11 @@ public class ImageLoadingActivity extends BaseActivity {
                 //downloadImg();
                 if (mDownloadService != null){
                     if (isHot){
-                        RxJavaHelper.workWithLifecycle(ImageLoadingActivity.this, (ObservableOnSubscribe<File>) e -> {
-                            File file = FrescoHelper.saveImageByFresco(picList.get(mPosition));
-                            e.onNext(file);
-                        }, new HttpRxObserver() {
-                            @Override
-                            protected void onStart(Disposable d) {
-
-                            }
-
-                            @Override
-                            protected void onError(ApiException e) {
-                                ToastUtils.show("下载失败：" + e.getMsg());
-                            }
-
-                            @Override
-                            protected void onSuccess(Object response) {
-                                ToastUtils.show("下载成功");
-                            }
-                        });
+                        downloadImgByFresco();
                     }else {
                         ToastUtils.show("正在下载");
                         mDownloadService.startDownload(picList.get(mPosition));
                     }
-
                 }
             } else if (i == 1) {
                 copyImgUrl();
@@ -328,6 +313,28 @@ public class ImageLoadingActivity extends BaseActivity {
         builder.show();
     }
 
+
+    private void downloadImgByFresco(){
+        RxJavaHelper.workWithLifecycle(ImageLoadingActivity.this, (ObservableOnSubscribe<File>) e -> {
+            File file = FrescoHelper.saveImageByFresco(picList.get(mPosition));
+            e.onNext(file);
+        }, new HttpRxObserver() {
+            @Override
+            protected void onStart(Disposable d) {
+
+            }
+
+            @Override
+            protected void onError(ApiException e) {
+                ToastUtils.show("下载失败：" + e.getMsg());
+            }
+
+            @Override
+            protected void onSuccess(Object response) {
+                ToastUtils.show("下载成功");
+            }
+        });
+    }
     private void copyImgUrl() {
         ClipboardManager manager = (ClipboardManager)
                 getSystemService(Context.CLIPBOARD_SERVICE);

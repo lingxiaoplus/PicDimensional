@@ -17,6 +17,7 @@ import com.lingxiaosuse.picture.tudimension.App;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.CrashActivity;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.Map;
@@ -108,7 +109,9 @@ public class InitIalizeService extends IntentService {
                 return super.onCrashHandleStart(crashType, errorType, errorMessage, errorStack);
             }
         });
-        CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", true,strategy);
+        //CrashReport.initCrashReport(getApplicationContext(), "fcc0256432", true,strategy);
+        Bugly.init(getApplicationContext(), "fcc0256432",true,strategy);
+
         SkinLib.init((App) mContext);
     }
 

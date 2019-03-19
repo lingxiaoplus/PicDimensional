@@ -3,23 +3,48 @@ package com.lingxiaosuse.picture.tudimension.modle;
 import java.util.List;
 
 public class TuWanModle {
-    private List<ImageData> res;
+    private String id;
+    private String title;
+    private String url;
 
-    public List<ImageData> getRes() {
-        return res;
+    public String getId() {
+        return id;
     }
 
-    public void setRes(List<ImageData> res) {
-        this.res = res;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    private List<ImageData> imageList;
+
+    public List<ImageData> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<ImageData> res) {
+        this.imageList = res;
     }
 
     public class ImageData{
         private String id;
         private String title;
-        private String header;
-        private String download;
-        private String time;
-        private String total;
+        private String url;
 
         public String getId() {
             return id;
@@ -37,36 +62,12 @@ public class TuWanModle {
             this.title = title;
         }
 
-        public String getHeader() {
-            return header;
+        public String getUrl() {
+            return url;
         }
 
-        public void setHeader(String header) {
-            this.header = header;
-        }
-
-        public String getDownload() {
-            return download;
-        }
-
-        public void setDownload(String download) {
-            this.download = download;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public void setTime(String time) {
-            this.time = time;
-        }
-
-        public String getTotal() {
-            return total;
-        }
-
-        public void setTotal(String total) {
-            this.total = total;
+        public void setUrl(String url) {
+            this.url = url;
         }
     }
 }
