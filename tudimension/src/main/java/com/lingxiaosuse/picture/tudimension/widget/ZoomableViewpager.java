@@ -10,9 +10,8 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 
-import com.nineoldandroids.view.ViewHelper;
+//import com.nineoldandroids.view.ViewHelper;
 
-import me.relex.photodraweeview.PhotoDraweeView;
 
 /**
  * Created by lingxiao on 2018/1/21.
@@ -151,8 +150,10 @@ public class ZoomableViewpager extends ViewPager{
             alphaPercent = 1 - Math.abs(deltaY) / (screenHeight / 5);//这里是设置背景的透明度，我这是设置移动屏幕一半高度的距离就全透明了。
         }
 
-        ViewHelper.setTranslationX(currentShowView, deltaX);
-        ViewHelper.setTranslationY(currentShowView, deltaY);
+        currentShowView.setTranslationX(deltaX);
+        currentShowView.setTranslationY(deltaY);
+        //ViewHelper.setTranslationX(currentShowView, deltaX);
+        //ViewHelper.setTranslationY(currentShowView, deltaY);
         setupScale(scale);
 
         setupBackground(alphaPercent);
@@ -161,8 +162,10 @@ public class ZoomableViewpager extends ViewPager{
 
     private void setupScale(float scale) {
         scale = Math.min(Math.max(scale, MIN_SCALE_WEIGHT), 1);//MIN_SCALE_WEIGHT是最小可缩小倍数，我这里设置的0.25f
-        ViewHelper.setScaleX(currentShowView, scale);
-        ViewHelper.setScaleY(currentShowView, scale);
+        //ViewHelper.setScaleX(currentShowView, scale);
+        //ViewHelper.setScaleY(currentShowView, scale);
+        currentShowView.setScaleX(scale);
+        currentShowView.setScaleY(scale);
     }
 
     private void setupBackground(float percent) {

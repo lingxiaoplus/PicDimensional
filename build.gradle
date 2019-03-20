@@ -58,7 +58,7 @@ ext{
     //沉浸式
     ultimatebarVersion = "2.0.0"
     gsonVersion = "2.7"
-    frescoVersion = "0.12.0"
+    frescoVersion = "1.13.0"
     retrofitVersion = "2.1.0"
     bannerVersion = "1.4.10"
     rxandroidVersion = "2.0.1"

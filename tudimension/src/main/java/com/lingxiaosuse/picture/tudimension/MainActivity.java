@@ -182,12 +182,7 @@ public class MainActivity extends BaseActivity implements MainView{
         }
 
         //延迟加载 提升速度
-        getWindow().getDecorView().post(new Runnable() {
-            @Override
-            public void run() {
-                mInitHandler.post(mLoadingRunnable);
-            }
-        });
+        getWindow().getDecorView().post(() -> mInitHandler.post(mLoadingRunnable));
     }
 
     private void initHeadLayout() {
@@ -215,44 +210,30 @@ public class MainActivity extends BaseActivity implements MainView{
                 //缓存用户对象为空时，可打开用户注册界面…
                 StartActivity(LoginActivity.class,false);
             }
-
-
         });
         mPresenter.getHeadImg();
         mPresenter.getHeadText();
 
-        simpleDraweeView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                final PopwindowUtil popwindowUtil = new PopwindowUtil
-                        .PopupWindowBuilder(getApplicationContext())
-                        .setView(R.layout.pop_long_click)
-                        .setFocusable(true)
-                        .setTouchable(true)
-                        .setOutsideTouchable(true)
-                        .create();
-                //popwindowUtil.showAtLocation(simpleDraweeView);
-                popwindowUtil.showAsDropDown(simpleDraweeView,0,
-                        -simpleDraweeView.getHeight()/2);
-                popwindowUtil.getView(R.id.pop_download).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mDownloadService != null && mHeadImageUrl != null){
-                            ToastUtils.show("正在下载");
-                            mDownloadService.startDownload(mHeadImageUrl);
-                        }
-                        popwindowUtil.dissmiss();
-                    }
-                });
-                popwindowUtil.getView(R.id.pop_cancel).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        popwindowUtil.dissmiss();
-                    }
-                });
-                return true;
-            }
+        simpleDraweeView.setOnLongClickListener(v -> {
+            final PopwindowUtil popwindowUtil = new PopwindowUtil
+                    .PopupWindowBuilder(getApplicationContext())
+                    .setView(R.layout.pop_long_click)
+                    .setFocusable(true)
+                    .setTouchable(true)
+                    .setOutsideTouchable(true)
+                    .create();
+            //popwindowUtil.showAtLocation(simpleDraweeView);
+            popwindowUtil.showAsDropDown(simpleDraweeView,0,
+                    -simpleDraweeView.getHeight()/2);
+            popwindowUtil.getView(R.id.pop_download).setOnClickListener(v12 -> {
+                if (mDownloadService != null && mHeadImageUrl != null){
+                    ToastUtils.show("正在下载");
+                    mDownloadService.startDownload(mHeadImageUrl);
+                }
+                popwindowUtil.dissmiss();
+            });
+            popwindowUtil.getView(R.id.pop_cancel).setOnClickListener(v1 -> popwindowUtil.dissmiss());
+            return true;
         });
     }
 
@@ -291,70 +272,86 @@ public class MainActivity extends BaseActivity implements MainView{
         //设置默认选中为首页
         navigationView.setCheckedItem(R.id.nav_home);
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.
-                OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nav_home:
-                        StartActivity(MainActivity.class, false);
-                        viewPager.setCurrentItem(0);
-                        break;
-                    case R.id.nav_vertical:
-                        StartActivity(VerticalActivity.class, false);
-                        break;
-                    /*case R.id.nav_figure:
-                        ToastUtils.show("斗图");
-                        break;*/
-                    case R.id.nav_find:
-                        showSelectDia();
-                        break;
-                    case R.id.nav_reception:
-                        goToMarket(MainActivity.this, getPackageName());
-                        break;
-                    case R.id.nav_exit:
-                        ActivityController.finishAll();
-                        break;
-                    case R.id.nav_mzitu:
-                        //mzitu 爬虫
-                        StartActivity(MzituActivity.class,false);
-                        break;
-                    case R.id.nav_sousiba:
-                        StartActivity(SousibaActivity.class,false);
-                        break;
-                    case R.id.nav_cosplayla:
-                        StartActivity(CosplayLaActivity.class,false);
-                        break;
-                    case R.id.nav_tuwan:
-                        StartActivity(TuWanActivity.class,false);
-                        break;
-                    default:
-                        break;
-                }
-                mDrawerLayout.closeDrawers(); //关闭菜单
-                return true;
+        navigationView.setNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.nav_home:
+                    StartActivity(MainActivity.class, false);
+                    viewPager.setCurrentItem(0);
+                    break;
+                case R.id.nav_vertical:
+                    StartActivity(VerticalActivity.class, false);
+                    break;
+                /*case R.id.nav_figure:
+                    ToastUtils.show("斗图");
+                    break;*/
+                case R.id.nav_find:
+                    showSelectDia();
+                    break;
+                case R.id.nav_reception:
+                    goToMarket(MainActivity.this, getPackageName());
+                    break;
+                case R.id.nav_exit:
+                    ActivityController.finishAll();
+                    break;
+                case R.id.nav_mzitu:
+                    //mzitu 爬虫
+                    StartActivity(MzituActivity.class,false);
+                    break;
+                case R.id.nav_sousiba:
+                    StartActivity(SousibaActivity.class,false);
+                    break;
+                case R.id.nav_cosplayla:
+                    StartActivity(CosplayLaActivity.class,false);
+                    break;
+                case R.id.nav_tuwan:
+                    Intent tuwanIt = new Intent(MainActivity.this,TuWanActivity.class);
+                    tuwanIt.putExtra("table_name","tuwan_main");
+                    startActivity(tuwanIt);
+                    break;
+                case R.id.nav_leshe:
+                    Intent lesheIt = new Intent(MainActivity.this,TuWanActivity.class);
+                    lesheIt.putExtra("table_name","leshe_cover");
+                    startActivity(lesheIt);
+                    break;
+                default:
+                    break;
             }
+            mDrawerLayout.closeDrawers(); //关闭菜单
+            return true;
         });
     }
 
     private void setVisibility(int pos,boolean vis){
         Menu menu = navigationView.getMenu();
-        if (pos == 0){
-            menu.findItem(R.id.nav_home).setVisible(vis);
-        }else if(pos == 1){
-            menu.findItem(R.id.nav_vertical).setVisible(vis);
-        }else if(pos == 2){
-            menu.findItem(R.id.nav_mzitu).setVisible(vis);
-        }else if(pos == 3){
-            menu.findItem(R.id.nav_cosplayla).setVisible(vis);
-        }else if(pos == 4){
-            menu.findItem(R.id.nav_find).setVisible(vis);
-        }else if(pos == 5){
-            menu.findItem(R.id.nav_reception).setVisible(vis);
-        }else if(pos == 6){
-            menu.findItem(R.id.nav_exit).setVisible(vis);
+        switch (pos){
+            case 0:
+                menu.findItem(R.id.nav_home).setVisible(vis);
+                break;
+            case 1:
+                menu.findItem(R.id.nav_vertical).setVisible(vis);
+                break;
+            case 2:
+                menu.findItem(R.id.nav_mzitu).setVisible(vis);
+                break;
+            case 3:
+                menu.findItem(R.id.nav_leshe).setVisible(vis);
+                break;
+            case 4:
+                menu.findItem(R.id.nav_tuwan).setVisible(vis);
+                break;
+            case 5:
+                menu.findItem(R.id.nav_cosplayla).setVisible(vis);
+                break;
+            case 6:
+                menu.findItem(R.id.nav_find).setVisible(vis);
+                break;
+            case 7:
+                menu.findItem(R.id.nav_reception).setVisible(vis);
+                break;
+            case 8:
+                menu.findItem(R.id.nav_exit).setVisible(vis);
+                break;
         }
-
     }
     @Override
     public void onGetHeadBackGround(Uri uri) {
@@ -593,20 +590,17 @@ public class MainActivity extends BaseActivity implements MainView{
      * 订阅侧滑菜单修改消息
      */
     private void initSubscription() {
-        Disposable regist = RxBus.getInstance().register(DrawerChangeEvent.class, new Consumer<DrawerChangeEvent>() {
-            @Override
-            public void accept(DrawerChangeEvent drawerChangeEvent) throws Exception {
+        Disposable regist = RxBus.getInstance().register(DrawerChangeEvent.class, drawerChangeEvent -> {
 
-                for (int j = 0; j < getResources().getStringArray(R.array.drawer_string).length; j++) {
-                    setVisibility(j,true);
-                }
-                String val = drawerChangeEvent.getPositions();
-                String[] posStr = val.split(",");
-                for (int i = 0; i < posStr.length; i++) {
-                    if (StringUtils.isNumeric(posStr[i]) && !posStr[i].isEmpty()){
-                        int pos = Integer.valueOf(posStr[i]);
-                        setVisibility(pos,false);
-                    }
+            for (int j = 0; j < getResources().getStringArray(R.array.drawer_string).length; j++) {
+                setVisibility(j,true);
+            }
+            String val = drawerChangeEvent.getPositions();
+            String[] posStr = val.split(",");
+            for (int i = 0; i < posStr.length; i++) {
+                if (StringUtils.isNumeric(posStr[i]) && !posStr[i].isEmpty()){
+                    int pos = Integer.valueOf(posStr[i]);
+                    setVisibility(pos,false);
                 }
             }
         });

@@ -14,20 +14,33 @@ import com.camera.lingxiao.common.http.RxJavaHelper;
 import com.camera.lingxiao.common.observer.HttpRxObserver;
 import com.facebook.binaryresource.FileBinaryResource;
 import com.facebook.cache.common.SimpleCacheKey;
+import com.facebook.common.logging.FLog;
 import com.facebook.drawee.backends.pipeline.Fresco;
 
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.imagepipeline.listener.RequestListener;
+import com.facebook.imagepipeline.listener.RequestLoggingListener;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.widget.ProgressDrawable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -43,12 +56,17 @@ import okhttp3.Response;
 
 public class FrescoHelper {
     public static void initFresco(Context context) {
-        ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
-                .newBuilder(context, getOkHttpClientForFresco()).build();
 
+       /* Set<RequestListener> requestListeners = new HashSet<>();
+        requestListeners.add(new RequestLoggingListener());
+        FLog.setMinimumLoggingLevel(FLog.VERBOSE);*/
+
+        ImagePipelineConfig config = OkHttpImagePipelineConfigFactory
+                .newBuilder(context, getOkHttpClientForFresco())
+                //.setRequestListeners(requestListeners)
+                .build();
 
         Fresco.initialize(context, config);
-        //Fresco.initialize(context, config);
     }
 
     public static OkHttpClient getOkHttpClientForFresco() {
@@ -62,7 +80,6 @@ public class FrescoHelper {
 
     private static class HeaderInterceptor implements Interceptor {
         private HashMap<String, String> mHeadMap;
-
         private HeaderInterceptor() {
             mHeadMap = new HashMap<>();
         }
@@ -95,6 +112,7 @@ public class FrescoHelper {
 
     /**
      * 从fresco的见缓存中获取图片
+     *
      * @param path
      */
     public static File saveImageByFresco(String path) throws IOException {
@@ -103,12 +121,12 @@ public class FrescoHelper {
                         .getMainFileCache()
                         .getResource(new SimpleCacheKey(path));
         File file = new File(ContentValue.PATH + "/" + System.currentTimeMillis() + ".jpg");
-        FileUtil.copyFile(resource.getFile(),file);
+        FileUtil.copyFile(resource.getFile(), file);
         UIUtils.updateImageDb(file);
         return file;
     }
 
-    public static GenericDraweeHierarchy getHierarchy(Context context){
+    public static GenericDraweeHierarchy getHierarchy(Context context) {
         GenericDraweeHierarchyBuilder builder =
                 new GenericDraweeHierarchyBuilder(context.getResources());
         GenericDraweeHierarchy hierarchy = builder

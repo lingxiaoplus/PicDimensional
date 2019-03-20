@@ -23,6 +23,7 @@ import com.lingxiaosuse.picture.tudimension.view.GeneralView;
 import com.lingxiaosuse.picture.tudimension.widget.BezierRefreshLayout;
 import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,13 +53,17 @@ public class TuWanDetailActivity extends BaseActivity implements GeneralView {
         Intent it = getIntent();
         String title = it.getStringExtra("title");
         String id = it.getStringExtra("id");
+        String tableName = it.getStringExtra("table_name");
         toolbar.setTitle(title);
-        presenter.getCoverData(ContentValue.limit,0);
         refreshLayout = refresh.getRefreshLayout();
         RecyclerView recyclerView = refresh.getRecyclerView();
         refreshLayout.autoRefresh();
         refreshLayout.setOnRefreshListener(refreshLayout1 -> {
-            presenter.getDetailData(id);
+            if (tableName.contains("tuwan")){
+                presenter.getDetailData(tableName,"type",id);
+            }else {
+                presenter.getDetailData(tableName,"title",title);
+            }
         });
         refreshLayout.setOnLoadMoreListener(refreshLayout1 -> {
             refreshLayout.finishLoadMore();

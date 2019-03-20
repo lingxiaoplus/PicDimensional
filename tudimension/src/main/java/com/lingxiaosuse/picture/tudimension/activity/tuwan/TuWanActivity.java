@@ -15,13 +15,16 @@ import com.camera.lingxiao.common.exception.ApiException;
 import com.camera.lingxiao.common.http.RxJavaHelper;
 import com.camera.lingxiao.common.http.retrofit.HttpRequest;
 import com.camera.lingxiao.common.observer.HttpRxObserver;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.AboutActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.TuWanAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.TuWanModle;
 import com.lingxiaosuse.picture.tudimension.presenter.GeneralPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.DialogUtil;
+import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
+import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.GeneralView;
 import com.lingxiaosuse.picture.tudimension.widget.BezierRefreshLayout;
 import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
@@ -56,22 +59,32 @@ public class TuWanActivity extends BaseActivity implements GeneralView {
     @Override
     protected void initWidget() {
         super.initWidget();
+        Fresco.shutDown();
+        Fresco.initialize(this);
         setToolbarBack(toolbar);
-        toolbar.setTitle("兔玩君");
-        DialogUtil.getInstence().showSingleDia("请注意",
-                "该资源为兔子君网站付费资源，点击即可跳转到浏览器下载图标包，需要的请尽快下载，不然失效了哭唧唧",
-                TuWanActivity.this);
-        presenter.getCoverData(ContentValue.limit,0);
+        String tableName = getIntent().getStringExtra("table_name");
+        final String tabDetailName;
+        if (tableName.contains("tuwan")){
+            toolbar.setTitle("兔玩君");
+            DialogUtil.getInstence().showSingleDia("请注意",
+                    "该资源为兔子君网站付费资源，点击即可跳转到浏览器下载图标包，需要的请尽快下载，不然失效了哭唧唧",
+                    TuWanActivity.this);
+            tabDetailName = "tuwan";
+        }else {
+            toolbar.setTitle("乐摄网");
+            tabDetailName = "leshe_detail";
+        }
+
         refreshLayout = refresh.getRefreshLayout();
         RecyclerView recyclerView = refresh.getRecyclerView();
         refreshLayout.autoRefresh();
-        refreshLayout.setOnRefreshListener(refreshLayout1 -> {
+        refreshLayout.setOnRefreshListener(refreshLayout -> {
             skip = 0;
-            presenter.getCoverData(ContentValue.limit,skip);
+            presenter.getCoverData(tableName,ContentValue.limit,skip);
         });
-        refreshLayout.setOnLoadMoreListener(refreshLayout1 -> {
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             skip++;
-            presenter.getCoverData(ContentValue.limit,skip);
+            presenter.getCoverData(tableName,ContentValue.limit,skip);
         });
 
         mAdapter = new TuWanAdapter(R.layout.list_mzitu,imageList);
@@ -91,6 +104,7 @@ public class TuWanActivity extends BaseActivity implements GeneralView {
             Intent intent = new Intent(getApplicationContext(),TuWanDetailActivity.class);
             intent.putExtra("id",modle.getId());
             intent.putExtra("title",modle.getTitle());
+            intent.putExtra("table_name",tabDetailName);
             startActivity(intent);
         });
     }
@@ -125,5 +139,12 @@ public class TuWanActivity extends BaseActivity implements GeneralView {
     @Override
     public void onGetDetailData(List<TuWanModle> modles) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Fresco.shutDown();
+        FrescoHelper.initFresco(UIUtils.getContext());
     }
 }
