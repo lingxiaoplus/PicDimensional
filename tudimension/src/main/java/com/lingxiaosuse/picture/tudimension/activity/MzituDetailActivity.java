@@ -81,12 +81,14 @@ public class MzituDetailActivity extends BaseActivity {
         });
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             if (mMaxPage > mPage){
-                for (int i = mPage; i < mPage+20; i++) {
+                for (int i = mPage; i < mPage + 20; i++) {
                     getDataFromJsoup(i);
                 }
             }else {
                 mAdapter.loadMoreEnd();
+                refreshLayout.finishLoadMore();
             }
+
         });
         mAdapter = new MzituRecyclerAdapter(R.layout.list_mzitu,mImgList);
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,
@@ -127,7 +129,63 @@ public class MzituDetailActivity extends BaseActivity {
     }
 
     private void getDataFromJsoup(final int page) {
-        RxJavaHelper.workWithLifecycle(this, new ObservableOnSubscribe<MzituModle>() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Connection connection = Jsoup.connect(imgUrl + "/" + page)
+                            .header("Referer", "http://www.mzitu.com")
+                            .header("User-Agent", ContentValue.USER_AGENT)
+                            .timeout(5000)
+                            .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
+
+                    Document doc = null;
+                    MzituModle modle = new MzituModle();
+                    Connection.Response response = connection.execute();
+                    response.cookies();
+                    doc = connection.get();
+
+                    if (page == 0) {
+                        Elements elementPage = doc.getElementsByClass("pagenavi");
+                        String page1 = checkPageNum(elementPage.select("span").text());
+                        int n = 2;
+                        Log.i("图片页数：", "run: ");
+                        String b = page1.substring(page1.length() - n, page1.length());
+                        Log.i("图片页数：", "run: " + b);
+                        mMaxPage = Integer.valueOf(b);
+                        Log.i("图片页数：", "run: " + mMaxPage);
+                    }
+                    Elements elementDiv = doc.getElementsByClass("main-image");
+                    String srcUrl = elementDiv.select("img").attr("src");
+                    Log.i("图片地址：", "run: " + srcUrl);
+                    modle.setTitle("");
+                    modle.setImgUrl(srcUrl);
+                    //请求次数
+                    mPage++;
+                    UIUtils.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.addData(modle);
+                            mAdapter.notifyDataSetChanged();
+                            refreshLayout.finishRefresh();
+                            refreshLayout.finishLoadMore();
+                        }
+                    });
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                    UIUtils.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.loadMoreEnd();
+                            refreshLayout.finishRefresh();
+                            refreshLayout.finishLoadMore();
+                        }
+                    });
+                }
+
+            }
+        }).start();
+        /*RxJavaHelper.workWithLifecycle(this, new ObservableOnSubscribe<MzituModle>() {
             @Override
             public void subscribe(ObservableEmitter<MzituModle> e) throws Exception {
                 Connection connection = Jsoup.connect(imgUrl + "/" + page)
@@ -158,6 +216,7 @@ public class MzituDetailActivity extends BaseActivity {
                 //请求次数
                 mPage++;
                 e.onNext(modle);
+                e.onComplete();
             }
         }, new HttpRxObserver() {
             @Override
@@ -179,7 +238,7 @@ public class MzituDetailActivity extends BaseActivity {
                 refreshLayout.finishLoadMore();
             }
         });
-
+*/
     }
 
     @Override

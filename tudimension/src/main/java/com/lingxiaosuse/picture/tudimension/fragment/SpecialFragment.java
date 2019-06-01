@@ -62,7 +62,7 @@ public class SpecialFragment extends BaseFragment implements SpecialView{
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        swipeRefreshLayout.autoRefresh();
+
         swipeRefreshLayout.setOnRefreshListener((refreshLayout)-> {
             albumBeanList.clear();
             mPresenter.getSpecialResult(ContentValue.limit,0);
@@ -96,11 +96,12 @@ public class SpecialFragment extends BaseFragment implements SpecialView{
 
     }
 
+
     @Override
-    protected void initData() {
-        albumBeanList.clear();
+    protected void onFirstVisiblity() {
+        super.onFirstVisiblity();
         mPresenter = new SpecialPresneter(this,this);
-        mPresenter.getSpecialResult(ContentValue.limit,0);
+        swipeRefreshLayout.autoRefresh();
     }
 
     @OnClick(R.id.fab_fragment)

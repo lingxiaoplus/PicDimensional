@@ -132,11 +132,13 @@ public class MainActivity extends BaseActivity implements MainView{
         //初始化leancloud的sdk  只能在主线程初始化
         // 初始化参数依次为 this, AppId, AppKey
         // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(UIUtils.getContext(),
+
+
+        AVOSCloud.initialize(this,
                 "LIAOQVeY4ChL2XLqKkRRNIHC-gzGzoHsz",
                 "hYedbdnzfufqTy2iCz0uECkc");
         // 放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可     开启调试日志
-        AVOSCloud.setDebugLogEnabled(true);
+        //AVOSCloud.setDebugLogEnabled(true);
 
     };
     private Handler mInitHandler = new Handler();

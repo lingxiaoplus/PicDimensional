@@ -78,7 +78,7 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
         manager = new StaggeredGridLayoutManager(3,
                 StaggeredGridLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(manager);
-        refreshLayout.autoRefresh();
+
 
         mAdapter = new VerticalAdapter(R.layout.list_vertical,mPicList);
         mRecyclerView.setAdapter(mAdapter);
@@ -110,13 +110,22 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
     }
 
     @Override
+    protected void onFirstVisiblity() {
+        super.onFirstVisiblity();
+        mPresenter = new VerticalPresenter(this,this);
+        Bundle bundle = getArguments();
+        order = bundle.getString("order");
+        refreshLayout.autoRefresh();
+    }
+
+    /*@Override
     protected void initData() {
         super.initData();
         mPresenter = new VerticalPresenter(this,this);
         Bundle bundle = getArguments();
         order = bundle.getString("order");
         mPresenter.getVerticalData(30,skip,order);
-    }
+    }*/
 
     @Override
     public void onGetVerticalResult(VerticalModle modle) {

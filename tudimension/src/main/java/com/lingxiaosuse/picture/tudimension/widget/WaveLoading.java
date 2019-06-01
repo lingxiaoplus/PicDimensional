@@ -41,6 +41,7 @@ public class WaveLoading extends View{
     private int mHeight = UIUtils.dip2px(50);
     private float currentPersent;
     private int textSize = UIUtils.sp2px(25);
+    private int mProgress;
 
     public WaveLoading(Context context) {
         this(context,null);
@@ -71,6 +72,7 @@ public class WaveLoading extends View{
         mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(mColor);
         mPaint.setDither(true);
+        mPaint.setAntiAlias(true);
         //初始化文字画笔
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setColor(Color.WHITE);
@@ -84,12 +86,9 @@ public class WaveLoading extends View{
         animator.setInterpolator(new LinearInterpolator());
         animator.setRepeatCount(ValueAnimator.INFINITE);
         animator.setRepeatMode(ValueAnimator.RESTART);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                currentPersent = valueAnimator.getAnimatedFraction();
-                invalidate();
-            }
+        animator.addUpdateListener(valueAnimator -> {
+            currentPersent = valueAnimator.getAnimatedFraction();
+            invalidate();
         });
         animator.start();
     }
@@ -132,7 +131,7 @@ public class WaveLoading extends View{
         //裁剪文字
         canvas.clipPath(path);
         drawCenterText(canvas,textPaint,mText);
-        canvas.restore();
+        //canvas.restore();
     }
 
     private Path getActionPath(float persent){
@@ -141,11 +140,11 @@ public class WaveLoading extends View{
         //当前x点坐标（根据动画进度水平推移，一个动画周期推移的距离为一个周期的波长）
         x+=mWidth*persent;
         //波形的起点
-        path.moveTo(x,mHeight/2);
+        path.moveTo(x,mProgress/2);
         //控制点的相对宽度
         int quadWidth = mWidth / 4;
         //控制点的相对高度
-        int quadHeight = mHeight / 20*3;
+        int quadHeight = mProgress / 20*3;
         //第一个周期波形
         path.rQuadTo(quadWidth,quadHeight,quadWidth*2,0);
         path.rQuadTo(quadWidth,-quadHeight,quadWidth*2,0);
@@ -153,9 +152,9 @@ public class WaveLoading extends View{
         path.rQuadTo(quadWidth,quadHeight,quadWidth*2,0);
         path.rQuadTo(quadWidth,-quadHeight,quadWidth*2,0);
         //右侧的直线
-        path.lineTo(x+mWidth*2,mHeight);
+        path.lineTo(x+mWidth*2,mProgress);
         //下边的直线
-        path.lineTo(x,mHeight);
+        path.lineTo(x,mProgress);
         path.close();
         return path;
     }
@@ -167,5 +166,15 @@ public class WaveLoading extends View{
         float bottom = metrics.bottom;
         int centerY = (int) (rect.centerY() - top/2 - bottom/2);
         canvas.drawText(text,rect.centerX(),centerY,textPaint);
+    }
+
+    public void setProgress(int progress){
+        if (progress < 0){
+            progress = 0;
+        }else if (progress > 100){
+            progress = 100;
+        }
+        mProgress = mHeight - mHeight * progress /100;
+        mText = progress + "%";
     }
 }

@@ -39,6 +39,9 @@ public class DownloadService extends Service {
 
         @Override
         public void onProgress(int progress) {
+            if (mDownloadListener != null){
+                mDownloadListener.onDownloading(progress);
+            }
             getNotificationManager().notify(1,getNotfifcation("下载中...",progress));
         }
 
@@ -49,9 +52,11 @@ public class DownloadService extends Service {
             stopForeground(true);
             getNotificationManager().notify(1,getNotfifcation("下载成功，点击查看",-1));
             // 最后通知图库更新
-            UIUtils.getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                    Uri.fromFile(new File(file.getPath()))));
+            UIUtils.updateImageDb(file);
             ToastUtils.show("下载成功");
+            if (mDownloadListener != null){
+                mDownloadListener.onDownloadSuccess(file);
+            }
         }
 
         @Override
@@ -60,6 +65,9 @@ public class DownloadService extends Service {
             stopForeground(true);
             ToastUtils.show("下载失败:" + msg);
             getNotificationManager().notify(1,getNotfifcation("下载失败，请重试",-1));
+            if (mDownloadListener != null){
+                mDownloadListener.onDownloadFailed(msg);
+            }
         }
 
         @Override
@@ -117,6 +125,9 @@ public class DownloadService extends Service {
             downloadTask = new DownloadTask(listener);
             downloadTask.execute(downloadUrl);
             startForeground(1,getNotfifcation("下载中...",0));
+            if (mDownloadListener != null){
+                mDownloadListener.onStartDownload();
+            }
         }
     }
     public void pauseDownload(){
@@ -194,6 +205,40 @@ public class DownloadService extends Service {
         }
         return builder.build();
     }
+    private OnDownloadListener mDownloadListener;
 
+    public void setDownloadListener(OnDownloadListener listener) {
+        this.mDownloadListener = listener;
+    }
+
+    public interface OnDownloadListener {
+        /**
+         * 下载成功
+         */
+        void onDownloadSuccess(File file);
+
+        /**
+         * @param progress
+         * 下载进度
+         */
+        void onDownloading(int progress);
+
+        /**
+         * 下载失败
+         */
+        void onDownloadFailed(String error);
+        /**
+         * 开始下载
+         */
+        void onStartDownload();
+        /**
+         *下载暂停
+         */
+        //void onDownloadPaused();
+        /**
+         *取消下载
+         */
+        //void onDownloadCancled();
+    }
 
 }

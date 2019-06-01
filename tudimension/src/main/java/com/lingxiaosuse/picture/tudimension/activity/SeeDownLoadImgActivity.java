@@ -113,7 +113,7 @@ public class SeeDownLoadImgActivity extends BaseActivity {
                 mAdapter.addData(path);
             }
         }
-        refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMoreWithNoMoreData();
     }
 
     /**

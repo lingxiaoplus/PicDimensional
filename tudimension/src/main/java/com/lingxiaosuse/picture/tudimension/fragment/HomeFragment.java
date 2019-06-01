@@ -72,9 +72,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
     private HomePresenter mPresenter;
     @Override
     protected void initData() {
-        smartRefreshLayout.autoRefresh(500);
-        mPresenter = new HomePresenter(this,this);
-        mPresenter.getHomePageData(ContentValue.limit,0);
+
     }
 
     @Override
@@ -86,7 +84,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
     protected void initWidget(View root) {
         super.initWidget(root);
         //设置item之间的间隔
-        SpaceItemDecoration space = new SpaceItemDecoration(10);
+        SpaceItemDecoration space = new SpaceItemDecoration(4);
         recycleView.addItemDecoration(space);
 
         smartRefreshLayout.setOnRefreshListener(refreshLayout -> {
@@ -138,6 +136,14 @@ public class HomeFragment extends BaseFragment implements HomeView{
             startActivity(intent,bundle);
         });
         floatingBtnToogle(recycleView,fab);
+    }
+
+    @Override
+    protected void onFirstVisiblity() {
+        super.onFirstVisiblity();
+        smartRefreshLayout.autoRefresh(500);
+        mPresenter = new HomePresenter(this,this);
+        mPresenter.getHomePageData(ContentValue.limit,0);
     }
 
     @Override

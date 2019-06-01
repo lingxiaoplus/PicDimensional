@@ -120,12 +120,13 @@ public class CommentActivity extends BaseActivity implements CommentView{
 
     @Override
     public void onGetCommentResult(CommentModle modle) {
-        if (modle.getComment().size()<30){
-            mAdapter.loadMoreEnd();
-        }
         mAdapter.addData(modle.getComment());
         mRefreshLayout.finishRefresh();
         mRefreshLayout.finishLoadMore();
+        if (modle.getComment().size()<30){
+            mAdapter.loadMoreEnd();
+            mRefreshLayout.finishLoadMoreWithNoMoreData();
+        }
     }
 
     @Override

@@ -63,6 +63,7 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+
     //photoview
     implementation "com.android.support:appcompat-v7:$rootProject.ext.supportVersion"
     implementation "com.android.support:cardview-v7:$rootProject.ext.supportVersion"
@@ -71,9 +72,9 @@ dependencies {
     implementation "com.android.support:support-vector-drawable:$rootProject.ext.supportVersion"
     implementation "com.android.support.constraint:constraint-layout:$rootProject.ext.constraintVersion"
     implementation "com.github.zackratos.ultimatebar:ultimatebar2:$rootProject.ext.ultimatebarVersion"
+
     //implementation 'com.ashokvarma.android:bottom-navigation-bar:1.2.0'
     implementation "com.google.code.gson:gson:$rootProject.ext.gsonVersion"
-
     implementation "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
     implementation "com.facebook.fresco:fresco:$rootProject.ext.frescoVersion"
@@ -92,46 +93,55 @@ dependencies {
     implementation "pub.devrel:easypermissions:$rootProject.ext.easypermissionsVersion"
     implementation 'com.liuguangqiang.cookie:library:0.2'
     implementation 'agency.tango.android:material-intro-screen:0.0.5'
-
     implementation 'com.tencent.bugly:crashreport_upgrade:latest.release'
     implementation 'com.tencent.bugly:nativecrashreport:latest.release'
-
     implementation 'me.relex:photodraweeview:1.1.3'
     implementation 'org.jsoup:jsoup:1.11.2'
 
     // your project's other dependencies
     implementation 'com.facebook.fresco:imagepipeline-okhttp3:0.12.0+'
-
     implementation "skin.support:skin-support:$rootProject.ext.skinSupportVersion"
+
     // skin-support 基础控件支持
     implementation "skin.support:skin-support-design:$rootProject.ext.skinSupportVersion"
+
     // skin-support-design material design 控件支持[可选]
     implementation "skin.support:skin-support-cardview:$rootProject.ext.skinSupportVersion"
+
     // skin-support-cardview CardView 控件支持[可选]
     implementation "skin.support:skin-support-constraint-layout:$rootProject.ext.skinSupportVersion"
+
     // skin-support-constraint-layout ConstraintLayout 控件支持[可选]
+
     //热修复
     implementation "com.aliyun.ams:alicloud-android-hotfix:$rootProject.ext.hotfixVersion"
 
     //兼容4.4
     implementation 'com.android.support:multidex:1.0.2'
+
     //dbflow
     implementation "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.ext.dbFlowVersion"
     implementation "com.github.Raizlabs.DBFlow:dbflow:$rootProject.ext.dbFlowVersion"
     annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.ext.dbFlowVersion"
     implementation 'com.github.didikee:AndroidDonate:0.1.0'
+
     // LeanCloud 基础包
     implementation "cn.leancloud.android:avoscloud-sdk:$rootProject.ext.leancloudVersion"
-    // LeanCloud 用户反馈包
-    implementation('cn.leancloud.android:avoscloud-feedback:v4.7.3@aar')
-    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:$rootProject.ext.BaseRecyclerHelperVersion"
-    //debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.ext.leak"
-    //releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.ext.leak"
 
+    // LeanCloud 用户反馈包
+    implementation 'cn.leancloud.android:avoscloud-feedback:v4.7.3@aar'
+    implementation "com.github.CymChad:BaseRecyclerViewAdapterHelper:$rootProject.ext.BaseRecyclerHelperVersion"
+
+    //debugImplementation "com.squareup.leakcanary:leakcanary-android:$rootProject.ext.leak"
+
+    //releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.ext.leak"
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
-    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'//没有使用特殊Header，可以不加这行
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'
+
+    //没有使用特殊Header，可以不加这行
     testImplementation 'junit:junit:4.12'
     implementation project(':lang')
     implementation project(':common')
     implementation project(':skinlibrary')
+    //implementation project(':SmoothProgressBar')
 }

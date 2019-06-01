@@ -15,4 +15,11 @@
     <string name="about_app_message">"&#064; 2018 Material Design"</string>
     <string name="action_feedback">反馈</string>
 
+
+    <integer-array name="gplus_colors">
+        <item>@color/green_500</item>
+        <item>@color/yellow_500</item>
+        <item>@color/blue500</item>
+        <item>@color/pink_500</item>
+    </integer-array>
 </resources>

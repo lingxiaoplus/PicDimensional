@@ -54,7 +54,6 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        refreshLayout.autoRefresh();
         refreshLayout.setOnRefreshListener((refreshLayout)->{
             categoryList.clear();
             mCategoryPresenter.getCategor();
@@ -112,9 +111,15 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
     }
 
     @Override
-    protected void initData() {
+    protected void onFirstVisiblity() {
+        super.onFirstVisiblity();
         mCategoryPresenter = new CategoryPresenter(this,this);
-        mCategoryPresenter.getCategor();
+        refreshLayout.autoRefresh();
+    }
+
+    @Override
+    protected void initData() {
+
     }
 
     @Override

@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/PicDimensional.iml" filepath="$PROJECT_DIR$/PicDimensional.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SmoothProgressBar/SmoothProgressBar.iml" filepath="$PROJECT_DIR$/SmoothProgressBar/SmoothProgressBar.iml" />
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/feedback/feedback.iml" filepath="$PROJECT_DIR$/feedback/feedback.iml" />
       <module fileurl="file://$PROJECT_DIR$/lang/lang.iml" filepath="$PROJECT_DIR$/lang/lang.iml" />

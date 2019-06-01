@@ -36,6 +36,8 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
     private Unbinder mRootUnbinder;
     public LifeCycleListener mListener;
     private ProgressDialog progressDialog;
+    private boolean firstVisibility = true;
+    protected boolean reuseView = true;
 
     @Override
     public void onAttach(Activity activity) {
@@ -52,6 +54,7 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
         if (mListener != null) {
             mListener.onCreate(savedInstanceState);
         }
+        firstVisibility = true;
     }
 
     @Nullable
@@ -82,9 +85,19 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        if (mRoot == null){
+            mRoot = view;
+        }
         super.onViewCreated(view, savedInstanceState);
         if (!setLazyMode()){
             initData();
+        }
+        if (getUserVisibleHint()){
+            if (firstVisibility){
+                onFirstVisiblity();
+                firstVisibility = false;
+            }
+            onVisiblityChanged(true);
         }
     }
 
@@ -106,6 +119,27 @@ public abstract class BaseFragment extends RxFragment implements EasyPermissions
                 initData();
             }
         }
+        if (mRoot == null){
+            return;
+        }
+        if (firstVisibility){
+            if (isVisibleToUser){
+                onFirstVisiblity();
+                firstVisibility = false;
+            }
+        }else{
+            onVisiblityChanged(isVisibleToUser);
+        }
+    }
+
+    /**
+     * fragment首次可见
+     */
+    protected void onFirstVisiblity(){
+
+    }
+    protected void onVisiblityChanged(boolean isVisibleToUser){
+
     }
 
     @Override

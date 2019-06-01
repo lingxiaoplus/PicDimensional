@@ -51,16 +51,23 @@ public class CategoryVerticalFragment extends BaseFragment implements CategoryVi
         return R.layout.fragment_category;
     }
 
-    @Override
+   /* @Override
     protected void initData() {
         mCategoryPresenter = new CategoryPresenter(this,this);
         mCategoryPresenter.getCategoryVertical();
+    }*/
+
+    @Override
+    protected void onFirstVisiblity() {
+        super.onFirstVisiblity();
+        mCategoryPresenter = new CategoryPresenter(this,this);
+        refreshLayout.autoRefresh();
     }
 
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        refreshLayout.autoRefresh();
+
         refreshLayout.setOnRefreshListener((refreshLayout)->{
             categoryList.clear();
             mCategoryPresenter.getCategoryVertical();

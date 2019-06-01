@@ -51,7 +51,7 @@ public class GeneralPresenter extends BasePresenter<GeneralView, BaseActivity> {
                     }
                     getView().onGetCoverData(imageList);
                 }else {
-                    getView().showToast(e.getMessage());
+                    getView().showToast("错误码： "+e.getCode());
                 }
             }
         });
@@ -76,7 +76,7 @@ public class GeneralPresenter extends BasePresenter<GeneralView, BaseActivity> {
                     }
                     getView().onGetDetailData(imageList);
                 }else {
-                    getView().showToast(e.getMessage());
+                    getView().showToast("错误码： "+e.getCode());
                 }
             }
         });

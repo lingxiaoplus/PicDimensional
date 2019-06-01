@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -50,6 +51,7 @@ import com.lingxiaosuse.picture.tudimension.utils.FileUtil;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
+import com.lingxiaosuse.picture.tudimension.widget.WaveLoading;
 import com.lingxiaosuse.picture.tudimension.widget.ZoomableViewpager;
 import com.liuguangqiang.cookie.CookieBar;
 import com.liuguangqiang.cookie.OnActionClickListener;
@@ -64,12 +66,10 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.disposables.Disposable;
-import me.relex.photodraweeview.PhotoDraweeView;
 
-public class ImageLoadingActivity extends BaseActivity {
+public class ImageLoadingActivity extends BaseActivity implements DownloadService.OnDownloadListener{
 
     @BindView(R.id.tv_image_loading)
     TextView textCurrent;
@@ -93,7 +93,6 @@ public class ImageLoadingActivity extends BaseActivity {
     private ArrayList<String> picList, IdList;
     private ImageLoadAdapter mAdapter;
     private boolean isHot, isVertical;
-    private File file;
     private DownloadService mDownloadService;
     private ServiceConnection mConnect;
 
@@ -166,6 +165,9 @@ public class ImageLoadingActivity extends BaseActivity {
         mAdapter.setOnItemclick(() -> toggleButtomView());
         mAdapter.setLongClickListener(() -> showDialog());
         bindDownloadService();
+       /* AccelerateDecelerateInterpolator interpolator = new AccelerateDecelerateInterpolator();
+        progressbar.setSmoothProgressDrawableInterpolator(interpolator);
+        progressbar.setSmoothProgressDrawableColors(getResources().getIntArray(R.array.gplus_colors));*/
     }
 
     private void bindDownloadService() {
@@ -174,6 +176,7 @@ public class ImageLoadingActivity extends BaseActivity {
             public void onServiceConnected(ComponentName name, IBinder service) {
                 DownloadService.DownloadBinder binder = (DownloadService.DownloadBinder) service;
                 mDownloadService = binder.getService();
+                mDownloadService.setDownloadListener(ImageLoadingActivity.this);
             }
 
             @Override
@@ -198,7 +201,6 @@ public class ImageLoadingActivity extends BaseActivity {
             downloadImgByFresco();
         }else {
             if (mDownloadService != null){
-                ToastUtils.show("正在下载");
                 mDownloadService.startDownload(picList.get(mPosition));
             }
         }
@@ -302,7 +304,6 @@ public class ImageLoadingActivity extends BaseActivity {
                     if (isHot){
                         downloadImgByFresco();
                     }else {
-                        ToastUtils.show("正在下载");
                         mDownloadService.startDownload(picList.get(mPosition));
                     }
                 }
@@ -315,6 +316,7 @@ public class ImageLoadingActivity extends BaseActivity {
 
 
     private void downloadImgByFresco(){
+        showProgressDialog("下载中...");
         RxJavaHelper.workWithLifecycle(ImageLoadingActivity.this, (ObservableOnSubscribe<File>) e -> {
             File file = FrescoHelper.saveImageByFresco(picList.get(mPosition));
             e.onNext(file);
@@ -327,11 +329,13 @@ public class ImageLoadingActivity extends BaseActivity {
             @Override
             protected void onError(ApiException e) {
                 ToastUtils.show("下载失败：" + e.getMsg());
+                cancleProgressDialog();
             }
 
             @Override
             protected void onSuccess(Object response) {
                 ToastUtils.show("下载成功");
+                cancleProgressDialog();
             }
         });
     }
@@ -343,5 +347,26 @@ public class ImageLoadingActivity extends BaseActivity {
         // 将ClipData内容放到系统剪贴板里。
         manager.setPrimaryClip(mClipData);
         ToastUtils.show("复制成功!");
+    }
+
+    @Override
+    public void onDownloadSuccess(File file) {
+        ToastUtils.show("下载成功");
+
+    }
+
+    @Override
+    public void onDownloading(int progress) {
+        ToastUtils.show("下载中:" + progress + "%");
+    }
+
+    @Override
+    public void onDownloadFailed(String error) {
+        ToastUtils.show("下载失败:" + error);
+    }
+
+    @Override
+    public void onStartDownload() {
+        ToastUtils.show("开始下载" );
     }
 }

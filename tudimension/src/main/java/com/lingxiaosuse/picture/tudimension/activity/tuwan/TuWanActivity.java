@@ -67,7 +67,7 @@ public class TuWanActivity extends BaseActivity implements GeneralView {
         if (tableName.contains("tuwan")){
             toolbar.setTitle("兔玩君");
             DialogUtil.getInstence().showSingleDia("请注意",
-                    "该资源为兔子君网站付费资源，点击即可跳转到浏览器下载图标包，需要的请尽快下载，不然失效了哭唧唧",
+                    "该资源为兔子君网站付费资源，点击即可跳转到浏览器下载图标包，需要的尽快下载叭",
                     TuWanActivity.this);
             tabDetailName = "tuwan";
         }else {

@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.modle.TuWanModle;
+import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 
 import java.util.List;
 
@@ -61,5 +62,6 @@ public class TuWanAdapter extends BaseQuickAdapter<TuWanModle, BaseViewHolder> {
                 // other setters
                 .build();
         simpleDraweeView.setController(controller);
+        simpleDraweeView.setHierarchy(FrescoHelper.getHierarchy(mContext));
     }
 }

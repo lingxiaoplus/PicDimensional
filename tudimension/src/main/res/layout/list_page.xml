@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="4dp"
-    android:layout_marginTop="3dp"
-    android:layout_marginLeft="3dp"
+    android:layout_marginTop="2dp"
+    android:layout_marginLeft="2dp"
     app:cardBackgroundColor="@color/whiteNor"
     android:transitionName="image"
     >

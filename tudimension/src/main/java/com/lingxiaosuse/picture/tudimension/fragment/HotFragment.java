@@ -65,7 +65,7 @@ public class HotFragment extends BaseFragment implements HotView{
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        refreshLayout.autoRefresh();
+
         refreshLayout.setOnRefreshListener((refreshLayout)-> {
             previsList.clear();
             picUrlList.clear();
@@ -114,10 +114,10 @@ public class HotFragment extends BaseFragment implements HotView{
     }
 
     @Override
-    protected void initData() {
-        super.initData();
+    protected void onFirstVisiblity() {
+        super.onFirstVisiblity();
         mPresenter = new HotPresenter(this,this);
-        mPresenter.getHotResult(ContentValue.limit,index);
+        refreshLayout.autoRefresh();
     }
 
 

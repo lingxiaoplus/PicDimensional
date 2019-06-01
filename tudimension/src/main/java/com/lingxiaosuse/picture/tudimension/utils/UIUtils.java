@@ -179,7 +179,7 @@ public class UIUtils {
                     file.getAbsolutePath(), file.getName(), null);
             // 最后通知图库更新
             getContext().sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE,
-                    Uri.fromFile(new File(file.getPath()))));
+                    Uri.fromFile(file)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
