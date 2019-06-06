@@ -109,6 +109,10 @@ public class ImageLoadingActivity extends BaseActivity implements DownloadServic
                 .build(this)
                 .apply();
         intent = getIntent();
+        boolean showGuide = SpUtils.getBoolean(getApplicationContext(),ContentValue.IS_SHOW_GUIDE,true);
+        if (showGuide){
+            StartActivity(GuidePulldownActivity.class,false);
+        }
     }
 
     @Override

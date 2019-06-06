@@ -43,6 +43,8 @@ public class ContentValue {
     public static String IS_CHECK = "is_check";
     //是否开启日图
     public static String IS_OPEN_DAILY ="is_open_daily";
+
+    public static String IS_SHOW_GUIDE = "is_show_guide";
     //
     //干货集中营api
     public static final String GANKURL = "http://gank.io/api/data/%E7%A6%8F%E5%88%A9/";

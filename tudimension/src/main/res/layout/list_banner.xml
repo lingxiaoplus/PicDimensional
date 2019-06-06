@@ -8,7 +8,9 @@
         android:orientation="vertical"
         android:layout_marginTop="5dp"
         android:layout_marginLeft="5dp"
-        android:gravity="center">
+        android:gravity="center"
+    android:transitionName="image"
+    >
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/iv_banner_image"
             android:layout_width="match_parent"

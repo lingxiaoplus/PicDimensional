@@ -24,6 +24,7 @@ import com.lingxiaosuse.picture.tudimension.presenter.CategoryPresenter;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.CategoryView;
+import com.lingxiaosuse.picture.tudimension.widget.ScrollerloadRecyclerView;
 import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ import butterknife.BindView;
 
 public class CategoryFragment extends BaseFragment implements CategoryView{
     @BindView(R.id.rv_category)
-    RecyclerView recyclerView;
+    ScrollerloadRecyclerView recyclerView;
     @BindView(R.id.swip_category)
     SmartSkinRefreshLayout refreshLayout;
 
@@ -56,6 +57,7 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
         super.initWidget(root);
         refreshLayout.setOnRefreshListener((refreshLayout)->{
             categoryList.clear();
+            recyclerView.showShimmerAdapter();
             mCategoryPresenter.getCategor();
         });
 
@@ -82,7 +84,6 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
             }
         });
         mCateAdapter.setOnItemLongClickListener((adapter, view, position) -> {
-
             final PopwindowUtil popwindowUtil = new PopwindowUtil
                     .PopupWindowBuilder(getActivity())
                     .setView(R.layout.pop_long_click)
@@ -93,16 +94,13 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
             popwindowUtil.showAsDropDown(view,0,-view.getHeight());
             //popwindowUtil.showAtLocation(view);
 
-            popwindowUtil.getView(R.id.pop_download).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    MainActivity activity = (MainActivity) getActivity();
-                    if (activity.mDownloadService != null){
-                        ToastUtils.show("正在下载");
-                        activity.mDownloadService.startDownload(categoryList.get(position).getCover());
-                    }
-                    popwindowUtil.dissmiss();
+            popwindowUtil.getView(R.id.pop_download).setOnClickListener(v -> {
+                MainActivity activity = (MainActivity) getActivity();
+                if (activity.mDownloadService != null){
+                    ToastUtils.show("正在下载");
+                    activity.mDownloadService.startDownload(categoryList.get(position).getCover());
                 }
+                popwindowUtil.dissmiss();
             });
             popwindowUtil.getView(R.id.pop_cancel).setOnClickListener(v -> popwindowUtil.dissmiss());
             return true;
@@ -118,12 +116,8 @@ public class CategoryFragment extends BaseFragment implements CategoryView{
     }
 
     @Override
-    protected void initData() {
-
-    }
-
-    @Override
     public void onGetCategoryResult(CategoryModle modle) {
+        if (recyclerView.isShowShimmer()) recyclerView.hideShimmerAdapter();
         mCateAdapter.addData(modle.getCategory());
         refreshLayout.finishRefresh();
     }

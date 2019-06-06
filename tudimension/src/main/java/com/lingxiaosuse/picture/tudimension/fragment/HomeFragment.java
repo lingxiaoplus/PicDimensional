@@ -36,6 +36,7 @@ import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.HomeView;
 import com.lingxiaosuse.picture.tudimension.widget.GlideImageLoader;
+import com.lingxiaosuse.picture.tudimension.widget.ScrollerloadRecyclerView;
 import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -64,7 +65,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
     private List<HomePageModle.Picture> homeList = new ArrayList<>();
     private int skip = 0;
     @BindView(R.id.rv_main)
-    RecyclerView recycleView;
+    ScrollerloadRecyclerView recycleView;
     @BindView(R.id.home_refresh_layout)
     SmartSkinRefreshLayout smartRefreshLayout;
     @BindView(R.id.fab_fragment)
@@ -89,6 +90,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
 
         smartRefreshLayout.setOnRefreshListener(refreshLayout -> {
             skip = 0;
+            recycleView.showShimmerAdapter();
             mPresenter.getHomePageData(ContentValue.limit,skip);
         });
         smartRefreshLayout.setOnLoadMoreListener(refreshLayout -> {
@@ -110,7 +112,6 @@ public class HomeFragment extends BaseFragment implements HomeView{
         recycleView.setLayoutManager(new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL));
         recycleView.setAdapter(mHomeAdapter);
-
         mHomeAdapter.setOnItemClickListener((adapter, view, position) -> {
             List<String> picUrlList = new ArrayList<>();//取出图片地址传递给下一个activity
             List<String> picIdList = new ArrayList<>();//取出图片id传递给下一个activity
@@ -143,7 +144,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
         super.onFirstVisiblity();
         smartRefreshLayout.autoRefresh(500);
         mPresenter = new HomePresenter(this,this);
-        mPresenter.getHomePageData(ContentValue.limit,0);
+        //mPresenter.getHomePageData(ContentValue.limit,0);
     }
 
     @Override
@@ -153,7 +154,7 @@ public class HomeFragment extends BaseFragment implements HomeView{
 
     @Override
     public void onGetHomeResult(HomePageModle modle) {
-        Log.e(TAG, "获取到返回结果了，隐藏swipeLayout");
+        if (recycleView.isShowShimmer()) recycleView.hideShimmerAdapter();
         if (modle.getWallpaper().size() < ContentValue.limit){
             mHomeAdapter.loadMoreEnd();
         }
@@ -173,7 +174,6 @@ public class HomeFragment extends BaseFragment implements HomeView{
             }
             bindHeaderData(slideList);
         }
-
         mHomeAdapter.addData(modle.wallpaper);
         smartRefreshLayout.finishRefresh();
         smartRefreshLayout.finishLoadMore();

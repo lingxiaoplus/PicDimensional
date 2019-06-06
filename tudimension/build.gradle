@@ -137,7 +137,8 @@ dependencies {
     //releaseImplementation "com.squareup.leakcanary:leakcanary-android-no-op:$rootProject.ext.leak"
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-14'
-
+    //骨架屏
+    implementation 'com.github.sharish:ShimmerRecyclerView:v1.3'
     //没有使用特殊Header，可以不加这行
     testImplementation 'junit:junit:4.12'
     implementation project(':lang')

@@ -12,12 +12,16 @@
                 <com.scwang.smartrefresh.header.BezierCircleHeader
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
-        <android.support.v7.widget.RecyclerView
+        <com.lingxiaosuse.picture.tudimension.widget.ScrollerloadRecyclerView
             android:id="@+id/rv_category"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:shimmer_demo_child_count="10"
+            app:shimmer_demo_layout="@layout/layout_shimmer_grid"
+            app:shimmer_demo_grid_child_count="2"
+            app:shimmer_demo_layout_manager_type="grid"
             >
 
-        </android.support.v7.widget.RecyclerView>
+        </com.lingxiaosuse.picture.tudimension.widget.ScrollerloadRecyclerView>
         </com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout>
 </LinearLayout>

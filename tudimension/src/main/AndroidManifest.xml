@@ -29,7 +29,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/MyMainTheme">
-        <activity android:name=".activity.tuwan.TuWanDetailActivity"></activity>
+        <activity android:name=".activity.tuwan.TuWanDetailActivity" />
         <activity android:name=".activity.tuwan.TuWanActivity" />
 
         <uses-library
@@ -127,12 +127,11 @@
         <activity android:name=".activity.RegisterActivity" />
         <activity android:name=".activity.UserInfoActivity" />
         <activity android:name="com.avos.avoscloud.feedback.ThreadActivity" />
-
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent" />
-
+        <activity android:name=".activity.GuidePulldownActivity" android:theme="@style/FullScreenWithoutActionBar"></activity>
     </application>
 
 </manifest>

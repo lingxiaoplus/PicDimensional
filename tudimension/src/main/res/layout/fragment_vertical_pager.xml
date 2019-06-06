@@ -19,11 +19,11 @@
         <com.scwang.smartrefresh.header.BezierCircleHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
-        <android.support.v7.widget.RecyclerView
+        <com.lingxiaosuse.picture.tudimension.widget.ScrollerloadRecyclerView
             android:id="@+id/recycle_vertical_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
+        </com.lingxiaosuse.picture.tudimension.widget.ScrollerloadRecyclerView>
         <com.scwang.smartrefresh.layout.footer.BallPulseFooter
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

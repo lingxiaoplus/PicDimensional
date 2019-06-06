@@ -4,35 +4,23 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lingxiaosuse.picture.tudimension.R;
 import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
-import com.lingxiaosuse.picture.tudimension.activity.VerticalActivity;
-import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.VerticalAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.VerticalModle;
 import com.lingxiaosuse.picture.tudimension.presenter.VerticalPresenter;
-import com.lingxiaosuse.picture.tudimension.retrofit.RetrofitHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.VerticalView;
 import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +88,9 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
             intent.putExtra("isVertical",true);
             intent.putStringArrayListExtra("picList",picUrlList);
             intent.putStringArrayListExtra("picIdList",picIdList);
-            startActivity(intent);
+            Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view,
+                    view.getWidth() / 2, view.getHeight() / 2, 0, 0).toBundle();
+            startActivity(intent,bundle);
         });
         mAdapter.setDuration(800);
         mAdapter.openLoadAnimation(view -> new Animator[]{

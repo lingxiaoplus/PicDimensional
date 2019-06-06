@@ -30,4 +30,5 @@
     <color name="deepPurple400">#7E57C2</color>
     <color name="indigo400">#5C6BC0</color>
     <color name="result_view">#B0000000</color>
+    <color name="demo_dark_transparent">#24000000</color>
 </resources>

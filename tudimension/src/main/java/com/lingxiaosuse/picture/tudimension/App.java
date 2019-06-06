@@ -8,22 +8,8 @@ import android.os.Build;
 import android.os.Handler;
 import android.support.multidex.MultiDex;
 
-import com.avos.avoscloud.AVOSCloud;
-import com.camera.lingxiao.common.utills.LogUtils;
-import com.lingxiao.skinlibrary.SkinLib;
 import com.lingxiaosuse.picture.tudimension.service.InitIalizeService;
 import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
-import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
-import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
-import com.raizlabs.android.dbflow.config.FlowManager;
-import com.taobao.sophix.PatchStatus;
-import com.taobao.sophix.SophixManager;
-import com.taobao.sophix.listener.PatchLoadStatusListener;
-import com.tencent.bugly.CrashModule;
-import com.tencent.bugly.crashreport.CrashReport;
-
-import java.util.Map;
-
 
 /**
  * Created by lingxiao on 2017/8/3.

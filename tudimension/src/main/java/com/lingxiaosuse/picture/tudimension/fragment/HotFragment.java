@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lingxiaosuse.picture.tudimension.R;
@@ -25,6 +26,7 @@ import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.HotRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.HotModle;
 import com.lingxiaosuse.picture.tudimension.presenter.HotPresenter;
+import com.lingxiaosuse.picture.tudimension.utils.FrescoHelper;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.HotView;
@@ -148,4 +150,20 @@ public class HotFragment extends BaseFragment implements HotView{
         refreshLayout.finishRefresh();
         refreshLayout.finishLoadMore();
     }
+
+    //重新初始化fresco，因为第一次初始化的带上了mzitu的header，会造成gankio的图403禁止访问
+    @Override
+    public void onStart() {
+        super.onStart();
+        Fresco.shutDown();
+        Fresco.initialize(getActivity());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Fresco.shutDown();
+        FrescoHelper.initFresco(UIUtils.getContext());
+    }
 }
+

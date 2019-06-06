@@ -26,7 +26,6 @@
             fresco:failureImage="@drawable/ic_failure"
             fresco:failureImageScaleType="centerInside"
             fresco:fadeDuration="1000"
-
             />
         <TextView
             android:id="@+id/tv_home_des"

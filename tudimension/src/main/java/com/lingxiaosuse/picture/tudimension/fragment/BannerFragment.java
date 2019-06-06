@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,6 +35,7 @@ import com.lingxiaosuse.picture.tudimension.transation.HomeTrans;
 import com.lingxiaosuse.picture.tudimension.utils.ToastUtils;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.view.HomeView;
+import com.lingxiaosuse.picture.tudimension.widget.ScrollerloadRecyclerView;
 import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
 import com.liuguangqiang.cookie.CookieBar;
 import com.liuguangqiang.cookie.OnActionClickListener;
@@ -56,7 +58,7 @@ import butterknife.Unbinder;
 
 public class BannerFragment extends BaseFragment implements HomeView{
     @BindView(R.id.recycle_vertical_item)
-    RecyclerView recycleView;
+    ScrollerloadRecyclerView recycleView;
     @BindView(R.id.swip_vertical_item)
     SmartSkinRefreshLayout refreshLayout;
     @BindView(R.id.fab_vertical_fragment)
@@ -105,7 +107,9 @@ public class BannerFragment extends BaseFragment implements HomeView{
             intent.putExtra("id", picList.get(position).getId());
             intent.putStringArrayListExtra("picList", picUrlList);
             intent.putStringArrayListExtra("picIdList", IdList);
-            startActivity(intent);
+            Bundle bundle = ActivityOptionsCompat.makeScaleUpAnimation(view,
+                    view.getWidth() / 2, view.getHeight() / 2, 0, 0).toBundle();
+            startActivity(intent,bundle);
         });
         mAdapter.setDuration(800);
         mAdapter.openLoadAnimation(view -> new Animator[]{
@@ -117,6 +121,7 @@ public class BannerFragment extends BaseFragment implements HomeView{
         refreshLayout.setOnRefreshListener((refreshLayout)-> {
             picUrlList.clear();
             IdList.clear();
+            recycleView.showShimmerAdapter();
             mHomePresenter.getBannerDetailData(id, ContentValue.limit,0,type,order);
         });
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
@@ -144,6 +149,7 @@ public class BannerFragment extends BaseFragment implements HomeView{
 
     @Override
     public void onGetBannerResult(BannerModle modle) {
+        if (recycleView.isShowShimmer()) recycleView.hideShimmerAdapter();
         if (modle.getWallpaper().size() < 30){
             mAdapter.loadMoreEnd();
         }
