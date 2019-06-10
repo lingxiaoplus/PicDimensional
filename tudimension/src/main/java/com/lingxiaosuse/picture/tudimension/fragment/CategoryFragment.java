@@ -1,12 +1,8 @@
 package com.lingxiaosuse.picture.tudimension.fragment;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.View;
 
 import com.camera.lingxiao.common.app.BaseFragment;

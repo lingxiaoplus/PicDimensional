@@ -69,15 +69,21 @@ public class MzituDetailActivity extends BaseActivity {
     private int mMaxPage = 2;  //最大页数  >1  让其先请求一次数据
     private String imgUrl;
     private MzituRecyclerAdapter mAdapter;
+    private static final int MESSAGE_GET_PICTURE = 1;
     private Handler mHandler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             switch (msg.what){
-                case 1:
+                case MESSAGE_GET_PICTURE:
                     MzituModle modle = (MzituModle) msg.obj;
                     mAdapter.addData(modle);
                     mAdapter.notifyDataSetChanged();
+                    refreshLayout.finishRefresh();
+                    refreshLayout.finishLoadMore();
+                    break;
+                default:
+                    mAdapter.loadMoreEnd();
                     refreshLayout.finishRefresh();
                     refreshLayout.finishLoadMore();
                     break;
@@ -100,7 +106,7 @@ public class MzituDetailActivity extends BaseActivity {
 
         refreshLayout.autoRefresh();
         refreshLayout.setOnRefreshListener(refreshLayout -> {
-            getDataFromJsoup(1,5);
+            getDataFromJsoup(1,20);
         });
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             if (mMaxPage > mPage){
@@ -136,8 +142,6 @@ public class MzituDetailActivity extends BaseActivity {
 
     }
 
-    private Disposable mDisposable;
-
     private void getDataFromJsoup(int startPage,int endPage) {
         new Thread(() -> {
             try {
@@ -145,16 +149,14 @@ public class MzituDetailActivity extends BaseActivity {
                     Connection connection = Jsoup.connect(imgUrl + "/" + mPage)
                             .header("Referer", "http://www.mzitu.com")
                             .header("User-Agent", ContentValue.USER_AGENT)
-                            .timeout(5000)
-                            .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
-
-                    Document doc = null;
+                            .timeout(5000);
+                            //.userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
                     MzituModle modle = new MzituModle();
                     Connection.Response response = connection.execute();
                     response.cookies();
-                    doc = connection.get();
+                    Document doc = connection.get();
 
-                    if (mPage == 0) {
+                    if (mPage == 1) {
                         Elements elementPage = doc.getElementsByClass("pagenavi");
                         String page1 = checkPageNum(elementPage.select("span").text());
                         int n = 2;
@@ -172,16 +174,14 @@ public class MzituDetailActivity extends BaseActivity {
                     //请求次数
                     mPage++;
                     Message message = Message.obtain();
+                    message.what = MESSAGE_GET_PICTURE;
                     message.obj = modle;
                     mHandler.sendMessage(message);
+                    Thread.sleep(500);
                 }
             }catch (Exception ex){
                 ex.printStackTrace();
-                UIUtils.runOnUIThread(() -> {
-                    mAdapter.loadMoreEnd();
-                    refreshLayout.finishRefresh();
-                    refreshLayout.finishLoadMore();
-                });
+                mHandler.sendEmptyMessage(0);
             }
         }).start();
         /*RxJavaHelper.workWithLifecycle(this, (ObservableOnSubscribe<MzituModle>) e -> {
@@ -275,9 +275,7 @@ public class MzituDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mDisposable != null){
-            mDisposable.dispose();
-        }
+        mHandler.removeMessages(MESSAGE_GET_PICTURE);
     }
 
 }
