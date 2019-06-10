@@ -97,6 +97,7 @@ public class VerticalFragment extends BaseFragment implements VerticalView{
                 ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
                 ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
         });
+        mAdapter.isFirstOnly(false);
     }
 
     @Override

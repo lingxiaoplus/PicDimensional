@@ -94,4 +94,5 @@ public abstract class HttpRxObserver<T> implements Observer<T>,HttpRequestListen
      * 成功回调
      */
     protected abstract void onSuccess(T response);
+
 }

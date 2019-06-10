@@ -5,7 +5,7 @@ import java.util.List;
 public class MzituModle {
     private String title;
     private String imgUrl;
-    private List<String> detailImgs;
+    //private List<String> detailImgs;
 
     public String getTitle() {
         return title;
@@ -23,11 +23,11 @@ public class MzituModle {
         this.imgUrl = imgUrl;
     }
 
-    public List<String> getDetailImgs() {
+    /*public List<String> getDetailImgs() {
         return detailImgs;
     }
 
     public void setDetailImgs(List<String> detailImgs) {
         this.detailImgs = detailImgs;
-    }
+    }*/
 }

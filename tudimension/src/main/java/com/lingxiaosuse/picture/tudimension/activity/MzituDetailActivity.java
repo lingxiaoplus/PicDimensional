@@ -1,6 +1,8 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -30,17 +32,24 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Flowable;
+import io.reactivex.FlowableEmitter;
+import io.reactivex.FlowableOnSubscribe;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class MzituDetailActivity extends BaseActivity {
@@ -60,7 +69,21 @@ public class MzituDetailActivity extends BaseActivity {
     private int mMaxPage = 2;  //最大页数  >1  让其先请求一次数据
     private String imgUrl;
     private MzituRecyclerAdapter mAdapter;
-
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    MzituModle modle = (MzituModle) msg.obj;
+                    mAdapter.addData(modle);
+                    mAdapter.notifyDataSetChanged();
+                    refreshLayout.finishRefresh();
+                    refreshLayout.finishLoadMore();
+                    break;
+            }
+        }
+    };
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_mzitu_detail;
@@ -77,13 +100,11 @@ public class MzituDetailActivity extends BaseActivity {
 
         refreshLayout.autoRefresh();
         refreshLayout.setOnRefreshListener(refreshLayout -> {
-            getDataFromJsoup(mPage);
+            getDataFromJsoup(1,5);
         });
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             if (mMaxPage > mPage){
-                for (int i = mPage; i < mPage + 20; i++) {
-                    getDataFromJsoup(i);
-                }
+                getDataFromJsoup(mPage,mPage + 20);
             }else {
                 mAdapter.loadMoreEnd();
                 refreshLayout.finishLoadMore();
@@ -115,25 +136,13 @@ public class MzituDetailActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void initData() {
-        super.initData();
-        /**
-         * 先请求20组数据
-         */
-        for (int i = 0; i < 20; i++) {
-            getDataFromJsoup(i);
-        }
+    private Disposable mDisposable;
 
-        //getDataFromJsoup(mPage);
-    }
-
-    private void getDataFromJsoup(final int page) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Connection connection = Jsoup.connect(imgUrl + "/" + page)
+    private void getDataFromJsoup(int startPage,int endPage) {
+        new Thread(() -> {
+            try {
+                while (mPage < endPage){
+                    Connection connection = Jsoup.connect(imgUrl + "/" + mPage)
                             .header("Referer", "http://www.mzitu.com")
                             .header("User-Agent", ContentValue.USER_AGENT)
                             .timeout(5000)
@@ -145,7 +154,7 @@ public class MzituDetailActivity extends BaseActivity {
                     response.cookies();
                     doc = connection.get();
 
-                    if (page == 0) {
+                    if (mPage == 0) {
                         Elements elementPage = doc.getElementsByClass("pagenavi");
                         String page1 = checkPageNum(elementPage.select("span").text());
                         int n = 2;
@@ -162,45 +171,31 @@ public class MzituDetailActivity extends BaseActivity {
                     modle.setImgUrl(srcUrl);
                     //请求次数
                     mPage++;
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.addData(modle);
-                            mAdapter.notifyDataSetChanged();
-                            refreshLayout.finishRefresh();
-                            refreshLayout.finishLoadMore();
-                        }
-                    });
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.loadMoreEnd();
-                            refreshLayout.finishRefresh();
-                            refreshLayout.finishLoadMore();
-                        }
-                    });
+                    Message message = Message.obtain();
+                    message.obj = modle;
+                    mHandler.sendMessage(message);
                 }
-
+            }catch (Exception ex){
+                ex.printStackTrace();
+                UIUtils.runOnUIThread(() -> {
+                    mAdapter.loadMoreEnd();
+                    refreshLayout.finishRefresh();
+                    refreshLayout.finishLoadMore();
+                });
             }
         }).start();
-        /*RxJavaHelper.workWithLifecycle(this, new ObservableOnSubscribe<MzituModle>() {
-            @Override
-            public void subscribe(ObservableEmitter<MzituModle> e) throws Exception {
-                Connection connection = Jsoup.connect(imgUrl + "/" + page)
+        /*RxJavaHelper.workWithLifecycle(this, (ObservableOnSubscribe<MzituModle>) e -> {
+            while (mPage < endPage){
+                Connection connection = Jsoup.connect(imgUrl + "/" + mPage)
                         .header("Referer", "http://www.mzitu.com")
                         .header("User-Agent", ContentValue.USER_AGENT)
                         .timeout(5000)
                         .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
-
-                Document doc = null;
                 MzituModle modle = new MzituModle();
                 Connection.Response response = connection.execute();
                 response.cookies();
-                doc = connection.get();
-
-                if (page == 1) {
+                Document doc = connection.get();
+                if (mPage == 1) {   //第一次爬完，才知道总共有多少页
                     Elements elementPage = doc.getElementsByClass("pagenavi");
                     String page1 = checkPageNum(elementPage.select("span").text());
                     int n = 2;
@@ -216,30 +211,36 @@ public class MzituDetailActivity extends BaseActivity {
                 //请求次数
                 mPage++;
                 e.onNext(modle);
-                e.onComplete();
             }
+            e.onComplete();
+            //mPage = endPage;
         }, new HttpRxObserver() {
             @Override
             protected void onStart(Disposable d) {
-
+                mDisposable = d;
             }
 
             @Override
             protected void onError(ApiException e) {
-
+                refreshLayout.finishRefresh();
+                refreshLayout.finishLoadMore();
             }
 
             @Override
             protected void onSuccess(Object response) {
                 MzituModle modle = (MzituModle) response;
                 mAdapter.addData(modle);
-                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onComplete() {
+                super.onComplete();
                 refreshLayout.finishRefresh();
                 refreshLayout.finishLoadMore();
             }
-        });
-*/
+        });*/
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -270,4 +271,13 @@ public class MzituDetailActivity extends BaseActivity {
             ToastUtils.show("收藏成功！");
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mDisposable != null){
+            mDisposable.dispose();
+        }
+    }
+
 }
