@@ -130,6 +130,22 @@ public class DownloadService extends Service {
             }
         }
     }
+
+    /**
+     * 批量下载
+     * @param urls
+     */
+    public void startDownload(String... urls){
+        if (downloadTask == null){
+            downloadTask = new DownloadTask(listener);
+            downloadTask.execute(urls);
+            startForeground(1,getNotfifcation("下载中...",0));
+            if (mDownloadListener != null){
+                mDownloadListener.onStartDownload();
+            }
+        }
+    }
+
     public void pauseDownload(){
         if (downloadTask != null){
             downloadTask.setTypePaused();

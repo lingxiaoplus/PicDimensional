@@ -40,57 +40,61 @@ public class DownloadTask extends AsyncTask<String,Integer,Integer>{
         InputStream is = null;
         RandomAccessFile saveFile = null;
         mFile = null;
+        int urlIndex = 0;
         try{
             long downloadLength = 0;
-            String downloadUrl = params[0];
-            String fileName = downloadUrl.substring(downloadUrl.lastIndexOf("/"));
+            while (urlIndex < params.length){
+                String downloadUrl = params[urlIndex];
+                String fileName = downloadUrl.substring(downloadUrl.lastIndexOf("/"));
             /*String directory = Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
                     .getPath();*/
-            String directory = ContentValue.PATH;
-            FileUtil.isExistDir(directory);
-            //这里下载的图片
-            if (!fileName.endsWith(".jpg") && !fileName.endsWith(".apk")){
-                fileName+=".jpg";
-            }
-            mFile = new File(directory +fileName);
-            if (mFile.exists()){
-                downloadLength = mFile.length();
-            }
-            long contentLength = getContentLength(downloadUrl);
-            if (contentLength == 0){
-                return TYPE_FAILED;
-            }else if (contentLength == downloadLength){
-                return TYPE_SUCCESS;
-            }
-            OkHttpClient client = new OkHttpClient();
-            Request request = new Request.Builder()
-                    .addHeader("RANGE","bytes="+downloadLength+"-")
-                    .url(downloadUrl)
-                    .build();
-            Response response = client.newCall(request).execute();
-            if (response != null){
-                is = response.body().byteStream();
-                saveFile = new RandomAccessFile(mFile,"rw");
-                saveFile.seek(downloadLength);  //跳过已下载的字节
-                byte[] b = new byte[1024];
-                int total = 0;
-                int len;
-                while ((len = is.read(b)) != -1){
-                    if (isCanceled){
-                        return TYPE_CANCELED;
-                    }else if (isPaused){
-                        return TYPE_PAUSED;
-                    }else {
-                        total += len;
-                        saveFile.write(b,0,len);
-                        //计算已经下载的百分比
-                        int progress = (int) ((total +downloadLength)*100 / contentLength);
-                        publishProgress(progress);
-                    }
+                String directory = ContentValue.PATH;
+                FileUtil.isExistDir(directory);
+                //这里下载的图片
+                if (!fileName.endsWith(".jpg") && !fileName.endsWith(".apk")){
+                    fileName+=".jpg";
                 }
-                response.body().close();
-                return TYPE_SUCCESS;
+                mFile = new File(directory +fileName);
+                if (mFile.exists()){
+                    downloadLength = mFile.length();
+                }
+                long contentLength = getContentLength(downloadUrl);
+                if (contentLength == 0){
+                    return TYPE_FAILED;
+                }else if (contentLength == downloadLength){
+                    return TYPE_SUCCESS;
+                }
+                OkHttpClient client = new OkHttpClient();
+                Request request = new Request.Builder()
+                        .addHeader("RANGE","bytes="+downloadLength+"-")
+                        .url(downloadUrl)
+                        .build();
+                Response response = client.newCall(request).execute();
+                if (response != null){
+                    is = response.body().byteStream();
+                    saveFile = new RandomAccessFile(mFile,"rw");
+                    saveFile.seek(downloadLength);  //跳过已下载的字节
+                    byte[] b = new byte[1024];
+                    int total = 0;
+                    int len;
+                    while ((len = is.read(b)) != -1){
+                        if (isCanceled){
+                            return TYPE_CANCELED;
+                        }else if (isPaused){
+                            return TYPE_PAUSED;
+                        }else {
+                            total += len;
+                            saveFile.write(b,0,len);
+                            //计算已经下载的百分比
+                            int progress = (int) ((total +downloadLength)*100 / contentLength);
+                            publishProgress(progress);
+                        }
+                    }
+                    response.body().close();
+                    return TYPE_SUCCESS;
+                }
+                urlIndex++;
             }
         }catch (Exception e){
             e.printStackTrace();

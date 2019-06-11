@@ -2,8 +2,12 @@ package com.lingxiaosuse.picture.tudimension.fragment.mzitu;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -15,10 +19,12 @@ import com.camera.lingxiao.common.app.BaseFragment;
 import com.camera.lingxiao.common.app.ContentValue;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.activity.ImageLoadingActivity;
 import com.lingxiaosuse.picture.tudimension.activity.MzituDetailActivity;
 import com.lingxiaosuse.picture.tudimension.adapter.BaseRecycleAdapter;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.MzituModle;
+import com.lingxiaosuse.picture.tudimension.service.DownloadService;
 import com.lingxiaosuse.picture.tudimension.utils.UIUtils;
 import com.lingxiaosuse.picture.tudimension.widget.SmartSkinRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -31,6 +37,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,7 +48,7 @@ import butterknife.BindView;
  * Created by lingxiao on 2018/1/19.
  */
 
-public class MzituFragment extends BaseFragment {
+public class MzituFragment extends BaseFragment{
     @BindView(R.id.rv_mzitu)
     RecyclerView rvMzitu;
     @BindView(R.id.swip_mzitu)
@@ -66,7 +73,7 @@ public class MzituFragment extends BaseFragment {
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-        refreshLayout.autoRefresh();
+
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             mPage = 1;
             initJsoup(mPage);
@@ -95,13 +102,22 @@ public class MzituFragment extends BaseFragment {
             startActivity(intent);
         });
 
+        mAdapter.setOnItemLongClickListener((adapter, view, position) ->
+
+                false
+        );
     }
 
     @Override
-    protected void initData() {
-        Bundle bundle = getArguments();
+    protected void initArgs(Bundle bundle) {
+        super.initArgs(bundle);
         type = bundle.getString("type");
-        initJsoup(mPage);
+    }
+
+    @Override
+    protected void onFirstVisiblity() {
+        super.onFirstVisiblity();
+        refreshLayout.autoRefresh();
     }
 
     private void initJsoup(final int page){
@@ -149,5 +165,6 @@ public class MzituFragment extends BaseFragment {
 
         }).start();
     }
+
 
 }

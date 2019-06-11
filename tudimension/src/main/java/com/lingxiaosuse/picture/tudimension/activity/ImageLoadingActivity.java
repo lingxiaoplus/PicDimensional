@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
@@ -320,16 +321,14 @@ public class ImageLoadingActivity extends BaseActivity implements DownloadServic
 
 
     private void downloadImgByFresco(){
-        showProgressDialog("下载中...");
         RxJavaHelper.workWithLifecycle(ImageLoadingActivity.this, (ObservableOnSubscribe<File>) e -> {
             File file = FrescoHelper.saveImageByFresco(picList.get(mPosition));
             e.onNext(file);
         }, new HttpRxObserver() {
             @Override
             protected void onStart(Disposable d) {
-
+                showProgressDialog("下载中...");
             }
-
             @Override
             protected void onError(ApiException e) {
                 ToastUtils.show("下载失败：" + e.getMsg());
@@ -338,7 +337,7 @@ public class ImageLoadingActivity extends BaseActivity implements DownloadServic
 
             @Override
             protected void onSuccess(Object response) {
-                ToastUtils.show("下载成功");
+                Snackbar.make(saveImg,"下载成功",Snackbar.LENGTH_SHORT).show();
                 cancleProgressDialog();
             }
         });
@@ -355,22 +354,22 @@ public class ImageLoadingActivity extends BaseActivity implements DownloadServic
 
     @Override
     public void onDownloadSuccess(File file) {
-        ToastUtils.show("下载成功");
+        Snackbar.make(saveImg,"下载成功",Snackbar.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void onDownloading(int progress) {
-        ToastUtils.show("下载中:" + progress + "%");
+        Snackbar.make(saveImg,"下载中:" + progress + "%",Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onDownloadFailed(String error) {
-        ToastUtils.show("下载失败:" + error);
+        Snackbar.make(saveImg,"下载失败:" + error,Snackbar.LENGTH_SHORT).show();
     }
 
     @Override
     public void onStartDownload() {
-        ToastUtils.show("开始下载" );
+        Snackbar.make(saveImg,"开始下载",Snackbar.LENGTH_SHORT).show();
     }
 }
