@@ -118,8 +118,9 @@ public class MyWidgetProvider extends AppWidgetProvider {
             @Override
             protected void onSuccess(Object response) {
                 Log.e(TAG,"成功设置小部件壁纸");
-                Bitmap bitmap = (Bitmap) response;
+                Bitmap bitmap = BitmapUtils.zoomImage((Bitmap) response);  //有些图片太大 压缩为1080p的，不然会oom
                 AppWidgetManager manager = AppWidgetManager.getInstance(context);
+
                 remoteViews.setImageViewBitmap(R.id.iv_widget,bitmap);
                 manager.updateAppWidget(componentName, remoteViews);
             }

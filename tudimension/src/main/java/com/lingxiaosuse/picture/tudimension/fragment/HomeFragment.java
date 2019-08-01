@@ -86,8 +86,8 @@ public class HomeFragment extends BaseFragment implements HomeView{
         //mHomeAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
         mHomeAdapter.setDuration(800);
         mHomeAdapter.openLoadAnimation(view -> new Animator[]{
-                ObjectAnimator.ofFloat(view, "scaleY", 0f, 1.05f, 1f),
-                ObjectAnimator.ofFloat(view, "scaleX", 0f, 1.05f, 1f)
+                ObjectAnimator.ofFloat(view, "scaleY", 0.3f, 1.05f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleX", 0.3f, 1.05f, 1f)
         });
         mHomeAdapter.isFirstOnly(false);
         // 错列网格布局

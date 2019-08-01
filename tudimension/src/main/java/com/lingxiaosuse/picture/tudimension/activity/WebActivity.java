@@ -128,7 +128,10 @@ public class WebActivity extends BaseActivity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
-                pbWeb.setProgress(newProgress);
+                if (pbWeb != null){
+                    pbWeb.setProgress(newProgress);
+                }
+
             }
         });
     }
@@ -141,12 +144,9 @@ public class WebActivity extends BaseActivity {
     }
 
     private void initSwipeLayout() {
-        swipWeb.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                pbWeb.setVisibility(View.VISIBLE);
-                webView.loadUrl(url);
-            }
+        swipWeb.setOnRefreshListener(() -> {
+            pbWeb.setVisibility(View.VISIBLE);
+            webView.loadUrl(url);
         });
     }
 

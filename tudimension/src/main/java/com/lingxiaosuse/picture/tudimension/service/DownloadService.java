@@ -99,7 +99,7 @@ public class DownloadService extends Service {
                         .setAutoCancel(true)
                         .setCategory(Notification.CATEGORY_SERVICE)
                         .setOngoing(true)
-                        .setPriority(NotificationManager.IMPORTANCE_LOW)
+                        .setPriority(NotificationManager.IMPORTANCE_DEFAULT)
                         .build();
                 startForeground(101, notification);
                 //startForeground(1,new Notification());

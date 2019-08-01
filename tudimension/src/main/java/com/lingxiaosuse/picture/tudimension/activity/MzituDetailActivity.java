@@ -1,5 +1,7 @@
 package com.lingxiaosuse.picture.tudimension.activity;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
@@ -17,7 +19,9 @@ import com.camera.lingxiao.common.exception.ApiException;
 import com.camera.lingxiao.common.http.RxJavaHelper;
 import com.camera.lingxiao.common.observer.HttpRxCallback;
 import com.camera.lingxiao.common.observer.HttpRxObserver;
+import com.camera.lingxiao.common.utills.LogUtils;
 import com.lingxiaosuse.picture.tudimension.R;
+import com.lingxiaosuse.picture.tudimension.SpaceItemDecoration;
 import com.lingxiaosuse.picture.tudimension.adapter.MzituRecyclerAdapter;
 import com.lingxiaosuse.picture.tudimension.modle.MzituModle;
 import com.lingxiaosuse.picture.tudimension.utils.SpUtils;
@@ -32,6 +36,9 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,10 +72,12 @@ public class MzituDetailActivity extends BaseActivity {
     private Intent intent;
     private List<MzituModle> mImgList = new ArrayList<>();
 
-    private int mPage = 1;
-    private int mMaxPage = 2;  //最大页数  >1  让其先请求一次数据
+
+    private volatile int mMaxPage = 20;  //最大页数  >1  让其先请求一次数据
+    private static int LIMIT = 20;
     private String imgUrl;
     private MzituRecyclerAdapter mAdapter;
+    private ExecutorService mExecutorService;
 
     @Override
     protected int getContentLayoutId() {
@@ -84,23 +93,37 @@ public class MzituDetailActivity extends BaseActivity {
         setToolbarBack(toolbarMzituDetail);
         tvMzituDetailTitle.setText(title);
 
+        mExecutorService = Executors.newSingleThreadExecutor();
         refreshLayout.autoRefresh();
         refreshLayout.setOnRefreshListener(refreshLayout -> {
-            getDataFromJsoup(mPage);
-        });
-        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
-            if (mMaxPage > mPage){
-                for (int i = mPage; i < mPage + 20; i++) {
-                    getDataFromJsoup(i);
-                }
-            }else {
-                mAdapter.loadMoreEnd();
-                refreshLayout.finishLoadMore();
+            mImgList.clear();
+            for (int i=0;i<LIMIT;i++){
+                mExecutorService.submit(new JsonRunnable(i));
             }
         });
+        refreshLayout.setOnLoadMoreListener(refreshLayout -> {
+            //if (mImageIndex != LIMIT) return;  //说明线程池还没有执行完毕
+            int nextLimit = Math.min(LIMIT+20, mMaxPage);
+            if (LIMIT == nextLimit) {
+                refreshLayout.finishLoadMore();
+                return;
+            }
+            for (int i=LIMIT;i <nextLimit;i++){
+                mExecutorService.submit(new JsonRunnable(i));
+            }
+            LIMIT = nextLimit;
+        });
         mAdapter = new MzituRecyclerAdapter(R.layout.list_mzitu,mImgList);
+        mAdapter.setDuration(800);
+        mAdapter.openLoadAnimation(view -> new Animator[]{
+                ObjectAnimator.ofFloat(view, "scaleY", 0.3f, 1.05f, 1f),
+                ObjectAnimator.ofFloat(view, "scaleX", 0.3f, 1.05f, 1f)
+        });
+        mAdapter.isFirstOnly(false);
         StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2,
                 StaggeredGridLayoutManager.VERTICAL);
+        SpaceItemDecoration space = new SpaceItemDecoration(4);
+        rvMzituDetail.addItemDecoration(space);
         rvMzituDetail.setHasFixedSize(true);
         rvMzituDetail.setLayoutManager(manager);
         rvMzituDetail.setAdapter(mAdapter);
@@ -123,84 +146,25 @@ public class MzituDetailActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void initData() {
-        super.initData();
-        /**
-         * 先请求20组数据
-         */
-        for (int i = 0; i < 20; i++) {
-            getDataFromJsoup(i);
+
+
+    private class JsonRunnable implements Runnable{
+        private int mImageIndex;
+        public JsonRunnable(int index){
+            mImageIndex = index;
         }
+        @Override
+        public void run() {
+            try {
 
-        //getDataFromJsoup(mPage);
-    }
-
-    private volatile boolean isRunning = false;
-    private void getDataFromJsoup(final int page) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    isRunning = true;
-                    Connection connection = Jsoup.connect(imgUrl + "/" + page)
-                            .header("Referer", "http://www.mzitu.com")
-                            .header("User-Agent", ContentValue.USER_AGENT)
-                            .timeout(5000)
-                            .userAgent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.108 Safari/537.36");//设置urer-agent  get();;
-
-                    Document doc = null;
-                    MzituModle modle = new MzituModle();
-                    Connection.Response response = connection.execute();
-                    response.cookies();
-                    doc = connection.get();
-
-                    if (page == 0) {
-                        Elements elementPage = doc.getElementsByClass("pagenavi");
-                        String page1 = checkPageNum(elementPage.select("span").text());
-                        int n = 2;
-                        Log.i("图片页数：", "run: ");
-                        String b = page1.substring(page1.length() - n, page1.length());
-                        Log.i("图片页数：", "run: " + b);
-                        mMaxPage = Integer.valueOf(b);
-                        Log.i("图片页数：", "run: " + mMaxPage);
-                    }
-                    Elements elementDiv = doc.getElementsByClass("main-image");
-                    String srcUrl = elementDiv.select("img").attr("src");
-                    Log.i("图片地址：", "run: " + srcUrl);
-                    modle.setTitle("");
-                    modle.setImgUrl(srcUrl);
-                    //请求次数
-                    mPage++;
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isRunning) return;
-                            mAdapter.addData(modle);
-                            mAdapter.notifyDataSetChanged();
-                            refreshLayout.finishRefresh();
-                            refreshLayout.finishLoadMore();
-                        }
+                if (null != refreshLayout && mMaxPage <= mImageIndex){
+                    refreshLayout.post(() -> {
+                        mAdapter.loadMoreEnd();
                     });
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                    UIUtils.runOnUIThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (!isRunning) return;
-                            mAdapter.loadMoreEnd();
-                            refreshLayout.finishRefresh();
-                            refreshLayout.finishLoadMore();
-                        }
-                    });
+                    return;
                 }
-
-            }
-        }).start();
-        /*RxJavaHelper.workWithLifecycle(this, new ObservableOnSubscribe<MzituModle>() {
-            @Override
-            public void subscribe(ObservableEmitter<MzituModle> e) throws Exception {
-                Connection connection = Jsoup.connect(imgUrl + "/" + page)
+                LogUtils.e("图片索引>>>  " + mImageIndex+ "limit >>>>> " + LIMIT);
+                Connection connection = Jsoup.connect(imgUrl + "/" + mImageIndex)
                         .header("Referer", "http://www.mzitu.com")
                         .header("User-Agent", ContentValue.USER_AGENT)
                         .timeout(5000)
@@ -208,56 +172,48 @@ public class MzituDetailActivity extends BaseActivity {
 
                 Document doc = null;
                 MzituModle modle = new MzituModle();
-                Connection.Response response = connection.execute();
+                Connection.Response response = connection.response();
                 response.cookies();
                 doc = connection.get();
 
-                if (page == 1) {
+                if (mImageIndex == 0) {  //第一次爬的时候，获取到最大页数
                     Elements elementPage = doc.getElementsByClass("pagenavi");
                     String page1 = checkPageNum(elementPage.select("span").text());
-                    int n = 2;
-                    String b = page1.substring(page1.length() - n, page1.length());
+                    String b = page1.substring(page1.length() - 2, page1.length());
                     mMaxPage = Integer.valueOf(b);
-                    Log.i("图片页数：", "run: " + b);
+                    Log.i("图片页数：", "run: " + mMaxPage);
+                    //LIMIT = Math.min(LIMIT,mMaxPage);
                 }
                 Elements elementDiv = doc.getElementsByClass("main-image");
                 String srcUrl = elementDiv.select("img").attr("src");
                 Log.i("图片地址：", "run: " + srcUrl);
                 modle.setTitle("");
                 modle.setImgUrl(srcUrl);
+                rvMzituDetail.post(()->mAdapter.addData(modle));
+                Thread.sleep(180);
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }finally {
                 //请求次数
-                mPage++;
-                e.onNext(modle);
-                e.onComplete();
+                if (null != refreshLayout){
+                    refreshLayout.post(() -> {
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
+                    });
+                }
+                if (mImageIndex == mMaxPage) {
+                    //mExecutorService.shutdownNow();
+                }
             }
-        }, new HttpRxObserver() {
-            @Override
-            protected void onStart(Disposable d) {
-
-            }
-
-            @Override
-            protected void onError(ApiException e) {
-                refreshLayout.finishRefresh();
-                refreshLayout.finishLoadMore();
-            }
-
-            @Override
-            protected void onSuccess(Object response) {
-                MzituModle modle = (MzituModle) response;
-                mAdapter.addData(modle);
-            }
-
-            @Override
-            public void onComplete() {
-                super.onComplete();
-                refreshLayout.finishRefresh();
-                refreshLayout.finishLoadMore();
-            }
-        });
-*/
+        }
     }
+    /*private Runnable jsonRunnable = new Runnable() {
+        @Override
+        public void run() {
 
+
+        }
+    };*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -292,6 +248,14 @@ public class MzituDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        isRunning = false;
+        mExecutorService.shutdownNow();
+        /*try {
+            mExecutorService.shutdown(); // 先终止执行完成的任务
+            if (!mExecutorService.awaitTermination(1000,TimeUnit.MILLISECONDS)){
+                mExecutorService.shutdownNow();  //等待1秒，如果还没完成就立即终止
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }*/
     }
 }

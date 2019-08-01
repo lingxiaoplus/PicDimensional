@@ -156,7 +156,9 @@ public class MainActivity extends BaseActivity implements MainView{
     private MainPresenter mPresenter = new MainPresenter(this,this);
     private String[] mPermessions = {
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.READ_EXTERNAL_STORAGE};
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            //Manifest.permission.SYSTEM_ALERT_WINDOW
+    };
 
     @Override
     protected int getContentLayoutId() {
@@ -175,7 +177,7 @@ public class MainActivity extends BaseActivity implements MainView{
         filter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
         filter.addAction("android.net.wifi.STATE_CHANGE");
         registerReceiver(mNetworkChangeListener, filter);
-        bindDownloadService();
+
         //权限检测
         if (!EasyPermissions.hasPermissions(this,mPermessions)){
             //没有权限就申请
@@ -217,6 +219,7 @@ public class MainActivity extends BaseActivity implements MainView{
         mPresenter.getHeadText();
 
         simpleDraweeView.setOnLongClickListener(v -> {
+            bindDownloadService();
             final PopwindowUtil popwindowUtil = new PopwindowUtil
                     .PopupWindowBuilder(getApplicationContext())
                     .setView(R.layout.pop_long_click)
@@ -368,6 +371,7 @@ public class MainActivity extends BaseActivity implements MainView{
 
 
     private void bindDownloadService() {
+        if (mConnect != null) return;
         mConnect = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {

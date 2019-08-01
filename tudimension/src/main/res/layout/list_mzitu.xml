@@ -5,10 +5,8 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="8dp"
-    android:layout_marginTop="3dp"
-    android:layout_marginLeft="3dp"
-    android:layout_margin="5dp"
+    app:cardCornerRadius="4dp"
+    android:layout_margin="2dp"
     app:cardBackgroundColor="#fff">
 
     <LinearLayout

@@ -43,8 +43,8 @@ task clean(type: Delete) {
 }
 ext{
     //版本号相关
-    versionCode = 20
-    versionName = '2.1.0'
+    versionCode = 21
+    versionName = '2.1.1'
     minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28

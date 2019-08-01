@@ -15,9 +15,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
-import android.provider.MediaStore;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -37,9 +34,6 @@ import com.camera.lingxiao.common.exception.ApiException;
 import com.camera.lingxiao.common.http.RxJavaHelper;
 import com.camera.lingxiao.common.observer.HttpRxObserver;
 import com.camera.lingxiao.common.utills.SpUtils;
-import com.facebook.binaryresource.FileBinaryResource;
-import com.facebook.cache.common.SimpleCacheKey;
-import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.github.zackratos.ultimatebar.UltimateBar;
 import com.lingxiaosuse.picture.tudimension.R;
@@ -337,7 +331,7 @@ public class ImageLoadingActivity extends BaseActivity implements DownloadServic
 
             @Override
             protected void onSuccess(Object response) {
-                Snackbar.make(saveImg,"下载成功",Snackbar.LENGTH_SHORT).show();
+                ToastUtils.show("下载成功");
                 cancleProgressDialog();
             }
         });
@@ -354,22 +348,22 @@ public class ImageLoadingActivity extends BaseActivity implements DownloadServic
 
     @Override
     public void onDownloadSuccess(File file) {
-        Snackbar.make(saveImg,"下载成功",Snackbar.LENGTH_SHORT).show();
+        ToastUtils.show("下载成功");
 
     }
 
     @Override
     public void onDownloading(int progress) {
-        Snackbar.make(saveImg,"下载中:" + progress + "%",Snackbar.LENGTH_SHORT).show();
+        ToastUtils.show("下载中:" + progress + "%");
     }
 
     @Override
     public void onDownloadFailed(String error) {
-        Snackbar.make(saveImg,"下载失败:" + error,Snackbar.LENGTH_SHORT).show();
+        ToastUtils.show("下载失败:" + error);
     }
 
     @Override
     public void onStartDownload() {
-        Snackbar.make(saveImg,"开始下载",Snackbar.LENGTH_SHORT).show();
+        ToastUtils.show("开始下载");
     }
 }

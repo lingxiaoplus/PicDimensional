@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 
@@ -62,6 +64,7 @@ public class MzituFragment extends BaseFragment{
     private MzituRecyclerAdapter mAdapter;
     private int mPage = 1;
     private View view;
+    private ExecutorService mSingleExecutor;
 
     private String type;
 
@@ -73,14 +76,14 @@ public class MzituFragment extends BaseFragment{
     @Override
     protected void initWidget(View root) {
         super.initWidget(root);
-
+        mSingleExecutor = Executors.newSingleThreadExecutor();
         refreshLayout.setOnRefreshListener(refreshLayout -> {
             mPage = 1;
-            initJsoup(mPage);
+            mSingleExecutor.execute(jsoupRunnable);
         });
         refreshLayout.setOnLoadMoreListener(refreshLayout -> {
             mPage++;
-            initJsoup(mPage);
+            mSingleExecutor.execute(jsoupRunnable);
         });
 
         mAdapter = new MzituRecyclerAdapter(R.layout.list_mzitu,mImageDataList);
@@ -120,9 +123,17 @@ public class MzituFragment extends BaseFragment{
         refreshLayout.autoRefresh();
     }
 
-    private void initJsoup(final int page){
-        new Thread(() -> {
-            Connection connection = Jsoup.connect(ContentValue.MZITU_URL+type+"/page/"+page)
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mSingleExecutor.shutdownNow();
+        jsoupRunnable = null;
+    }
+
+    private Runnable jsoupRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Connection connection = Jsoup.connect(ContentValue.MZITU_URL+type+"/page/"+mPage)
                     .header("Referer","http://www.mzitu.com")
                     .header("User-Agent","Mozilla/5.0 (Windows NT 6.1; WOW64; rv:48.0) Gecko/20100101 Firefox/48.0")
                     .timeout(5000)
@@ -153,18 +164,15 @@ public class MzituFragment extends BaseFragment{
             }catch (Exception e){
                 e.printStackTrace();
             }finally {
-                UIUtils.runOnUIThread(() -> {
-                    if (MzituFragment.this.getActivity().isDestroyed()){
-                        return;
-                    }
-                    mAdapter.notifyDataSetChanged();
-                    refreshLayout.finishLoadMore();
-                    refreshLayout.finishRefresh();
-                });
+                if (refreshLayout != null){
+                    refreshLayout.post(()->{
+                        mAdapter.notifyDataSetChanged();
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                    });
+                }
             }
-
-        }).start();
-    }
-
+        }
+    };
 
 }

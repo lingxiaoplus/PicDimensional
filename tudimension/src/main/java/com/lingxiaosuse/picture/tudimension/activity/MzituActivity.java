@@ -31,6 +31,8 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,22 +76,23 @@ public class MzituActivity extends BaseActivity {
                     LogUtils.e("Connection: "+targetTitle);
                 }
 
-                if (MzituActivity.this.isDestroyed()){
-                    return;
-                }
-                UIUtils.runOnUIThread(() -> {
-                    for (int i = 0; i < tabTitle.size(); i++) {
-                        mAdapter.notifyDataSetChanged();
-                        tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
-                    }
-                    cancleProgressDialog();
-                });
-
             }catch (Exception e){
                 e.printStackTrace();
+            }finally {
+                if (!MzituActivity.this.isDestroyed()){
+                    UIUtils.runOnUIThread(() -> {
+                        for (int i = 0; i < tabTitle.size(); i++) {
+                            mAdapter.notifyDataSetChanged();
+                            tabMzitu.addTab(tabMzitu.newTab().setText(tabTitle.get(i)));
+                        }
+                        cancleProgressDialog();
+                    });
+                }
             }
         }
     };
+    private ExecutorService mSingleExecutor;
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_mzitu;
@@ -113,6 +116,7 @@ public class MzituActivity extends BaseActivity {
         mAdapter = new MzituPagerAdapter(getSupportFragmentManager());
         pagerMzitu.setAdapter(mAdapter);
         tabMzitu.setupWithViewPager(pagerMzitu);
+        mSingleExecutor = Executors.newSingleThreadExecutor();
         List<MzituTabModel> tabList = SQLite.select()
                 .from(MzituTabModel.class)
                 .queryList();
@@ -129,11 +133,11 @@ public class MzituActivity extends BaseActivity {
 
             }else {
                 SQLite.delete(MzituTabModel.class).execute();
-                new Thread(mTabRunnable).start();
+                mSingleExecutor.execute(mTabRunnable);
             }
             cancleProgressDialog();
         }else {
-            new Thread(mTabRunnable).start();
+            mSingleExecutor.execute(mTabRunnable);
         }
     }
 
@@ -193,5 +197,11 @@ public class MzituActivity extends BaseActivity {
         public CharSequence getPageTitle(int position) {
             return tabTitle.get(position);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSingleExecutor.shutdownNow();
     }
 }

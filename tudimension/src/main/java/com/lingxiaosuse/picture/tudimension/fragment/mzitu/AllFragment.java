@@ -30,6 +30,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import butterknife.BindView;
 
@@ -47,6 +49,7 @@ public class AllFragment extends BaseFragment {
     private List<String> mTitleList = new ArrayList<>();
     private String type;
     private AllMzituAdapter mAdapter;
+    private ExecutorService mSingleExecutor;
 
     @Override
     protected int getContentLayoutId() {
@@ -57,8 +60,9 @@ public class AllFragment extends BaseFragment {
     protected void initWidget(View root) {
         super.initWidget(root);
         refreshLayout.autoRefresh();
+        mSingleExecutor = Executors.newSingleThreadExecutor();
         refreshLayout.setOnRefreshListener(refreshLayout -> {
-            getDataFromJsoup();
+            mSingleExecutor.execute(jsoupRunnable);
         });
 
 
@@ -88,56 +92,59 @@ public class AllFragment extends BaseFragment {
     protected void initData() {
         Bundle bundle = getArguments();
         type = bundle.getString("type");
-        getDataFromJsoup();
+        mSingleExecutor.execute(jsoupRunnable);
     }
 
-    private void getDataFromJsoup() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Connection connection = Jsoup.connect(ContentValue.MZITU_URL+type)
-                        .timeout(5000);
-                Document doc = null;
-                try {
-                    Connection.Response response = connection.execute();
-                    response.cookies();
-                    doc = connection.get();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-                try {
-                    Elements elementHome = doc.getElementsByClass("archives");
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mSingleExecutor != null) mSingleExecutor.shutdownNow();
+        jsoupRunnable = null;
+    }
 
-                    for (Element elementImg:elementHome) {
-                        Elements elements = elementImg.getElementsByTag("a");
-                        for (Element element:elements) {
-                            final String imgUrl = element.attr("href");
-                            final String imgTitle = element.text();
-                            Log.i("图片地址", "run: "+imgUrl+"  图片标题"+imgTitle);
-                            mImgList.add(imgUrl);
-                            mTitleList.add(imgTitle);
-                        }
-                        UIUtils.runOnUIThread(() -> {
-                            if (AllFragment.this.getActivity().isDestroyed()){
-                                return;
-                            }
-                            mAdapter.notifyDataSetChanged();
-                            refreshLayout.finishLoadMore();
-                            refreshLayout.finishRefresh();
-                        });
+    private Runnable jsoupRunnable = new Runnable() {
+        @Override
+        public void run() {
+            Connection connection = Jsoup.connect(ContentValue.MZITU_URL+type)
+                    .timeout(5000);
+            Document doc = null;
+            try {
+                Connection.Response response = connection.execute();
+                response.cookies();
+                doc = connection.get();
+
+                Elements elementHome = doc.getElementsByClass("archives");
+
+                for (Element elementImg:elementHome) {
+                    Elements elements = elementImg.getElementsByTag("a");
+                    for (Element element:elements) {
+                        final String imgUrl = element.attr("href");
+                        final String imgTitle = element.text();
+                        Log.i("图片地址", "run: "+imgUrl+"  图片标题"+imgTitle);
+                        mImgList.add(imgUrl);
+                        mTitleList.add(imgTitle);
                     }
-
-                }catch (Exception e){
-                    Log.i("AllFragment", e.getMessage());
-                }finally {
                     UIUtils.runOnUIThread(() -> {
+                        if (AllFragment.this.getActivity().isDestroyed()){
+                            return;
+                        }
+                        mAdapter.notifyDataSetChanged();
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
-                        mAdapter.isFinish(true);
                     });
                 }
+
+            }catch (Exception e){
+                Log.i("AllFragment", e.getMessage());
+            }finally {
+                UIUtils.runOnUIThread(() -> {
+                    refreshLayout.finishLoadMore();
+                    refreshLayout.finishRefresh();
+                    mAdapter.isFinish(true);
+                });
             }
-        }).start();
-    }
+        }
+    };
+
 }

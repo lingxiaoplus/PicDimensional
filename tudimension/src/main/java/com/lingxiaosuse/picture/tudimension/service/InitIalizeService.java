@@ -5,12 +5,14 @@ import android.app.IntentService;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.job.JobService;
 import android.content.Intent;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
@@ -55,7 +57,6 @@ public class InitIalizeService extends IntentService {
         }
     }
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void startMyOwnForeground(){
         String NOTIFICATION_CHANNEL_ID = "com.example.simpleapp";
@@ -85,6 +86,7 @@ public class InitIalizeService extends IntentService {
         } else {
             context.startService(intent);
         }
+
         //context.startService(intent);
         mContext = context;
     }
@@ -121,6 +123,7 @@ public class InitIalizeService extends IntentService {
         Bugly.init(getApplicationContext(), "fcc0256432",true,strategy);
         SkinLib.init((App) mContext);
         initHotFix();
+        stopSelf();
     }
 
     private void initHotFix(){
